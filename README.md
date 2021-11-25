@@ -1,11 +1,5 @@
 ![Banner](./Untitled.png)
 
-# Installation
-
-```
-npm i dbd-soft-ui
-```
-
 ## Information
 
 This theme has not released yet, for updates join the [discord-dashboard discord](https://discord.gg/CHbfcSbEgd).
