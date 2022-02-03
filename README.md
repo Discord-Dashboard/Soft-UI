@@ -1,4 +1,4 @@
-![Banner](./Untitled.png)
+![Banner](./soft-ui_bg.png)
 
 ## Information
 
