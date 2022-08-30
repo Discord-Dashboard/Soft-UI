@@ -1,0 +1,25 @@
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+
+<select 
+<% if (actual[s.categoryId][option.optionId]) {%>
+   defaultValue="<%= JSON.stringify(actual[s.categoryId][option.optionId])%>" 
+<% } %>
+   id="<%= option.optionId %>" 
+   getValue="<%= option.optionId %>" 
+   class="tags form-control" 
+   multiple="multiple" 
+   formType="tagInput"
+<% if(!Allowed.allowed){ %>
+    style="border-color: red;" 
+    disabled
+<% } %>
+<% if (Allowed.allowed && option.optionType.disabled) { %>
+    disabled
+<% } %>
+>
+<% if (actual[s.categoryId][option.optionId]) {%>
+     <% actual[s.categoryId][option.optionId].forEach(value=>{ %>
+            <option value="<%= value %>" selected><%= value %></option>
+        <% }) %>
+     <% } %>
+</select>

@@ -1,0 +1,63 @@
+<%
+let currentPage = "Dashboard";
+if (now) {
+    const pages = req?.locales?.partials?.navbar?.pages;
+    if (now === 'manage') currentPage = pages?.manage || "Manage Guilds";
+    if (now === 'settings') currentPage = pages?.settings || "Manage Guilds";
+    if (now === 'commands') currentPage = pages?.commands || "Commands";
+    if (now === 'pp') currentPage = pages?.pp || "Privacy Policy";
+    if (now === 'admin') currentPage = pages?.admin || "Admin Panel";
+    if (now === 'error') currentPage = pages?.error || "Error";
+    if (now === 'credits') currentPage = pages?.credits || "Credits";
+    if (now === 'debug') currentPage = pages?.debug || "Debug";
+    if (now === 'leaderboard') currentPage = pages?.leaderboard || "Leaderboard";
+    if (now === 'profile') currentPage = pages?.profile || "Profile";
+    if (now === 'maintenance') currentPage = pages?.maintenance || "Under Maintenance";
+}
+%>
+<!-- Navbar -->
+<nav style="padding-bottom: 0;" class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+     id="navbarBlur" navbar-scroll="false">
+    <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-sm"><a class="opacity-9 text-dark" href="/"><%- req?.locales?.partials?.navbar?.home || "Home" %></a></li>
+                <li class="breadcrumb-item text-sm text-dark active" aria-current="page"><%- currentPage %></li>
+            </ol>
+            <h6 class="font-weight-bolder mb-0"><%- currentPage %></h6>
+        </nav>
+
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            </div>
+            <ul class="navbar-nav  justify-content-end">
+                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a onclick="toggleSidenav()" style="cursor: pointer;" class="nav-link text-body p-0"
+                       id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                        </div>
+                    </a>
+                </li>
+                <!--<% if(req.session.user) { %>
+                <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                        <a href="javascript:;" class="avatar rounded-circle" style="margin-top: 5px;">
+                            <img alt="Image placeholder"
+                                src="<%= req.session.user.avatarURL || "https://w5fc.org/wp-content/uploads/2021/05/s9biyhs4lix61.jpg" %>">
+                        </a>
+                </li>
+            <% } else { %>
+                <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                    <a onclick="const newWindow = window.open('/discord?r=/close%3Flogin=true', 'Log in with discord', `scrollbars=no, resizable=no, status=no, location=no, toolbar=no, menubar=no, width=500, height=800`);" class="nav-link text-body p-0">
+                            <i class="fa fa-user me-sm-1" aria-hidden="true"></i>
+                            <span class="d-sm-inline d-none">Sign In</span>
+                    </a>
+                  </li>
+            <% } %>-->
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->

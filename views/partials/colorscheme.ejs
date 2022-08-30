@@ -1,0 +1,176 @@
+<%
+let currentScheme = themeConfig.colorScheme,
+        currentCode = "310deg, #7928CA 0%, #FF0080 100%",
+        colone,
+        coltwo;
+
+if (currentScheme == "pink") {
+    currentCode = "310deg, #7928CA 0%, #FF0080 100%";
+    colone = "#FF0080";
+    coltwo = "#7928CA";
+}
+if (currentScheme == "red") {
+    currentCode = "310deg, #ea0606 0%, #ff667c 100%";
+    colone = "#ea0606";
+    coltwo = "#ff667c";
+}
+if (currentScheme == "green") {
+    currentCode = "310deg, #17ad37 0%, #98ec2d 100%";
+    colone = "#17ad37";
+    coltwo = "#98ec2d";
+}
+if (currentScheme == "yellow") {
+    currentCode = "310deg, #f53939 0%, #fbcf33 100%";
+    colone = "#f53939";
+    coltwo = "#fbcf33";
+}
+if (currentScheme == "dark") {
+    currentCode = "310deg, #141727 0%, #3A416F 100%";
+    colone = "#141727";
+    coltwo = "#3A416F";
+}
+if (currentScheme == "blue") {
+    currentCode = "310deg, #2152ff 0%, #21d4fd 100%";
+    colone = "#2152ff";
+    coltwo = "#21d4fd";
+}
+%>
+<meta name="theme-color" content="<%- colone %>">
+<style>
+    :root {
+        --gradient: <%= currentCode%> !important;
+        --colone: <%= colone%> !important;
+        --coltwo: <%= coltwo%> !important;
+    }
+
+    input:checked + .tslider {
+        background: linear-gradient(var(--gradient)) !important;
+    }
+
+    option {
+        color: var(--colone);
+    }
+
+    option:hover {
+        background-color: none !important;
+    }
+
+    .fixed-plugin .btn.bg-gradient-primary:not(:disabled):not(.disabled):not(.active) {
+        border: 1px solid var(--colone) !important;
+        color: var(--colone) !important;
+    }
+
+    .card.card-background.card-background-mask-primary::after, .swal2-popup.swal2-toast {
+        background-image: linear-gradient(var(--gradient)) !important;
+    }
+
+    .form-switch .form-check-input:checked {
+        border-color: var(--colone) !important;
+        background-image: linear-gradient(var(--gradient)) !important;
+    }
+
+    .swal2-title {
+        color: #ebdddd !important;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .swal2-success-fix, .swal2-success-circular-line-left, .swal2-success-circular-line-right {
+        background: none !important;
+    }
+
+    .swal2-success-ring {
+        color: rgba(0, 0, 0, 0) !important;
+        border: rgba(0, 0, 0, 0) !important;
+    }
+
+    .swal2-icon.swal2-error, .swal2-icon.swal2-success {
+        border-color: #f9f9f9 !important;
+        color: #f9f9f9 !important;
+    }
+
+    .swal2-x-mark-line-right, .swal2-x-mark-line-left, .swal2-success-line-long, .swal2-success-line-tip {
+        background-color: #f9f9f9 !important;
+    }
+
+    .swal2-success-fix {
+        color: white !important;
+    }
+
+    .swal2-icon.swal2-success [class^=swal2-success-line] {
+        display: block;
+        position: absolute;
+        z-index: 2;
+        height: 0.3125em;
+        border-radius: 0.125em;
+        background-color: var(#f9f9f9) !important;
+    }
+
+    .bg-gradient-primary {
+        background-image: linear-gradient(var(--gradient));
+    }
+
+    .card.card-background.card-background-mask-primary:after {
+        background-image: linear-gradient(var(--gradient));
+        opacity: .85;
+    }
+
+    .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon {
+        background-image: linear-gradient(var(--gradient)) !important;
+    }
+
+    .text-gradient.text-primary {
+        background-image: linear-gradient(var(--gradient));
+    }
+
+    .btn-outline-primary {
+        color: var(--colone);
+        border-color: var(--colone);
+    }
+
+    .nav-tabs .nav-link.active {
+        background-size: 100% 4px;
+        border-bottom: 4px solid var(--colone) !important;
+        color: var(--colone) !important;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border: 0;
+        border-bottom: 0px solid;
+    }
+
+    .pagination.pagination-primary .page-item.active > .page-link,
+    .pagination.pagination-primary .page-item.active > .page-link:focus,
+    .pagination.pagination-primary .page-item.active > .page-link:hover {
+        background-image: linear-gradient(var(--gradient));
+        border: none;
+    }
+
+    .sidenav[data-color="primary"] .navbar-nav > .nav-item > .nav-link.active .icon {
+        background-image: linear-gradient(var(--gradient));
+    }
+
+    .blur-section.blur-gradient-primary {
+        background-image: linear-gradient(var(--gradient));
+    }
+
+    .blur-section.blur-gradient-primary {
+        background-image: linear-gradient(var(--gradient));
+    }
+
+    .form-control:focus {
+        box-shadow: var(--colone) 0px 0px 0px 2px !important;
+    }
+
+    .input-group .form-control:focus {
+        border-color: var(--colone) !important;
+    }
+
+    .themecol {
+        color: var(--colone) !important;
+    }
+
+    .input-group .form-control:focus {
+        border-left-color: var(--colone) !important;
+        border-right-color: var(--colone) !important;
+    }
+</style>

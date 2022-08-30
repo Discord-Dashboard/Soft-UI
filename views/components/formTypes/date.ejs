@@ -1,0 +1,27 @@
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+
+<input 
+    defaultValue=""
+    class="form-control"
+    type="date"
+    id="<%= option.optionId %>"
+    formType="date"
+<% if(actual[s.categoryId][option.optionId]){ %>
+    value="<%= actual[s.categoryId][option.optionId] %>"
+<% } else { %>
+    value="<%- new Date().toISOString().slice(0, 10) %>"
+<% } %>
+<% if(option?.themeOptions?.min) { %>
+    min="<%= option.themeOptions.min%>" 
+<% } %>
+<% if(option?.themeOptions?.max) { %>
+    max="<%= option.themeOptions.max%>"
+<% } %>
+<% if(!Allowed.allowed){ %>
+    style="border-color: red;" 
+    disabled 
+<% } %>
+<% if (Allowed.allowed && option.optionType.disabled) { %>
+    disabled
+<% } %>
+>

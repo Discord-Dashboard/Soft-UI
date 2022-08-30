@@ -1,0 +1,107 @@
+.select2-selection.select2-selection--multiple {
+    background-color: #101112 !important;
+    border: none !important;
+}
+
+.select2-container--default .select2-selection--multiple {
+    background-color: #101112 !important;
+    border: none !important;
+}
+
+.select2-results__option.select2-results__option--selectable {
+    background: #101112 !important;
+    background-color: #101112 !important;
+}
+
+#select2-prefix-3r-results {
+    border: none !important;
+}
+
+.select2-selection__choice {
+    background-color: rgb(32, 31, 31) !important;
+    border: 1px solid rgb(32, 31, 31) !important;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-left: 5px;
+    margin-top: 5px;
+    padding: 0;
+    padding-left: 20px;
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+    white-space: nowrap;
+}
+
+.scrollbar-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+h4 {
+    margin-top: 0px !important;
+}
+
+.svgText {
+    text-transform: capitalize !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.05em;
+}
+
+.mleft15 {
+    margin-left: 15px;
+}
+
+.mbottom6 {
+    margin-bottom: 6px;
+}
+
+.cgray {
+    color: rgb(199, 196, 196) !important;
+}
+
+.column {
+    width: 30%;
+    margin-left: 30px;
+}
+
+.column2 {
+    width: 14%;
+    padding-left: 20px;
+}
+
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .column2 {
+        width: 100%;
+    }
+}
+
+.nav-tabs .nav-link {
+    color: gray;
+    border: 0;
+    border-bottom: 1px solid grey;
+}
+
+.nav-tabs .nav-link:hover {
+    border: 0;
+    border-bottom: 1px solid grey;
+}
+
+.nav-tabs .nav-link.active {
+    color: #101112;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 5px solid #101112;
+}

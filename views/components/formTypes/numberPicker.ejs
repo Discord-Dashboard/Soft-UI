@@ -1,0 +1,19 @@
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+
+<input 
+<% if(actual[s.categoryId][option.optionId]){ %>
+    defaultValue="<%= actual[s.categoryId][option.optionId] %>" 
+    value="<%= actual[s.categoryId][option.optionId] %>"
+<% } %>
+    class="form-control" 
+    type="number" 
+    id="<%= option.optionId %>" 
+    formType="numberPicker"
+<% if(!Allowed.allowed ){ %>
+    style="border-color: red !important" 
+    disabled
+<% } %>
+<% if (Allowed.allowed && option.optionType.disabled) { %>
+    disabled
+<% } %>
+>

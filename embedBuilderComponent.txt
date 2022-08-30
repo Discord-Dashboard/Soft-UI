@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Build and preview Discord embeds outside Discord.">
+        <meta property="og:site_name" content="EmbedBuilder">
+        <meta property="og:title" content="EmbedBuilder">
+        <meta property="og:description" content="Build and preview Discord embeds outside Discord.">
+        <meta property="og:url" content="/">
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://assistantscenter.com/embedBuilder/assets/media/screenshot2.png">
+        <meta name="twitter:card" content="https://assistantscenter.com/embedBuilder/assets/media/screenshot2.png">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+        <title>Embed Builder</title>
+        <link rel="stylesheet" href="https://assistantscenter.com/embedBuilder/assets/css/index.css" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/mode/javascript/javascript.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/theme/material-darker.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/scroll/simplescrollbars.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/scroll/simplescrollbars.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/edit/matchbrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/fold/brace-fold.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/fold/foldgutter.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/fold/foldgutter.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/fold/foldcode.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/lint/json-lint.min.js"></script>
+        <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/lint/lint.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/addon/lint/lint.min.js"></script>
+        <script src="https://assistantscenter.com/embedBuilder/assets/libs/color-picker/color-picker.min.js"></script>
+        <link rel="stylesheet" href="https://assistantscenter.com/embedBuilder/assets/libs/color-picker/color-picker.min.css">
+        <script src="https://assistantscenter.com/embedBuilder/assets/js/components.js"></script>
+        <script>
+// Want to use or contribute to this? https://github.com/Glitchii/embedbuilder
+// If you found an issue, please report it, make a P.R, or use the discussion page. Thanks
+
+
+var params = new URL(location).searchParams,
+    hasParam = param => params.get(param) !== null,
+    dataSpecified = params.get('data'),
+    botName = params.get('username'),
+    botIcon = params.get('avatar'),
+    guiTabs = params.get('guitabs'),
+    useJsonEditor = false,
+    botVerified = hasParam('verified'),
+    reverseColmns = hasParam('reverse'),
+    noUser = hasParam('nouser'),
+    onlyEmbed = hasParam('embed'),
+    activeFields, colNum = 1, num = 0, validationError,
+    jsonToBase64 = (jsonCode, withURL, redirect) => {
+        data = btoa(escape((JSON.stringify(typeof jsonCode === 'object' ? jsonCode : json))));
+        if (withURL) {
+            let currentURL = new URL(location);
+            currentURL.searchParams.append('data', data);
+            if (redirect) window.location = currentURL;
+            data = currentURL.href;
+        }
+        return data;
+    },
+    base64ToJson = data => {
+        jsonData = unescape(atob(data || dataSpecified));
+        if (typeof jsonData === 'string')
+            jsonData = JSON.parse(jsonData);
+        return jsonData;
+    },
+    toRGB = (hex, reversed, integer) => {
+        if (reversed) return '#' + hex.match(/[\d]+/g).map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+        if (integer) return parseInt(hex.match(/[\d]+/g).map(x => parseInt(x).toString(16).padStart(2, '0')).join(''), 16);
+        if (hex.includes(',')) return hex.match(/[\d]+/g);
+        hex = hex.replace('#', '').match(/.{1,2}/g)
+        return [parseInt(hex[0], 16), parseInt(hex[1], 16), parseInt(hex[2], 16), 1];
+    },
+    mainKeys = ["author", "footer", "color", "thumbnail", "image", "fields", "title", "description", "url", "timestamp"],
+    jsonKeys = ["embed", "content", ...mainKeys],
+    json = {{ContentJsonReplacer}}
+
+if (dataSpecified)
+    window.json = base64ToJson();
+
+window.onload = () => {
+    let body = document.body;
+
+    if (onlyEmbed) body.classList.add('only-embed');
+    else {
+        document.querySelector('.side1.noDisplay').classList.remove('noDisplay');
+        if (useJsonEditor) body.classList.remove('gui');
+    }
+    if (noUser) body.classList.add('no-user');
+    else {
+        if (botName) document.querySelector('.username').textContent = botName;
+        if (botIcon) document.querySelector('.avatar').src = botIcon;
+        if (botVerified) document.querySelector('.msgEmbed > .contents').classList.add('verified');
+    }
+    if (reverseColmns) {
+        let side1 = document.querySelector('.side1');
+        side1.parentElement.insertBefore(side1.nextElementSibling, side1);
+        body.classList.add('reversed');
+    };
+
+    document.querySelectorAll('.clickable > img')
+        .forEach(e => e.parentElement.addEventListener('mouseup', el => window.open(el.target.src)));
+
+    let editorHolder = document.querySelector('.editorHolder'),
+        guiParent = document.querySelector('.top'),
+        embedContent = document.querySelector('.messageContent'),
+        embedCont = document.querySelector('.messageContent + .container'),
+        gui = guiParent.querySelector('.gui:first-of-type');
+
+    window.editor = CodeMirror(elt => editorHolder.parentNode.replaceChild(elt, editorHolder), {
+        value: JSON.stringify(json, null, 4),
+        gutters: ["CodeMirror-foldgutter", "CodeMirror-lint-markers"],
+        scrollbarStyle: "overlay",
+        mode: "application/json",
+        theme: 'material-darker',
+        matchBrackets: true,
+        foldGutter: true,
+        lint: true,
+        extraKeys: {
+            // Make tabs four spaces long instead of the default two.
+            Tab: cm => cm.replaceSelection("    ", "end"),
+            // Fill in indent spaces on a new line when enter (return) key is pressed.
+            Enter: _ => {
+                let cur = editor.getCursor(), end = editor.getLine(cur.line),
+                    leadingSpaces = end.replace(/\S($|.)+/g, '') || '    \n', nextLine = editor.getLine(cur.line + 1);
+                if ((nextLine === undefined || !nextLine.trim()) && !end.substr(cur.ch).trim())
+                    editor.replaceRange('\n', { line: cur.line, ch: cur.ch });
+                else
+                    editor.replaceRange(`\n${end.endsWith('{') ? leadingSpaces + '    ' : leadingSpaces}`, {
+                        line: cur.line,
+                        ch: cur.ch
+                    });
+            },
+        }
+    });
+
+    editor.focus();
+    let notif = document.querySelector('.notification'),
+        url = (url) => /^(https?:)?\/\//g.exec(url) ? url : '//' + url,
+        makeShort = (txt, length, mediaWidth) => {
+            if (mediaWidth && window.matchMedia(`(max-width:${mediaWidth}px)`).matches)
+                return txt.length > (length - 3) ? txt.substring(0, length - 3) + '...' : txt;
+            return txt;
+        }, error = (msg, time) => {
+            if (msg === false)
+                // Hide error element
+                return notif.animate({ opacity: '0', bottom: '-50px', offset: 1 }, { easing: 'ease', duration: 500 }).onfinish = () => notif.style.removeProperty('display');
+            notif.innerHTML = msg, notif.style.display = 'block';
+            time && setTimeout(() => notif.animate({ opacity: '0', bottom: '-50px', offset: 1 }, { easing: 'ease', duration: 500 })
+                .onfinish = () => notif.style.removeProperty('display'), time);
+            return false;
+        }, allGood = e => {
+            let invalid, err, str = JSON.stringify(e, null, 4), re = /("(?:icon_)?url": *")((?!\w+?:\/\/).+)"/g.exec(str);
+            if (e.timestamp && new Date(e.timestamp).toString() === "Invalid Date")
+                invalid = true, err = 'Timestamp is invalid';
+            else if (re) { // If a URL is found without a protocol
+                if (!/\w+:|\/\/|^\//g.exec(re[2]) && re[2].includes('.')) {
+                    let activeInput = document.querySelector('input[class$="link" i]:focus')
+                    if (activeInput) {
+                        lastPos = activeInput.selectionStart + 7;
+                        activeInput.value = `http://${re[2]}`;
+                        update(JSON.parse(str.replace(re[0], `${re[1]}http://${re[2]}"`)));
+                        activeInput.setSelectionRange(lastPos, lastPos)
+                        return true;
+                    }
+                }
+                invalid = true, err = (`URL should have a protocol. Did you mean <span class="inline full short">http://${makeShort(re[2], 30, 600).replace(' ', '')}</span>?`);
+            }
+            if (invalid) {
+                validationError = true;
+                return error(err);
+            }
+            return true;
+        }, markup = (txt, opts) => {
+            txt = txt
+                .replace(/\&#60;:[^:]+:(\d+)\&#62;/g, '<img class="emoji" src="https://cdn.discordapp.com/emojis/$1.png"/>')
+                .replace(/\&#60;a:[^:]+:(\d+)\&#62;/g, '<img class="emoji" src="https://cdn.discordapp.com/emojis/$1.gif"/>')
+                .replace(/~~(.+?)~~/g, '<s>$1</s>')
+                .replace(/\*\*\*(.+?)\*\*\*/g, '<em><strong>$1</strong></em>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.+?)__/g, '<u>$1</u>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/_(.+?)_/g, '<em>$1</em>')
+            if (opts.inlineBlock) txt = txt.replace(/\`([^\`]+?)\`|\`\`([^\`]+?)\`\`|\`\`\`((?:\n|.)+?)\`\`\`/g, (m, x, y, z) => x ? `<code class="inline">${x}</code>` : y ? `<code class="inline">${y}</code>` : z ? `<code class="inline">${z}</code>` : m);
+            else txt = txt.replace(/\`\`\`(\w{1,15})?\n((?:\n|.)+?)\`\`\`|\`\`(.+?)\`\`(?!\`)|\`([^\`]+?)\`/g, (m, w, x, y, z) => w && x ? `<pre><code class="${w}">${x.trim()}</code></pre>` : x ? `<pre><code class="hljs nohighlight">${x.trim()}</code></pre>` : y || z ? `<code class="inline">${y || z}</code>` : m);
+            if (opts.inEmbed) txt = txt.replace(/\[([^\[\]]+)\]\((.+?)\)/g, `<a title="$1" target="_blank" class="anchor" href="$2">$1</a>`);
+            if (opts.replaceEmojis) txt = txt.replace(/(?<!code(?: \w+=".+")?>[^>]+)(?<!\/[^\s"]+?):((?!\/)\w+):/g, (match, x) => x && emojis[x] ? emojis[x] : match);
+            txt = txt
+                .replace(/&#62; .+(?:\s&#62; .+)*\n?/g, match => `<div class="blockquote"><div class="blockquoteDivider"></div><blockquote>${match.replace(/&#62; /g, '')}</blockquote></div>`)
+                .replace(/\n/g, '<br>')
+            return txt;
+        },
+        embed = document.querySelector('.embedGrid'),
+        msgEmbed = document.querySelector('.msgEmbed'),
+        embedTitle = document.querySelector('.embedTitle'),
+        embedDescription = document.querySelector('.embedDescription'),
+        embedAuthor = document.querySelector('.embedAuthor'),
+        embedFooter = document.querySelector('.embedFooter'),
+        embedImage = document.querySelector('.embedImage > img'),
+        embedThumbnail = document.querySelector('.embedThumbnail > img'),
+        embedFields = embed.querySelector('.embedFields'),
+        smallerScreen = matchMedia('(max-width: 1015px)'),
+        encodeHTML = str => str.replace(/[\u00A0-\u9999<>\&]/g, i => '&#' + i.charCodeAt(0) + ';'),
+        tstamp = stringISO => {
+            let date = stringISO ? new Date(stringISO) : new Date(),
+                dateArray = date.toLocaleString('en-US', { hour: 'numeric', hour12: false, minute: 'numeric' }),
+                today = new Date(),
+                yesterday = new Date(new Date().setDate(today.getDate() - 1));
+            return today.toDateString() === date.toDateString() ? `Today at ${dateArray}` :
+                yesterday.toDateString() === date.toDateString() ? `Yesterday at ${dateArray}` :
+                    `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+        }, display = (el, data, displayType) => {
+            if (data) el.innerHTML = data;
+            el.style.display = displayType || "unset";
+        }, hide = el => el.style.removeProperty('display'),
+        imgSrc = (elm, src, remove) => remove ? elm.style.removeProperty('content') : elm.style.content = `url(${src})`;
+    buildGui = (object, opts) => {
+        gui.innerHTML = `
+            <div class="item content"><p class="ttle">Message content</p></div>
+            <div class="edit">
+                <textarea class="editContent" placeholder="Message content" maxlength="2000" autocomplete="off">${encodeHTML(object.content || '')}</textarea>
+            </div>
+            <div class="item author rows2"><p class="ttle">Author</p></div>
+            <div class="edit">
+                <div class="linkName">
+                    <div class="editIcon">
+                        <span class="imgParent" ${object.embed?.author?.icon_url ? 'style="content: url(' + encodeHTML(object.embed.author.icon_url) + ')"' : ''}></span>
+                        <input class="editAuthorLink" type="text" value="${encodeHTML(object.embed?.author?.icon_url || '')}" placeholder="Icon URL" autocomplete="off"/>
+                    </div>
+                    <div class="editName">
+                        <input class="editAuthorName" type="text" maxlength="256" value="${encodeHTML(object.embed?.author?.name || '')}" placeholder="Author name" autocomplete="off" />
+                    </div>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    <input class="browserAuthorLink" type="file" name="file" id="file2" accept="image/png,image/gif,image/jpeg,image/webp" autocomplete="off" />
+                    <label for="file2">
+                        <div class="browse">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 64 64" xml:space="preserve">
+                                <g>
+                                    <path xmlns="http://www.w3.org/2000/svg" d="m23.414 21.414 6.586-6.586v29.172c0 1.104.896 2 2 2s2-.896 2-2v-29.172l6.586 6.586c.39.391.902.586 1.414.586s1.024-.195 1.414-.586c.781-.781.781-2.047 0-2.828l-10-10c-.78-.781-2.048-.781-2.828 0l-10 10c-.781.781-.781 2.047 0 2.828.78.781 2.048.781 2.828 0z" fill="#ffffff" data-original="#000000"></path>
+                                    <path xmlns="http://www.w3.org/2000/svg" d="m50 40c-1.104 0-2 .896-2 2v8c0 1.103-.897 2-2 2h-28c-1.103 0-2-.897-2-2v-8c0-1.104-.896-2-2-2s-2 .896-2 2v8c0 3.309 2.691 6 6 6h28c3.309 0 6-2.691 6-6v-8c0-1.104-.896-2-2-2z" fill="#ffffff" data-original="#000000"></path>
+                                </g>
+                            </svg>
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                                <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 15 ; 0 -15; 0 15" repeatCount="indefinite" begin="0.1"></animateTransform>
+                                </circle>
+                                <circle fill="#fff" stroke="none" cx="30" cy="50" r="6">
+                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 10 ; 0 -10; 0 10" repeatCount="indefinite" begin="0.2"></animateTransform>
+                                </circle>
+                                <circle fill="#fff" stroke="none" cx="54" cy="50" r="6">
+                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3"></animateTransform>
+                                </circle>
+                            </svg>
+                                </svg>
+                            </svg>
+                            <p></p>
+                        </div>
+                    </label>
+                </form>
+            </div>
+                </div>
+            </div>
+            <div class="item title inlineField">
+                <p class="ttle">Title</p>
+                <input class="editTitle" type="text" placeholder="Title" autocomplete="off" maxlength="256" value="${encodeHTML(object.embed?.title || '')}">
+            </div>
+            <div class="item description"><p class="ttle">Description</p></div>
+            <div class="edit">
+                <textarea class="editDescription" placeholder="Embed description" maxlength="2048" autocomplete="off">${encodeHTML(object.embed?.description || '')}</textarea>
+            </div>
+            <div class="item fields"><p class="ttle">Fields</p></div>
+            <div class="edit"></div>
+            <div class="item thumbnail largeImg"><p class="ttle">Thumbnail</p></div>
+            <div class="edit">
+                <div class="linkName">
+                    <div class="editIcon">
+                        <span class="imgParent" ${object.embed?.thumbnail?.url ? 'style="content: url(' + encodeHTML(object.embed.thumbnail.url) + ')"' : ''}></span>
+                        <div class="txtCol">
+                            <input class="editThumbnailLink" type="text" value="${encodeHTML(object.embed?.thumbnail?.url || '')}" placeholder="Thumbnail URL" autocomplete="off" />
+                            <form method="post" enctype="multipart/form-data">
+                                <input class="browseThumbLink" type="file" name="file" id="file3" accept="image/png,image/gif,image/jpeg,image/webp" autocomplete="off" />
+                                <label for="file3">
+                                    <div class="browse">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 64 64" xml:space="preserve">
+                                            <g>
+                                                <path xmlns="http://www.w3.org/2000/svg" d="m23.414 21.414 6.586-6.586v29.172c0 1.104.896 2 2 2s2-.896 2-2v-29.172l6.586 6.586c.39.391.902.586 1.414.586s1.024-.195 1.414-.586c.781-.781.781-2.047 0-2.828l-10-10c-.78-.781-2.048-.781-2.828 0l-10 10c-.781.781-.781 2.047 0 2.828.78.781 2.048.781 2.828 0z" fill="#ffffff" data-original="#000000"></path>
+                                                <path xmlns="http://www.w3.org/2000/svg" d="m50 40c-1.104 0-2 .896-2 2v8c0 1.103-.897 2-2 2h-28c-1.103 0-2-.897-2-2v-8c0-1.104-.896-2-2-2s-2 .896-2 2v8c0 3.309 2.691 6 6 6h28c3.309 0 6-2.691 6-6v-8c0-1.104-.896-2-2-2z" fill="#ffffff" data-original="#000000"></path>
+                                            </g>
+                                        </svg>
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                                            <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                                                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 15 ; 0 -15; 0 15" repeatCount="indefinite" begin="0.1"></animateTransform>
+                                            </circle>
+                                            <circle fill="#fff" stroke="none" cx="30" cy="50" r="6">
+                                                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 10 ; 0 -10; 0 10" repeatCount="indefinite" begin="0.2"></animateTransform>
+                                            </circle>
+                                            <circle fill="#fff" stroke="none" cx="54" cy="50" r="6">
+                                                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3"></animateTransform>
+                                            </circle>
+                                        </svg>
+                                        <p></p>
+                                    </div>
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item image largeImg"><p class="ttle">Image</p></div>
+            <div class="edit">
+                <div class="linkName">
+                    <div class="editIcon">
+                        <span class="imgParent" ${object.embed?.image?.url ? 'style="content: url(' + encodeHTML(object.embed.image.url) + ')"' : ''}></span>
+                        <div class="txtCol">
+                            <input class="editImageLink" type="text" value="${encodeHTML(object.embed?.image?.url || '')}" placeholder="Image URL" autocomplete="off" />
+                            <form method="post" enctype="multipart/form-data">
+                                <input class="browseImageLink" type="file" name="file" id="file4" accept="image/png,image/gif,image/jpeg,image/webp" autocomplete="off" />
+                                <label for="file4">
+                                    <div class="browse">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 64 64" xml:space="preserve">
+                                            <g>
+                                                <path xmlns="http://www.w3.org/2000/svg" d="m23.414 21.414 6.586-6.586v29.172c0 1.104.896 2 2 2s2-.896 2-2v-29.172l6.586 6.586c.39.391.902.586 1.414.586s1.024-.195 1.414-.586c.781-.781.781-2.047 0-2.828l-10-10c-.78-.781-2.048-.781-2.828 0l-10 10c-.781.781-.781 2.047 0 2.828.78.781 2.048.781 2.828 0z" fill="#ffffff" data-original="#000000"></path>
+                                                <path xmlns="http://www.w3.org/2000/svg" d="m50 40c-1.104 0-2 .896-2 2v8c0 1.103-.897 2-2 2h-28c-1.103 0-2-.897-2-2v-8c0-1.104-.896-2-2-2s-2 .896-2 2v8c0 3.309 2.691 6 6 6h28c3.309 0 6-2.691 6-6v-8c0-1.104-.896-2-2-2z" fill="#ffffff" data-original="#000000"></path>
+                                            </g>
+                                        </svg>
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                                            <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                                                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 15 ; 0 -15; 0 15" repeatCount="indefinite" begin="0.1"></animateTransform>
+                                            </circle>
+                                            <circle fill="#fff" stroke="none" cx="30" cy="50" r="6">
+                                                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 10 ; 0 -10; 0 10" repeatCount="indefinite" begin="0.2"></animateTransform>
+                                            </circle>
+                                            <circle fill="#fff" stroke="none" cx="54" cy="50" r="6">
+                                                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3"></animateTransform>
+                                            </circle>
+                                        </svg>
+                                        <p></p>
+                                    </div>
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item footer rows2"><p class="ttle">Footer</p></div>
+            <div class="edit">
+                <div class="linkName">
+                    <div class="editIcon">
+                        <span class="imgParent" ${object.embed?.footer?.icon_url ? 'style="content: url(' + encodeHTML(object.embed.footer.icon_url) + ')"' : ''}></span>
+                        <input class="editFooterLink" type="text" value="${encodeHTML(object.embed?.footer?.icon_url || '')}" placeholder="Icon URL" autocomplete="off"/>
+                    </div>
+                    <div class="editName">
+                        <input class="editFooterText" type="text" maxlength="2048" value="${encodeHTML(object.embed?.footer?.text || '')}" placeholder="Footer text" autocomplete="off" />
+                    </div>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    <input class="browserFooterLink" type="file" name="file" id="file" accept="image/png,image/gif,image/jpeg,image/webp" autocomplete="off" />
+                    <label for="file">
+                        <div class="browse">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 64 64" xml:space="preserve">
+                                <g>
+                                    <path xmlns="http://www.w3.org/2000/svg" d="m23.414 21.414 6.586-6.586v29.172c0 1.104.896 2 2 2s2-.896 2-2v-29.172l6.586 6.586c.39.391.902.586 1.414.586s1.024-.195 1.414-.586c.781-.781.781-2.047 0-2.828l-10-10c-.78-.781-2.048-.781-2.828 0l-10 10c-.781.781-.781 2.047 0 2.828.78.781 2.048.781 2.828 0z" fill="#ffffff" data-original="#000000"></path>
+                                    <path xmlns="http://www.w3.org/2000/svg" d="m50 40c-1.104 0-2 .896-2 2v8c0 1.103-.897 2-2 2h-28c-1.103 0-2-.897-2-2v-8c0-1.104-.896-2-2-2s-2 .896-2 2v8c0 3.309 2.691 6 6 6h28c3.309 0 6-2.691 6-6v-8c0-1.104-.896-2-2-2z" fill="#ffffff" data-original="#000000"></path>
+                                </g>
+                            </svg>
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                                <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
+                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 15 ; 0 -15; 0 15" repeatCount="indefinite" begin="0.1"></animateTransform>
+                                </circle>
+                                <circle fill="#fff" stroke="none" cx="30" cy="50" r="6">
+                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 10 ; 0 -10; 0 10" repeatCount="indefinite" begin="0.2"></animateTransform>
+                                </circle>
+                                <circle fill="#fff" stroke="none" cx="54" cy="50" r="6">
+                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3"></animateTransform>
+                                </circle>
+                            </svg>
+                                </svg>
+                            </svg>
+                            <p></p>
+                        </div>
+                    </label>
+                </form>
+            </div>`;
+
+        let fieldsEditor = gui.querySelector('.fields ~ .edit'), addField = `
+            <div class="addField">
+                <p>New Field</p>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" x="0" y="0" viewBox="0 0 477.867 477.867" xml:space="preserve">
+                    <g>
+                        <g xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <path d="M392.533,0h-307.2C38.228,0.056,0.056,38.228,0,85.333v307.2c0.056,47.105,38.228,85.277,85.333,85.333h307.2    c47.105-0.056,85.277-38.228,85.333-85.333v-307.2C477.81,38.228,439.638,0.056,392.533,0z M443.733,392.533    c0,28.277-22.923,51.2-51.2,51.2h-307.2c-28.277,0-51.2-22.923-51.2-51.2v-307.2c0-28.277,22.923-51.2,51.2-51.2h307.2    c28.277,0,51.2,22.923,51.2,51.2V392.533z" fill="#ffffff" data-original="#000000"
+                                ></path>
+                            </g>
+                        </g>
+                        <g xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <path d="M324.267,221.867H256V153.6c0-9.426-7.641-17.067-17.067-17.067s-17.067,7.641-17.067,17.067v68.267H153.6    c-9.426,0-17.067,7.641-17.067,17.067S144.174,256,153.6,256h68.267v68.267c0,9.426,7.641,17.067,17.067,17.067    S256,333.692,256,324.267V256h68.267c9.426,0,17.067-7.641,17.067-17.067S333.692,221.867,324.267,221.867z" fill="#ffffff" data-original="#000000"></path>
+                            </g>
+                        </g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                        <g xmlns="http://www.w3.org/2000/svg"></g>
+                    </g>
+                </svg>
+            </div>`;
+        if (object.embed?.fields) fieldsEditor.innerHTML = object.embed.fields.filter(f => f && typeof f === 'object').map(f => `
+            <div class="field">
+                <div class="fieldNumber"></div>
+                <div class="fieldInner">
+                    <div class="designerFieldName">
+                        <input type="text" placeholder="Field name" autocomplete="off" maxlength="256" value="${encodeHTML(f.name)}">
+                    </div>
+                    <div class="designerFieldValue">
+                        <textarea placeholder="Field value" autocomplete="off" maxlength="1024">${encodeHTML(f.value)}</textarea>
+                    </div>
+                </div>
+                <div class="inlineCheck">
+                    <label>
+                        <input type="checkbox" autocomplete="off" ${f.inline ? 'checked' : ''}>
+                        <span>Inline</span>
+                    </label>
+                </div>
+                <div class="removeBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 329.26933 329" xml:space="preserve">
+                        <g>
+                            <path xmlns="http://www.w3.org/2000/svg" d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" fill="#ffffff" data-original="#000000"/>
+                        </g>
+                    </svg>
+                    <span>Remove</span>
+                </div>
+            </div>`).join('\n') + addField;
+        else fieldsEditor.innerHTML = addField;
+
+        gui.querySelectorAll('.removeBtn').forEach(e => {
+            e.addEventListener('click', el => {
+                fields = gui.querySelector('.fields ~ .edit');
+                let field = el.target.closest('.field');
+                if (field) {
+                    let i = Array.from(fields.children).indexOf(field), jsonField = object.embed.fields[i];
+                    if (jsonField) {
+                        object.embed.fields.splice(i, 1);
+                        field.remove();
+                        update(object);
+                    }
+                }
+            })
+        })
+
+        document.querySelectorAll('.gui > .item').forEach(e => {
+            e.addEventListener('click', el => {
+                let elm = (el.target.closest('.top>.gui>.item') || el.target);
+                if (elm.classList.contains('active')) window.getSelection().anchorNode !== elm && elm.classList.remove('active');
+                else {
+                    let inlineField = elm.closest('.inlineField'),
+                        input = elm.nextElementSibling.querySelector('input[type="text"]'),
+                        txt = elm.nextElementSibling.querySelector('textarea');
+                    elm.classList.add('active');
+                    if (inlineField) inlineField.querySelector('.ttle~input').focus();
+                    else if (input) {
+                        if (!smallerScreen.matches)
+                            input.focus();
+                        input.selectionStart = input.selectionEnd = input.value.length;
+                    } else if (txt && !smallerScreen.matches)
+                        txt.focus();
+                    if (elm.classList.contains('fields')) {
+                        if (reverseColmns && smallerScreen.matches)
+                            // return elm.nextElementSibling.scrollIntoView({ behavior: 'smooth', block: "end" });
+                            return elm.parentNode.scrollTop = elm.offsetTop;
+                        elm.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                }
+            })
+        })
+
+        // Scroll into view when tabs are opened in the GUI.
+        let lastTabs = Array.from(document.querySelectorAll('.footer.rows2, .image.largeImg')),
+            requiresView = matchMedia(`${smallerScreen.media}, (max-height: 845px)`);
+        document.querySelectorAll('.gui>.item:not(.fields)').forEach(e => e.addEventListener('click', () => {
+            if (lastTabs.includes(e) || requiresView.matches) {
+                if (!reverseColmns || !smallerScreen.matches) e.scrollIntoView({ behavior: 'smooth', block: "center" });
+                else if (e.nextElementSibling.classList.contains('edit') && e.classList.contains('active'))
+                    // e.nextElementSibling.scrollIntoView({ behavior: 'smooth', block: "end" });
+                    e.parentNode.scrollTop = e.offsetTop;
+            }
+        }));
+
+        content = gui.querySelector('.editContent');
+        title = gui.querySelector('.editTitle');
+        authorName = gui.querySelector('.editAuthorName');
+        authorLink = gui.querySelector('.editAuthorLink');
+        desc = gui.querySelector('.editDescription');
+        thumbLink = gui.querySelector('.editThumbnailLink');
+        imgLink = gui.querySelector('.editImageLink');
+        footerText = gui.querySelector('.editFooterText');
+        footerLink = gui.querySelector('.editFooterLink');
+        fields = gui.querySelector('.fields ~ .edit');
+
+        document.querySelector('.addField').addEventListener('click', () => {
+            !json.embed && (json.embed = {});
+            let arr = json.embed.fields || [];
+            if (arr.length >= 25) return error('Cannot have more than 25 fields', 5000);
+            arr.push({ name: "Field name", value: "Field value", inline: false });
+            json.embed.fields = arr;
+            update(json);
+            buildGui(json, { newField: true, activate: document.querySelectorAll('.gui > .item.active') });
+        })
+
+        gui.querySelectorAll('textarea, input').forEach(e => e.addEventListener('input', el => {
+            let value = el.target.value, field = el.target.closest('.field');
+            if (field) {
+                let jsonField = json.embed.fields[Array.from(fields.children).filter(e => e.className === 'field').indexOf(field)];
+                if (jsonField) {
+                    if (el.target.type === 'text') jsonField.name = value;
+                    else if (el.target.type === 'textarea') jsonField.value = value;
+                    else jsonField.inline = el.target.checked;
+                } else {
+                    let obj = {}
+                    if (el.target.type === 'text') obj.name = value;
+                    else if (el.target.type === 'textarea') obj.value = value;
+                    else obj.inline = el.target.checked;
+                    json.embed.fields.push(obj);
+                }
+            } else {
+                json.embed ??= {};
+                switch (el.target) {
+                    case content: json.content = value; break;
+                    case title: json.embed.title = value; break;
+                    case authorName: json.embed.author ??= {}, json.embed.author.name = value; break;
+                    case authorLink: json.embed.author ??= {}, json.embed.author.icon_url = value, imgSrc(el.target.previousElementSibling, value); break;
+                    case desc: json.embed.description = value; break;
+                    case thumbLink: json.embed.thumbnail ??= {}, json.embed.thumbnail.url = value, imgSrc(el.target.closest('.editIcon').querySelector('.imgParent'), value); break;
+                    case imgLink: json.embed.image ??= {}, json.embed.image.url = value, imgSrc(el.target.closest('.editIcon').querySelector('.imgParent'), value); break;
+                    case footerText: json.embed.footer ??= {}, json.embed.footer.text = value; break;
+                    case footerLink: json.embed.footer ??= {}, json.embed.footer.icon_url = value, imgSrc(el.target.previousElementSibling, value); break;
+                }
+            }
+            update(json);
+        }))
+
+        if (opts?.guiTabs) {
+            let tabs = opts.guiTabs.split(/, */), bottomKeys = ['footer', 'image'], topKeys = ['author', 'content'];
+            document.querySelectorAll(`.${tabs.join(', .')}`).forEach(e => e.classList.add('active'));
+
+            // Autoscroll GUI to the bottom if necessary.
+            if (!tabs.some(item => topKeys.includes(item)) && tabs.some(item => bottomKeys.includes(item))) {
+                let gui2 = document.querySelector('.top .gui');
+                gui2.scrollTo({ top: gui2.scrollHeight });
+            }
+        } else if (opts?.activate) {
+            Array.from(opts.activate).map(el => el.className).map(clss => '.' + clss.split(' ').slice(0, 2).join('.'))
+                .forEach(clss => document.querySelectorAll(clss)
+                    .forEach(e => e.classList.add('active')))
+        } else
+            document.querySelectorAll('.item.author, .item.description').forEach(clss => clss.classList.add('active'));
+
+        if (opts?.newField) {
+            let last = fields.children[fields.childElementCount - 2], el = last.querySelector('.designerFieldName > input');
+            el.setSelectionRange(el.value.length, el.value.length); el.focus();
+            last.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        let upload = form => {
+            let formData = new FormData(form);
+            formData.append('file', files.files);
+            formData.append('datetime', '10m');
+            fetch('https://tempfile.site/api/files', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(res => res.json())
+                .then(res => {
+                    let browse = form.closest('.edit').querySelector('.browse');
+                    browse.classList.remove('loading');
+                    if (!res.ok) {
+                        console.log(res.error);
+                        browse.classList.add('error');
+                        return setTimeout(() => browse.classList.remove('error'), 5000)
+                    }
+                    imgSrc(form.previousElementSibling.querySelector('.editIcon > .imgParent') || form.closest('.editIcon').querySelector('.imgParent'), res.link);
+                    let input = form.previousElementSibling.querySelector('.editIcon > input') || form.previousElementSibling;
+                    input.value = res.link;
+                    if (input === authorLink) ((json.embed ??= {}).author ??= {}).icon_url = res.link;
+                    else if (input === thumbLink) ((json.embed ??= {}).thumbnail ??= {}).url = res.link;
+                    else if (input === imgLink) ((json.embed ??= {}).image ??= {}).url = res.link;
+                    else ((json.embed ??= {}).footer ??= {}).icon_url = res.link;
+                    update(json);
+                    console.info(`Image (${res.link}) will be deleted in 10 minutes. To delete it now, go to ${res.link.replace('/files', '/del')} and enter this code: ${res.authkey}`);
+                }).catch(err => error(`Request to tempfile.site failed with error: ${err}`, 5000))
+        }
+
+        let files = document.querySelectorAll('input[type="file"]');
+        files.forEach(f => f.addEventListener('change', e => {
+            if (f.files) {
+                upload(e.target.parentElement);
+                e.target.closest('.edit').querySelector('.browse').classList.add('loading');
+            }
+        }))
+    }
+
+    buildGui(json, { guiTabs });
+    fields = gui.querySelector('.fields ~ .edit');
+    update = data => {
+        try {
+            if (!data.content) document.body.classList.add('emptyContent');
+            else {
+                embedContent.innerHTML = markup(encodeHTML(data.content), { replaceEmojis: true });
+                document.body.classList.remove('emptyContent');
+            }
+            if (data.embed && Object.keys(data.embed).length) {
+                let e = data.embed;
+                if (!allGood(e)) return;
+                validationError = false;
+                if (e.title) display(embedTitle, markup(`${e.url ? '<a class="anchor" target="_blank" href="' + encodeHTML(url(e.url)) + '">' + encodeHTML(e.title) + '</a>' : encodeHTML(e.title)}`, { replaceEmojis: true, inlineBlock: true }));
+                else hide(embedTitle);
+                if (e.description) display(embedDescription, markup(encodeHTML(e.description), { inEmbed: true, replaceEmojis: true }));
+                else hide(embedDescription);
+                if (e.color) embed.closest('.embed').style.borderColor = (typeof e.color === 'number' ? '#' + e.color.toString(16).padStart(6, "0") : e.color);
+                else embed.closest('.embed').style.removeProperty('border-color');
+                if (e.author?.name) display(embedAuthor, `
+                ${e.author.icon_url ? '<img class="embedAuthorIcon" src="' + encodeHTML(url(e.author.icon_url)) + '">' : ''}
+                ${e.author.url ? '<a class="embedAuthorNameLink embedLink embedAuthorName" href="' + encodeHTML(url(e.author.url)) + '" target="_blank">' + encodeHTML(e.author.name) + '</a>' : '<span class="embedAuthorName">' + encodeHTML(e.author.name) + '</span>'}`, 'flex');
+                else hide(embedAuthor);
+                let pre = embed.querySelector('.markup pre');
+                if (e.thumbnail?.url) {
+                    embedThumbnail.src = e.thumbnail.url,
+                        embedThumbnail.parentElement.style.display = 'block';
+                    if (pre) pre.style.maxWidth = '90%';
+                } else {
+                    hide(embedThumbnail.parentElement);
+                    if (pre) pre.style.removeProperty('max-width');
+                }
+                if (e.image?.url)
+                    embedImage.src = e.image.url,
+                        embedImage.parentElement.style.display = 'block';
+                else hide(embedImage.parentElement);
+                if (e.footer?.text) display(embedFooter, `
+                    ${e.footer.icon_url ? '<img class="embedFooterIcon" src="' + encodeHTML(url(e.footer.icon_url)) + '">' : ''}<span class="embedFooterText">
+                        ${encodeHTML(e.footer.text)}
+                    ${e.timestamp ? '<span class="embedFooterSeparator">•</span>' + encodeHTML(tstamp(e.timestamp)) : ''}</span></div>`, 'flex');
+                else if (e.timestamp) display(embedFooter, `<span class="embedFooterText">${encodeHTML(tstamp(e.timestamp))}</span></div>`, 'flex');
+                else hide(embedFooter);
+                if (e.fields) {
+                    embedFields.innerHTML = '';
+                    let index, gridCol;
+
+                    e.fields.forEach((f, i) => {
+                        if (f.name && f.value) {
+                            let fieldElement = embedFields.insertBefore(document.createElement('div'), null);
+                            // Figuring out if there are only two fields on a row to give them more space.
+                            // e.fields = json.embeds.fields.
+
+                            // if both the field of index 'i' and the next field on its right are inline and -
+                            if (e.fields[i].inline && e.fields[i + 1]?.inline &&
+                                // it's the first field in the embed or -
+                                ((i === 0 && e.fields[i + 2] && !e.fields[i + 2].inline) || ((
+                                    // it's not the first field in the embed but the previous field is not inline or -
+                                    i > 0 && !e.fields[i - 1].inline ||
+                                    // it has 3 or more fields behind it and 3 of those are inline except the 4th one back if it exists -
+                                    i >= 3 && e.fields[i - 1].inline && e.fields[i - 2].inline && e.fields[i - 3].inline && (e.fields[i - 4] ? !e.fields[i - 4].inline : !e.fields[i - 4])
+                                    // or it's the first field on the last row or the last field on the last row is not inline or it's the first field in a row and it's the last field on the last row.
+                                ) && (i == e.fields.length - 2 || !e.fields[i + 2].inline))) || i % 3 === 0 && i == e.fields.length - 2) {
+                                // then make the field halfway (and the next field will take the other half of the embed).
+                                index = i, gridCol = '1 / 7';
+                            }
+                            // The next field.
+                            if (index === i - 1)
+                                gridCol = '7 / 13';
+
+                            if (!f.inline)
+                                fieldElement.outerHTML = `
+                                    <div class="embedField" style="grid-column: 1 / 13;">
+                                        <div class="embedFieldName">${markup(encodeHTML(f.name), { inEmbed: true, replaceEmojis: true, inlineBlock: true })}</div>
+                                        <div class="embedFieldValue">${markup(encodeHTML(f.value), { inEmbed: true, replaceEmojis: true })}</div>
+                                    </div>`;
+                            else {
+                                if (i && !e.fields[i - 1].inline) colNum = 1;
+
+                                fieldElement.outerHTML = `
+                                    <div class="embedField ${num}${gridCol ? ' colNum-2' : ''}" style="grid-column: ${gridCol || (colNum + ' / ' + (colNum + 4))};">
+                                        <div class="embedFieldName">${markup(encodeHTML(f.name), { inEmbed: true, replaceEmojis: true, inlineBlock: true })}</div>
+                                        <div class="embedFieldValue">${markup(encodeHTML(f.value), { inEmbed: true, replaceEmojis: true })}</div>
+                                    </div>`;
+
+                                if (index !== i) gridCol = false;
+                            }
+                            colNum = (colNum === 9 ? 1 : colNum + 4);
+                            num++;
+                        }
+                    });
+
+                    document.querySelectorAll('.embedField[style="grid-column: 1 / 5;"]').forEach(e => {
+                        if (!e.nextElementSibling || e.nextElementSibling.style.gridColumn === '1 / 13')
+                            e.style.gridColumn = '1 / 13';
+                    });
+                    colNum = 1;
+
+                    display(embedFields, undefined, 'grid');
+                } else hide(embedFields);
+                document.body.classList.remove('emptyEmbed');
+                document.querySelectorAll('.markup pre > code').forEach((block) => hljs.highlightBlock(block));
+                error(false);
+                twemoji.parse(msgEmbed);
+            } else document.body.classList.add('emptyEmbed');
+            if (!embedCont.innerText) document.body.classList.add('emptyEmbed');
+            json = data;
+        } catch (e) {
+            console.log(e);
+            error(e);
+        }
+        window.parent.postMessage(['{{msgSource}}', json], '*');
+        console.log("UPDATED")
+    }
+
+    editor.on('change', editor => {
+        // // Autofill when " key is typed on new line
+        // let line = editor.getCursor().line, text = editor.getLine(line)
+        // if (text.trim() === '"') {
+        //     editor.replaceRange(text.trim() + ': ', { line, ch: line.length });
+        //     editor.setCursor(line, text.length)
+        // }
+
+        let jsonData = JSON.parse(editor.getValue()), dataKeys = Object.keys(jsonData);
+        if (!dataKeys.includes('embed') && !dataKeys.includes('embed') && mainKeys.some(key => dataKeys.includes(key))) {
+            editor.setValue(JSON.stringify({ embed: jsonData }, null, 4));
+            editor.refresh();
+        }
+
+        try {
+            if (dataKeys.length && !jsonKeys.some(key => dataKeys.includes(key))) {
+                let usedKeys = dataKeys.filter(key => !jsonKeys.includes(key));
+                if (usedKeys.length > 2)
+                    return error(`'${usedKeys[0] + "', '" + usedKeys.slice(1, usedKeys.length - 1).join("', '")}', and '${usedKeys[usedKeys.length - 1]}' are invalid keys.`);
+                return error(`'${usedKeys.length == 2 ? usedKeys[0] + "' and '" + usedKeys[usedKeys.length - 1] + "' are invalid keys." : usedKeys[0] + "' is an invalid key."}`);
+            } else if (!validationError)
+                error(false);
+            update(jsonData);
+        }
+        catch (e) {
+            if (editor.getValue()) return;
+            document.body.classList.add('emptyEmbed');
+            embedContent.innerHTML = '';
+        }
+    });
+
+    let picker = new CP(document.querySelector('.picker'), state = { parent: document.querySelector('.cTop') });
+    picker.fire('change', toRGB('#41f097'));
+
+    let colrs = document.querySelector('.colrs'),
+        hexInput = colrs.querySelector('.hex>div input'),
+        typingHex = true, exit = false,
+        removePicker = () => {
+            if (exit) return exit = false;
+            if (typingHex) picker.enter();
+            else {
+                typingHex = false, exit = true;
+                colrs.classList.remove('picking');
+                picker.exit();
+            }
+        }
+    document.querySelector('.colBack').addEventListener('click', () => {
+        picker.self.remove();
+        typingHex = false;
+        removePicker();
+    })
+
+    picker.on('exit', removePicker);
+    picker.on('enter', () => {
+        if (json?.embed?.color) {
+            hexInput.value = json.embed.color.toString(16).padStart(6, '0');
+            document.querySelector('.hex.incorrect')?.classList.remove('incorrect');
+        }
+        colrs.classList.add('picking')
+    })
+
+    document.querySelectorAll('.colr').forEach(e => e.addEventListener('click', el => {
+        el = el.target.closest('.colr') || el.target;
+        embed.closest('.embed').style.borderColor = el.style.backgroundColor;
+        json.embed && (json.embed.color = toRGB(el.style.backgroundColor, false, true));
+        picker.source.style.removeProperty('background');
+    }))
+
+    hexInput.addEventListener('focus', () => typingHex = true);
+    setTimeout(() => {
+        picker.on('change', function (r, g, b, a) {
+            embed.closest('.embed').style.borderColor = this.color(r, g, b);
+            json.embed && (json.embed.color = parseInt(this.color(r, g, b).slice(1), 16));
+            picker.source.style.background = this.color(r, g, b);
+            hexInput.value = json.embed.color.toString(16).padStart(6, '0');
+        })
+    }, 1000)
+
+    document.querySelector('.timeText').innerText = tstamp();
+    document.querySelectorAll('.markup pre > code').forEach((block) => hljs.highlightBlock(block));
+
+    document.querySelector('.opt.gui').addEventListener('click', () => {
+        json = JSON.parse(editor.getValue() || '{}');
+        buildGui(json, { activate: activeFields });
+        document.body.classList.add('gui');
+        activeFields = null;
+        if (pickInGuiMode) {
+            pickInGuiMode = false;
+            togglePicker();
+        }
+    })
+
+    document.querySelector('.opt.json').addEventListener('click', () => {
+        let jsonData = JSON.stringify(json, null, 4);
+        editor.setValue(jsonData === '{}' ? '{\n\t\n}' : jsonData);
+        editor.refresh();
+        document.body.classList.remove('gui');
+        // if (!smallerScreen.matches)
+        editor.focus();
+        activeFields = document.querySelectorAll('.gui > .item.active');
+        if (document.querySelector('section.low'))
+            togglePicker(true);
+    })
+
+    document.querySelector('.clear').addEventListener('click', () => {
+        json = {};
+        embed.style.removeProperty('border-color');
+        picker.source.style.removeProperty('background');
+        update(json); buildGui(json); editor.setValue('{\n\t\n}');
+        document.querySelectorAll('.gui>.item').forEach(e => e.classList.add('active'));
+        if (!smallerScreen.matches)
+            content.focus();
+    })
+
+    document.querySelectorAll('.img').forEach(e => {
+        if (e.nextElementSibling?.classList.contains('spinner-container'))
+            e.addEventListener('error', el => {
+                el.target.style.removeProperty('display');
+                el.target.nextElementSibling.style.display = 'block';
+            })
+    })
+
+    let pickInGuiMode = false;
+    togglePicker = pickLater => {
+        colrs.classList.toggle('display');
+        document.querySelector('.side1').classList.toggle('low');
+        pickLater && (pickInGuiMode = true);
+    };
+
+    document.querySelector('.pickerToggle').addEventListener('click', togglePicker);
+    update(json);
+
+    document.body.addEventListener('click', e => {
+        if (e.target.classList.contains('low') || (e.target.classList.contains('top') && colrs.classList.contains('display')))
+            togglePicker();
+    })
+
+    document.querySelector('.colrs .hex>div').addEventListener('input', e => {
+        let inputValue = e.target.value;
+        if (inputValue.startsWith('#'))
+            e.target.value = inputValue.slice(1), inputValue = e.target.value;
+        if (inputValue.length !== 6 || !/^[a-zA-Z0-9]{6}$/g.test(inputValue))
+            return e.target.closest('.hex').classList.add('incorrect');
+        e.target.closest('.hex').classList.remove('incorrect');
+        json.embed.color = parseInt(inputValue, 16);
+        update(json);
+    })
+
+    if (onlyEmbed) document.querySelector('.side1')?.remove();
+};</script>
+    </head>
+    <body class="gui emptyEmbed">
+        <div class="main">
+            <section class="side1 noDisplay">
+                <div class="chooser">
+                    <div class="back"></div>
+                    <div class="gui opt">
+                        <p>GUI</p>
+                    </div>
+                    <div class="json opt">
+                        <p>JSON</p>
+                    </div>
+                    <div class="clear">
+                        <svg title="clear everything" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" xml:space="preserve">
+                            <g>
+                                <path d="M740.4,401.4c-46-25.4-92.5-49.9-139.1-74.2c-36.3-18.9-73.3-19.2-110-0.9c-22,11-38.8,27.5-50.4,49.9c116.5,62,232.2,123.6,348.7,185.6c2.2-5.1,4.4-9.3,6-13.7C816.7,491.3,794.5,431.2,740.4,401.4z" style="fill: #fff;"></path>
+                                <path d="M875.6,35.1c-9.2-12.8-21.9-20.4-37.2-23.8c-16.7-3.7-26.1,0.2-35,14.3c-53,84.6-106,169.2-159,253.8c-1.7,2.7-3.2,5.4-4.8,8.1c1,1.1,1.5,2,2.3,2.4c36.2,19.3,72.4,38.6,109.1,58.2c1.3-2.1,2-3.1,2.6-4.2c41.6-93.9,83.1-187.8,124.8-281.6C882.7,52.3,881.7,43.5,875.6,35.1z" style="fill: #fff;"></path>
+                                <path d="M754.3,597.7c7.1-18.1-1.8-38.5-19.9-45.6c-18-7.2-38.5,1.7-45.6,19.8c-3.7,9.4-80.7,208.2-18.2,347.6c-29.6-0.3-76.3-7.1-141.9-31.8c-12.2-38-20.9-97.3,5.7-166.9c0,0-63.7,72.8-74.3,137.5c-13.7-6.6-28-13.8-43-21.8c-15-8.1-28.9-16-42-23.8c48.1-44.6,73.5-137.9,73.5-137.9c-43.3,60.6-97.5,86.2-135.9,97c-57.1-41.1-88.6-76.3-105.1-100.6c150.8-25,273.9-199.1,279.7-207.4c11.1-15.9,7.2-37.9-8.7-48.9c-15.9-11.2-37.8-7.2-49,8.7c-1.4,1.9-137.8,193.7-271.7,179.5c-10.4-1.1-21,2.5-28.6,10c-7.5,7.5-11.3,17.9-10.2,28.5c1.3,12.4,19.5,125.3,264.8,256.9C522.1,972.6,615.5,990,672.6,990c44.3,0,66.9-10.4,71.7-13c9.4-4.9,16-13.8,18.1-24.3c2.1-10.4-0.7-21.2-7.5-29.4C668.7,819.5,753.5,599.9,754.3,597.7z" style="fill: #fff;"></path>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="pickerToggle">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve">
+                            <path style="fill:#D8D8DA;" d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z   M256,336.842c-44.648,0-80.842-36.194-80.842-80.842s36.194-80.842,80.842-80.842s80.842,36.194,80.842,80.842  S300.648,336.842,256,336.842z"></path>
+                            <path style="fill:#D4B6E6;" d="M282.947,188.632h220.076C485.09,122.726,441.507,67.394,383.64,34.044L229.053,188.632H282.947z"></path>
+                            <path style="fill:#EBAFD1;" d="M229.053,188.632L383.639,34.044C346.068,12.39,302.482,0,256,0c-23.319,0-45.899,3.135-67.368,8.978  v220.075L229.053,188.632z"></path>
+                            <path style="fill:#E07188;" d="M188.632,229.053V8.978C122.726,26.91,67.394,70.493,34.045,128.36l154.586,154.588V229.053z"></path>
+                            <g>
+                                <polygon style="fill:#D8D8DA;" points="188.632,229.053 229.053,188.633 282.947,188.633 282.947,188.632 229.053,188.632  "></polygon>
+                                <polygon style="fill:#D8D8DA;" points="229.053,323.367 188.632,282.947 229.053,323.368 282.947,323.368 323.368,282.947    282.947,323.367  "></polygon>
+                            </g>
+                            <path style="fill:#B4D8F1;" d="M503.024,188.632H282.947v0.001h0.958l39.463,40.42L477.955,383.64  C499.611,346.068,512,302.482,512,256C512,232.681,508.865,210.099,503.024,188.632z"></path>
+                            <path style="fill:#ACFFF4;" d="M323.368,282.947v220.075c65.905-17.932,121.238-61.517,154.586-119.382L323.368,229.053V282.947z"></path>
+                            <path style="fill:#95D5A7;" d="M282.947,323.368L128.361,477.956C165.932,499.61,209.518,512,256,512  c23.319,0,45.899-3.135,67.368-8.977V282.947L282.947,323.368z"></path>
+                            <path style="fill:#F8E99B;" d="M229.053,323.368H8.976C26.91,389.274,70.493,444.606,128.36,477.956l154.588-154.588H229.053z"></path>
+                            <path style="fill:#EFC27B;" d="M188.632,282.947L34.045,128.36C12.389,165.932,0,209.518,0,256c0,23.319,3.135,45.901,8.976,67.368  h220.076L188.632,282.947z"></path>
+                            <polygon style="fill:#D8D8DA;" points="283.905,188.633 282.947,188.633 323.368,229.053 "></polygon>
+                            <path style="fill:#B681D5;" d="M503.024,188.632C485.09,122.726,441.507,67.394,383.64,34.044L256,161.684v26.947h26.947H503.024z"></path>
+                            <path style="fill:#E592BF;" d="M383.639,34.044C346.068,12.39,302.482,0,256,0v161.684L383.639,34.044z"></path>
+                            <path style="fill:#80CB93;" d="M256,350.316V512c23.319,0,45.899-3.135,67.368-8.977V282.947l-40.421,40.421L256,350.316z"></path>
+                            <polygon style="fill:#F6E27D;" points="282.947,323.368 256,323.368 256,350.316 "></polygon>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                            <g></g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="top item">
+                    <div class="gui"></div>
+                    <div class="editorHolder"></div>
+                </div>
+                <div class="bottom item">
+                    <div class="colrs high">
+                        <div class="hex">
+                            <div>
+                               <span>
+                                    <span>#</span>
+                                    <input placeholder="Hex code" autocomplete="off">
+                               </span>
+                            </div>
+                         </div>
+                        <div class="col colLeft">
+                            <div class="picker">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" x="0" y="0" viewBox="0 0 390.954 390.955" xml:space="preserve">
+                                    <g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                            <g>
+                                                <path d="M377.314,27.704C360.761,0.494,325.283-8.145,298.076,8.41l-52.561,31.977l-3.607-5.932    c-10.484-17.229-32.947-22.7-50.179-12.218C174.5,32.72,169.032,55.184,179.512,72.415l7.162,11.771L60.314,161.652    c-11.612,7.065-30.483,32.364-35.989,39.95c-2.97,4.09-3.191,9.563-0.565,13.881l24.784,40.738    c2.627,4.317,7.591,6.637,12.587,5.88c9.269-1.402,40.41-6.529,52.024-13.596l126.357-77.467l7.161,11.771    c10.481,17.229,32.946,22.7,50.178,12.217c17.229-10.481,22.699-32.946,12.217-50.177l-3.607-5.93l52.561-31.978    C385.229,90.389,393.868,54.912,377.314,27.704z M100.124,227.084l-0.694-59.882l85.469-52.59    c0.715,8.641,3.392,17.25,8.204,25.161c4.812,7.911,11.229,14.245,18.571,18.853L100.124,227.084z" fill="#ffffff" data-original="#000000"></path>
+                                                <path d="M52.666,276.584c-1.823-1.458-4.413-1.459-6.238-0.003C44.745,277.922,5.23,309.82,5.23,343.554    c0,27.909,18.223,47.4,44.314,47.4c26.836,0,46.314-19.936,46.314-47.4C95.859,311.472,54.43,277.995,52.666,276.584z     M55.582,378.402c-0.414,0.104-0.829,0.155-1.237,0.155c-2.231,0-4.266-1.506-4.842-3.769c-0.68-2.672,0.931-5.389,3.6-6.075    c0.915-0.241,20.916-5.754,20.913-25.823c0-2.762,2.237-5,4.999-5.001c2.762,0,5.001,2.238,5.001,4.999    C84.02,365.254,65.417,375.898,55.582,378.402z" fill="#ffffff" data-original="#000000"></path>
+                                            </g>
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                        <g xmlns="http://www.w3.org/2000/svg">
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="colr" style="background: #41f097"></div>
+                        </div>
+                        <div class="col colRight">
+                            <div class="colBack">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 512 512" xml:space="preserve"><g><g xmlns="http://www.w3.org/2000/svg"><path d="m377 91h-362c-8.291 0-15 6.709-15 15v30c0 8.291 6.709 15 15 15h362c41.353 0 75 33.647 75 75s-33.647 75-75 75h-121v-45c0-5.742-3.281-10.986-8.452-13.491s-11.323-1.846-15.85 1.714l-94.995 75c-3.604 2.842-5.698 7.192-5.698 11.777s2.095 8.936 5.698 11.777l94.995 75c4.554 3.569 10.688 4.222 15.85 1.714 5.171-2.504 8.452-7.749 8.452-13.491v-45h121c74.443 0 135-60.557 135-135s-60.557-135-135-135z" fill="#ffffff" data-original="#000000"></path></g></g></svg>
+                            </div>
+                            <div class="cTop">
+                                <h2>Embed {{Colour}}</h2>
+                                <p class="desc">Pick the embed {{colour}}</p>
+                            </div>
+                            <div class="pallets">
+                                <div class="colr" class="colr" style="background: #00bb9c"></div>
+                                <div class="colr" style="background: #00cb74"></div>
+                                <div class="colr" style="background: #0098d9"></div>
+                                <div class="colr" style="background: #a05bb4"></div>
+                                <div class="colr" style="background: #f52565"></div>
+                                <div class="colr" style="background: #f6c42f"></div>
+                                <div class="colr" style="background: #ef7f31"></div>
+                                <div class="colr" style="background: #f24e43"></div>
+                                <div class="colr" style="background: #93a5a6"></div>
+                                <div class="colr" style="background: #5c7d8a"></div>
+                                <div class="colr" style="background: #00806a"></div>
+                                <div class="colr" style="background: #008a4e"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="side2">
+                <div class="msgEmbed">
+                    <div class="contents">
+                        <img src="{{botavatar}}" class="avatar" alt=" " />
+                        <h2>
+                            <span class="username" role="button">{{botusername}}</span>
+                            <span class="botTag">
+                                <svg aria-label="Verified bot" class="botTagVerified" aria-hidden="false" width="16" height="16" viewBox="0 0 16 15.2">
+                                    <path d="M7.4,11.17,4,8.62,5,7.26l2,1.53L10.64,4l1.36,1Z" fill="currentColor"></path>
+                                 </svg>
+                                <span class="botText">BOT</span>
+                            </span>
+                            <span class="timeText"></span>
+                        </h2>
+                    </div>
+                    <div class="markup messageContent"></div>
+                    <div class="container">
+                        <div class="embed markup">
+                            <div class="embedGrid">
+                                <div class="embedAuthor embedMargin"></div>
+                                <div class="embedTitle embedMargin"></div>
+                                <div class="embedDescription embedMargin"></div>
+                                <div class="embedFields"></div>
+                                <div class="imageWrapper clickable embedMedia embedImage">
+                                    <img class="img" onload="this.nextElementSibling?.style.removeProperty('display');"  />
+                                    <div class="spinner-container" style="display: block;">
+                                        <span class="spinner">
+                                            <span class="inner">
+                                                <span class="wanderingCubesItem"></span>
+                                                <span class="wanderingCubesItem"></span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="imageWrapper clickable embedThumbnail">
+                                    <img class="img" onload="this.nextElementSibling?.style.removeProperty('display');" />
+                                    <div class="spinner-container" style="display: block;">
+                                        <span class="spinner">
+                                            <span class="inner">
+                                                <span class="wanderingCubesItem"></span>
+                                                <span class="wanderingCubesItem"></span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="embedFooter embedMargin"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emptyTxt">Nothing here</div>
+                </div>
+                <div class="bottomSide">
+                    <div class="notification">There is an error</div>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>

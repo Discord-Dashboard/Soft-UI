@@ -1,0 +1,68 @@
+<div class="fixed-plugin">
+    <a id="themeButton" class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+        <i class="fa fa-cog py-2"> </i>
+    </a>
+    <div class="card shadow-lg ">
+        <div class="card-header pb-0 pt-3 ">
+            <div class="float-start">
+                <h5 class="mt-3 mb-0"><%- req?.locales?.partials?.settings?.title || "Site Configuration" %></h5>
+                <p><%- req?.locales?.partials?.settings?.description || "Configurable Viewing Options" %></p>
+            </div>
+            <div class="float-end mt-4">
+                <button aria-label="Close Panel" class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+                    <i class="fa fa-close"></i>
+                </button>
+            </div>
+            <!-- End Toggle Button -->
+        </div>
+        <hr class="horizontal dark my-1">
+        <div class="card-body pt-sm-3 pt-0">
+            <!-- Sidebar Backgrounds -->
+            <!-- Sidenav Type -->
+            <div class="mt-3">
+                <h6 class="mb-0"><%- req?.locales?.partials?.settings?.theme?.title || "Site Theme" %></h6>
+                <p class="text-sm"><%- req?.locales?.partials?.settings?.theme?.description || "Make the site more appealing for your eyes!" %></p>
+            </div>
+            <div class="d-flex">
+                <button data-theme="auto"
+                        class="theme btn bg-gradient-primary w-100 px-3 mb-2 ms-2 <% if (req.cookies?.selectedTheme == "auto") { %>active<% } %>"
+                        data-class="bg-white">
+                    Auto
+                </button>
+                <button data-theme="light"
+                        class="theme btn bg-gradient-primary w-100 mb-2 ms-2 <% if (req.cookies?.selectedTheme == "light") { %>active<% } %>"
+                        data-class="bg-transparent">
+                    Light
+                </button>
+                <button data-theme="dark"
+                        class="theme btn bg-gradient-primary w-100 px-3 mb-2 ms-2 <% if (req.cookies?.selectedTheme == "dark") { %>active<% } %>"
+                        data-class="bg-white">
+                    Dark
+                </button>
+
+            </div>
+            <div class="mt-5">
+                <h6 class="mb-0"><%- req?.locales?.partials?.settings?.language?.title || "Site Language" %></h6>
+                <p class="text-sm"><%- req?.locales?.partials?.settings?.language.description || "Select your preffered language!" %></p>
+            </div>
+            <div class="d-flex">
+                <select name="languages" id="lang" class="form-control">
+                    <% Object.keys(themeConfig.locales).forEach((lang) => { %>
+                        <option value="<%= lang %>" <%= lang === req.lang ? 'selected' : '' %>><%= themeConfig.locales[lang].name %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+        </div>
+    </div>
+</div>
+<script>
+    $("#lang").change(function () {
+        var lang = $(this).val();
+        setCookie('lang', lang, 365);
+
+        location.reload()
+    });
+
+</script>
+<script src="./js/configMenu.js"></script>

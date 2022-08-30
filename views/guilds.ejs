@@ -1,0 +1,114 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/preloader.ejs', {now:'manage'}) %>
+
+    <link rel="stylesheet" href="/css/dashboard/guilds.css">
+</head>
+
+<body class="g-sidenav-show bg-gray-100" id="scroll">
+<%- include('partials/preload.ejs') %>
+<%- include('partials/sidebar.ejs', {config: config, now:'manage'}) %>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+    <%- include('partials/navbar.ejs', {now:'manage'}) %>
+    <div class="container-fluid py-4" style="padding-bottom: 0px !important;">
+        <div class="row">
+            <div class="col-12" id="divtable">
+                <div class="card mb-4">
+                    <div class="card-header pb-0" style="text-align: center;">
+                        <h2 class="mb-1">
+                            Your servers
+                        </h2>
+                        <p class="mb-0 font-weight-bold text-sm">
+                            Select the server you want to configure
+                        </p>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div style="margin-bottom: 35px; margin-top: 0px; text-align: center;">
+                            <%
+                            for(var i in req.session.guilds){ %>
+                                <% if((req.session.guilds[i].permissions & 0x00000020) == 0x00000020){ %>
+                                    <% if(bot.guilds.cache.get(req.session.guilds[i].id)){
+                                        const guild = bot.guilds.cache.get(req.session.guilds[i].id);
+                                        let icon;
+
+                                        if (!guild.iconURL()) icon = themeConfig.icons.noGuildIcon;
+                                        else icon = guild.iconURL() + "?size=256";
+                                    %>
+                                    <a oncontextmenu="window.location='/guild/<%- guild.id %>'; return false;"
+                                       onclick="window.location='/settings/<%- guild.id %>'">
+                                        <div max="20" scale="110" perspective="400" class="_82d1"
+                                             data-guildname="<%- guild.name %>"
+                                             style="background-image: url(&quot;<%- icon %>&quot;);"></div>
+                                    </a>
+                            <% } } } %>
+                        </div>
+                        <div class="_4204" style="margin-bottom: 35px; text-align: center;">
+                            <% for (var i in req.session.guilds){ %>
+                                <% if((req.session.guilds[i].permissions & 0x00000020) == 0x00000020){ %>
+                                    <%
+                                    if(!bot.guilds.cache.get(req.session.guilds[i].id)){
+                                        let icon = `https://cdn.discordapp.com/icons/${req.session.guilds[i].id}/${req.session.guilds[i].icon}.png`;
+                                        const friendlyName = req.session.guilds[i].name.replace('`', '');
+                                        if (!req.session.guilds[i].icon) icon = themeConfig.icons.noGuildIcon;
+                                        else icon = icon + "?size=256"
+                                    %>
+                                    <!--href="../invite?g=<%- req.session.guilds[i].id %>"-->
+                                    <a onclick="const newWindow = window.open(`/invite?g=<%- req.session.guilds[i].id %>&redirect=<%- req.headers.referer.split(':')[0] %>://<%- req.get(`host`) %>`, 'Add bot to guild', 'scrollbars=no, resizable=no, status=no, location=no, toolbar=no, menubar=no, width=500, height=800'); checkRefresh()">
+                                        <div max="20" scale="110" perspective="700" class="_82d1"
+                                             data-guildname="<%- req.session.guilds[i].name %>"
+                                             style="background-image: url(&quot;<%- icon %>&quot;); filter: grayscale(1);"></div>
+                                    </a>
+
+                            <% } } } %>
+                            <script>
+                                function checkRefresh() {
+                                    setInterval(() => {
+                                        if (newWindow.closed) location.reload();
+                                    }, 500);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%- include('partials/footer.ejs') %>
+        </div>
+    </div>
+    <!--   Core JS Files   -->
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <%- include('partials/scripts.ejs', {now: "guilds"}) %>
+</body>
+
+</html>

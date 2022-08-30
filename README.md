@@ -2,7 +2,7 @@
 
 ## Information
 
-This theme has not released yet, for updates join the [discord-dashboard discord](https://discord.gg/CHbfcSbEgd).
+This theme has not been released yet, for updates join the [discord-dashboard discord](https://discord.gg/CHbfcSbEgd).
 
 ## Features
 

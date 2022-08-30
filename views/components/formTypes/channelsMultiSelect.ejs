@@ -1,0 +1,33 @@
+<% console.log(actual[s.categoryId][option.optionId]) %>
+<style>
+    .select2-results__option.select2-results__option--selectable:before {
+        content: "# ";
+    }
+</style>
+
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+
+<select placeholder="Select" class="multiSelect form-control"
+        formType="channelMultiSelect"
+        id="<%= option.optionId %>"
+        defaultValue=""
+        <% if(option.optionType.disabled){ %>disabled
+        <% } %>
+        <% if(option.optionType.required){ %>required
+        <% } %>
+        style="width:100%;background: #f9f9ff;border-color: #f9f9ff;"
+        multiple="multiple"
+        <% if(!Allowed.allowed){ %>disabled
+        <% } %>
+>
+    <% if (actual[s.categoryId][option.optionId]) {
+        let ioooooo = 0;
+        let functiona = option.optionType.function(bot, guildid);
+        functiona.values.forEach(value=>{ %>
+            <option value="<%= value %>"
+                    <% if(actual[s.categoryId][option.optionId].includes(value)){ %>selected
+                    <% } %>
+            ><%= functiona.keys[ioooooo] %></option>
+        <% ioooooo++; })} %>
+</select>
+<br>

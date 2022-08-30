@@ -1,0 +1,151 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/preloader.ejs', {now: 'error'}) %>
+    <%
+    let data
+
+    if (error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) {
+        data = "text/json;charset=utf-8," + encodeURIComponent(error) + "\n"
+        data += `${error.path}`
+    }
+    %>
+    <% if (error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
+        <script>
+            function copyToClipboard(text) {
+                if (window.clipboardData && window.clipboardData.setData) {
+                    return window.clipboardData.setData("Text", text);
+                }
+                else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+                    var textarea = document.createElement("textarea");
+                    textarea.textContent = text;
+                    textarea.style.position = "fixed";
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand("copy");
+                    }
+                    catch (ex) {
+                        console.warn("Copy to clipboard failed.", ex);
+                        prompt("Copy to clipboard: Ctrl+C, Enter", text);
+                    }
+                    finally {
+                        document.body.removeChild(textarea);
+                        sweetalert("success", "Copied to clipboard", 3000)
+                    }
+                }
+            }
+        </script>
+    <% } %>
+</head>
+
+<body class="g-sidenav-show bg-gray-100" id="scroll">
+<%- include('partials/preload.ejs') %>
+<header>
+    <div class="page-header min-vh-85">
+        <%
+        const images = ["curved-1", "curved-2", "curved-3", "curved-4", "curved-5", "curved-6", "curved-7", "curved-8", "curved-9", "curved-10", "curved-11", "curved-12", "curved-13", "curved-14", "curved-15", "curved-16", "curved-17", "curved-18"];
+    
+        const image = images[Math.floor(Math.random() * images.length)];
+        %>
+        <div style="background-image: url('/img/curved-images/<%- image %>.webp') !important; background: no-repeat; background-size: cover;"
+             class="position-absolute fixed-top ms-auto w-50 h-100 z-index-0 d-none d-sm-none d-md-block border-radius-section border-top-end-radius-0 border-top-start-radius-0 border-bottom-end-radius-0">
+                    <span class="mask bg-gradient-primary ms-auto h-100 z-index-0 d-none d-sm-none d-md-block border-radius-section border-top-end-radius-0 border-top-start-radius-0 border-bottom-end-radius-0">
+      </span>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 d-flex">
+                    <div class="card card-body blur text-md-start text-center px-sm-5 shadow-lg mt-sm-5 py-sm-5">
+                        <h2 class="text-gradient text-primary mb-0"> <%- title %></h2>
+                        <h2 class="text-dark mb-4"><%- subtitle %></h2>
+                        <p class="lead text-dark pe-md-5 me-md-5">
+                            <%- description %>
+                        </p>
+                        <% if (req.originalUrl !== "/") { %>
+                            <div class="buttons">
+                                <a href="/" class="btn btn-rounded bg-gradient-primary mt-4">Return to home</a>
+                                <!-- <a target="_blank" href="https://discord.gg/CHbfcSbEgd" class="btn btn-rounded btn-outline-secondary mt-4 ms-2">Get help</a> -->
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</main>
+<%- include('partials/scripts.ejs', {now: "index"}) %>
+<% if(error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
+    <div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document" style="max-width: 700px;">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card card-plain">
+                        <div class="card-body pb-3" id="form1">
+                            <h4 class="font-weight-bolder text-primary text-gradient">Viewing Error</h4>
+                            <pre><%= error %><br><br>Error occured at: <%- error.path %><br>Check console logs for more information</pre>
+                        </div>
+                        <div class="d-flex" style="justify-content: flex-end; margin-right: 20px">
+                            <!--
+                            <button onclick="copyToClipboard(`<%= strError %>`)" class="btn btn-primary" style="margin-left: 10px;">Copy
+                                error
+                            </button>
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% if (error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
+    <script>
+        if (window.addEventListener) {
+            const konami = <%- JSON.stringify(themeConfig?.error?.dbdError?.secretMenuCombination || ["69", "82", "82", "79", "82"]) %> //this spells error
+                let
+currentCount = 0;
+            let entered = [];
+            window.addEventListener("keydown", function (e) {
+                if (e.keyCode.toString() === konami[currentCount]) {
+                    if (currentCount !== 0 && entered[currentCount - 1] !== konami[currentCount - 1]) {
+                        // User has messed with variables in console to try show it smh
+                        entered = [];
+                        return currentCount = 0;
+                    }
+                    if (!konami[currentCount + 1]) {
+                        // Correct code
+                        $('#exampleModalSignUp').modal('show');
+                        currentCount = 0;
+                        return entered = [];
+                    }
+                    entered.push(e.keyCode.toString());
+                    currentCount++;
+                } else {
+                    currentCount = 0;
+                    return entered = [];
+                }
+            }, true);
+        }
+    </script>
+    <% } %>
+<% } %>
+</body>
+
+</html>

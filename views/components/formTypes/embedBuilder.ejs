@@ -1,0 +1,100 @@
+<style>
+    .iframe-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+    }
+
+    @media (max-width: 570px) {
+        .iframe-container {
+            padding-top: 150%;
+        }
+    }
+
+    @media (min-width: 570px) and (max-width: 760px) {
+        .iframe-container {
+            padding-top: 130%;
+        }
+    }
+
+    @media (min-width: 760px) and (max-width: 980px) {
+        .iframe-container {
+            padding-top: 110%;
+        }
+    }
+
+    @media (min-width: 980px) and (max-width: 1247px) {
+        .iframe-container {
+            padding-top: 95%;
+        }
+    }
+
+    .responsive-iframe {
+        border: none;
+        border-radius: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+<textarea id="<%= option.optionId %>" name="<%= option.optionId %>"
+          style="visibility: hidden;width: .1px;height: .1px"></textarea>
+<div class="iframe-container">
+    <%
+    let embedContent;
+    if (actual[s.categoryId][option.optionId] == null) {
+        if (option.optionType.data.defaultJson) {
+            embedContent = JSON.stringify(option.optionType.data.defaultJson, null, 3);
+        } else {
+            embedContent = `{
+          content: "Did you know that if you don't know something, you don't know it? This riddle was solved by me. Don't thank me.",
+          embed: {
+              timestamp: new Date().toISOString(),
+              url: "https://discord.com",
+              description: "There was a boar, everyone liked a boar. One day the boar ate my dinner and escaped through the chimney. I haven't seen a boar since then.",
+              author: {
+                  name: "Assistants Center",
+                  url: "https://assistants.ga",
+                  icon_url: "https://media.discordapp.net/attachments/911644960590270484/934513385402413076/ac_fixed.png"
+              },
+              image: {
+                  url: "https://unsplash.it/380/200"
+              },
+              footer: {
+                  text: "Crated with Discord-Dashboard",
+                  icon_url: "https://cdn.discordapp.com/emojis/870635912437047336.png"
+              },
+              fields: [
+                  {
+                      name: "Hello",
+                      value: "Hi, Assistants Center loves you <:ac_love:806492057996230676>"
+                  },
+                  {
+                      name: "Do you know that",
+                      value: "You can use custom emojis there, even from server where bot isn't <:Kekwlaugh:722088222766923847>",
+                      inline: false
+                  },
+              ]
+          }
+          }`
+        }
+    } else {
+        embedContent = JSON.stringify(actual[s.categoryId][option.optionId], null, 3);
+    } %>
+    <iframe class="responsive-iframe"
+            src="data:text/html;charset=utf-8,<%= encodeURIComponent(config.theme.embedBuilderComponent.replace('{{ContentJsonReplacer}}', embedContent).replace('{{msgSource}}', option.optionId).replace('{{botusername}}', option.optionType.data.username).replace('{{botavatar}}', option.optionType.data.avatarURL)) %>"></iframe>
+</div>
+<script>
+    window.addEventListener('message', function (e) {
+        if (e.data[0] === '<%= option.optionId %>') {
+            document.getElementById('<%= option.optionId %>').innerHTML = JSON.stringify(e.data[1]);
+        }
+    }, false);
+</script>

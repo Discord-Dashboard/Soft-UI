@@ -1,0 +1,166 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/preloader.ejs', {now: 'commands'}) %>
+    <script>
+        // docuemnt on read
+        document.addEventListener('DOMContentLoaded', function() {
+            $('.glow').removeClass('active');
+            $('.active_all').addClass('active');
+        });
+        $(function () {
+            $('#all').click(function () {
+                $('.item').slideDown("slow");
+                $('.glow').removeClass('active');
+                $('.active_all').addClass('active');
+                return false;
+            });
+            <% themeConfig.commands.forEach(category => { %>
+            $('#<%= category.categoryId %>').click(function () {
+                $('.item').not('.<%= category.categoryId %>').slideUp(300);
+                $('.<%= category.categoryId %>').slideDown("slow");
+                $('.glow').removeClass('active');
+                $('.active_<%= category.categoryId %>').addClass('active');
+                return false;
+            });
+            <% }) %>
+        });
+    </script>
+</head>
+
+<body class="g-sidenav-show bg-gray-100" id="scroll">
+<%- include('partials/preload.ejs') %>
+<%- include('partials/sidebar.ejs', {config: config, now:'commands'}) %>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs', {now:'commands'}) %>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="container-fluid">
+                <% themeConfig.commands.forEach(category => { %>
+                    <section id="<%= category.categoryId %>">
+                        <div class="col-12 item <%= category.categoryId %>" id="divtable">
+                            <div class="card mb-4 command-card">
+                                <div class="card-header pb-0">
+                                    <h4><%= category.category %></h4>
+                                    <a><%= category.subTitle %></a>
+                                </div>
+                                <div class="card-body px-0 pt-0 pb-2">
+                                    <div class="table-responsive p-0">
+                                        <table class="table align-items-center mb-0" name="commandsTable" id="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    Name
+                                                </th>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                    Command Usage
+                                                </th>
+                                                <% if(!category.hideDescription) { %>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Description
+                                                    </th>
+                                                <% } %>
+                                                <% if(!category.hideAlias) { %>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Aliases
+                                                    </th>
+                                                <% } %>
+                                                <th class="text-secondary opacity-7"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <% category.list.forEach((item)=>{ %>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div>
+                                                                <% if(category.image){ %>
+                                                                    <%- category.image %>
+                                                                <% } %>
+                                                            </div>
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <h6 class="mb-0 text-sm"><%= item.commandName %></h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-xs font-weight-bold mb-0"><%= item.commandUsage %></p>
+                                                    </td>
+                                                    <% if(!category.hideDescription) { %>
+                                                        <td class="align-middle text-center text-sm">
+                                                            <p class="text-xs font-weight-bold mb-0"><%= item.commandDescription %></p>
+                                                        </td>
+                                                    <% } %>
+                                                    <% if(!category.hideAlias) { %>
+                                                        <td class="align-middle text-center">
+                                                            <span class="text-secondary text-xs font-weight-bold"><%= item.commandAlias %></span>
+                                                        </td>
+                                                    <% } %>
+                                                    <td class="align-middle">
+                                                        <a class="text-secondary font-weight-bold text-xs"
+                                                           data-toggle="tooltip"
+                                                           data-original-title="Edit user">
+
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                <% }) %>
+            </div>
+        </div>
+        </main>
+        <%- include('partials/footer.ejs') %>
+        <script>
+            $('#searchBar').on('change keyup paste enter', function () {
+                var input = $(this).val().toLowerCase();
+                const divs = $(".command-card").toArray()
+
+                if (!input || input.length <= 0) {
+                    $('.item').show();
+                    $(divs).show();
+                }
+
+                $('tr').show()
+                $('tr:not(:contains(' + input + '))').hide()
+
+                for (const item of divs) {
+                    try {
+                        const tbody = item.firstChild.nextElementSibling.nextElementSibling.firstChild.nextElementSibling.firstChild.nextElementSibling.firstChild.nextElementSibling.nextElementSibling
+
+                        if ($(tbody).children(':visible').length == 0) $(item).hide()
+
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            });
+        </script>
+        <%- include('partials/scripts.ejs', {now: "commands"}) %>
+</body>
+
+</html>

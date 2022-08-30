@@ -1,0 +1,16 @@
+<h4><%- option.optionName %></h4>
+<%- option.optionDescription %><br>
+<label class="container">
+    <input type="checkbox" id="<%= option.optionId %>"
+           formType="checkbox"
+           id="<%= option.optionId %>"
+           formType="checkbox"
+           defaultValue=""
+           <% if(option.optionType.disabled){ %>disabled
+            <% } %>
+           <% if(!Allowed.allowed){ %>style="border-color: red;" disabled
+            <% } %>
+    >
+    <span class="checkmark round"></span>
+</label>
+<br>

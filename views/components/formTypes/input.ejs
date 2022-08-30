@@ -1,0 +1,33 @@
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+
+<input <% if(!Allowed.allowed){ %>style="border-color: red;" disabled
+        <% } %>
+       type="text" id="<%= option.optionId %>" class="col-md-12 form-control"
+       id="<%= option.optionId %>"
+       formType="input"
+       defaultValue="<% if(actual[s.categoryId][option.optionId]){ %><%= actual[s.categoryId][option.optionId] %><% } %>"
+       <% if(option.optionType.required){ %>required
+        <% } %>
+       <% if(option.optionType.disabled){ %>disabled
+        <% } %>
+       placeholder="<%= option.optionType.data %>"
+       <% if(actual[s.categoryId][option.optionId]){ %>value="<%= actual[s.categoryId][option.optionId] %>"
+        <% } %>
+       <% if(option.optionType.min){ %>minlength="<%= option.optionType.min %>"
+        <% } %>
+       <% if(option.optionType.max){ %>maxlength="<%= option.optionType.max %>"
+        <% } %>
+/>
+
+<% if (option?.themeOptions?.optionPlaceholder) { %>
+    <div style="margin: 0px -5px;">
+        <% option?.themeOptions?.optionPlaceholder?.values.forEach(array => { %>
+            <span style="<% if(option.themeOptions.optionPlaceholder.clickable && Allowed.allowed){ %>cursor: pointer;<% } %> color: #9db4cc;"
+                  class="_87eb"
+            <% if(option.themeOptions.optionPlaceholder.clickable && Allowed.allowed){ %>
+                  onclick="$('#<%= option.optionId %>').val(this.innerHTML);"
+                    <% } %>
+            ><%- array %></span>
+        <% }) %>
+    </div>
+<% } %>
