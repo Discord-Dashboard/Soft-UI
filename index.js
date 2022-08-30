@@ -33,7 +33,7 @@ module.exports = (themeConfig = {}) => {
             
             require('./utils/functions/errorHandler')(config, themeConfig)
             require('./utils/functions/settingsPage')(config, themeConfig)
-            require('./utils/addonManager').execute(themeConfig, config, app, module.exports.messages);
+            await require('./utils/addonManager').execute(themeConfig, config, app, module.exports.messages);
             require('./utils/initPages').init(config, themeConfig, app);
         }
     }
