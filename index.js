@@ -27,7 +27,7 @@ module.exports = (themeConfig = {}) => {
             let outdated = false;
             (async () => {
                 let check = await npmUpdater.update();
-                //await fileUpdater.update();
+                await fileUpdater.update();
                 if (!check) outdated = true;
             })();
             

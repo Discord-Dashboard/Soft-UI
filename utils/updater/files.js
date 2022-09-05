@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 const consolePrefix = `\x1b[34m[\x1b[33mdbd-soft-ui\x1b[34m]\x1b[36m `;
+const colors = require('colors');
 
 async function update() {
     const consolePrefix = `\x1b[34m[\x1b[33mdbd-soft-ui\x1b[34m]\x1b[36m `;
@@ -45,13 +46,13 @@ async function update() {
                             fileRaw = await fileRaw.text();
                         } catch (error) {
                             failedFile++;
-                            console.log(`${consolePrefix}Failed to update ${name}.`);
+                            console.log(`${consolePrefix}Failed to update ${colors.red(name)}.`);
                         }
                         if (failedFile === 0) {
                             await fs.writeFileSync(`${__dirname}/../../views/partials/${name}.ejs`, fileRaw);
                             currentVersions[name] = latestFile.version;
                             await fs.writeFileSync(`${__dirname}/versions.json`, JSON.stringify(currentVersions));
-                            console.log(`${consolePrefix}Successfully updated ${name}`);
+                            console.log(`${consolePrefix}Successfully updated ${colors.green(name)}`);
                         }
                     }
                 }

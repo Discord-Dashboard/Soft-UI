@@ -1,8 +1,8 @@
 {
-  "colorscheme": "1.0.62",
+  "colorscheme": "1.0.64",
   "feeds": "1.0.62",
-  "footer": "1.0.0",
-  "graph": "0.0.0",
+  "footer": "1.0.1",
+  "graph": "1.0.2",
   "iconsList": "1.0.0",
   "meta": "0.0.0",
   "navbar": "1.0.11",
@@ -13,5 +13,5 @@
   "scripts": "0.0.0",
   "secret": "1.0.0",
   "sidebar": "0.0.0",
-  "theme": "0.0.0"
+  "theme": "1.1.0"
 }
