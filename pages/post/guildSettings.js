@@ -1,5 +1,5 @@
 module.exports = {
-    page: '/settingss/update/:guildId/',
+    page: '/guild/update/:guildId/',
     execute: async (req, res, app, config, themeConfig, info) => {
         const data = req.body;
 

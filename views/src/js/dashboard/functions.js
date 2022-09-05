@@ -142,6 +142,12 @@ async function saveChanges() {
                 e.datatoggle = "tooltip";
                 $(e).tooltip('enable')
                 $(e).tooltip('show')
+            } else if (e.required && e.value) {
+                e.style.border = "";
+                e.style.boxShadow = "";
+                e.title = "";
+                e.datatoggle = "";
+                $(e).tooltip('disable')
             }
         }
 
@@ -151,7 +157,7 @@ async function saveChanges() {
             return;
         }
 
-        const response = await fetch(`/settingss/update/${guildId}/${category}`, {
+        const response = await fetch(`/guild/update/${guildId}/${category}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
