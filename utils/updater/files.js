@@ -1,5 +1,5 @@
-const fetch         = require('node-fetch');
-const fs            = require('fs');
+const fetch = require('node-fetch');
+const fs = require('fs');
 const consolePrefix = `\x1b[34m[\x1b[33mdbd-soft-ui\x1b[34m]\x1b[36m `;
 
 async function update() {
@@ -10,13 +10,13 @@ async function update() {
     let failed3 = 0;
     let failed4 = 0;
     try {
-        await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-CDN@soft-ui/src/verions.json`);
+        await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/utils/updater/versionsOnline.json`);
     } catch (error) {
         failed3++;
         console.log(`${consolePrefix}Failed to check live for updates.`);
     }
     if (failed3 === 0) {
-        let checkArray = await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-CDN@soft-ui/src/verions.json`);
+        let checkArray = await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/utils/updater/versionsOnline.json`);
         try {
             checkArray = await checkArray.json();
         } catch (error) {
@@ -40,7 +40,7 @@ async function update() {
                     } = latestFile;
                     if (type === "partial") {
                         let failedFile = 0;
-                        let fileRaw = await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-CDN@soft-ui/src/partials/${name}.ejs`);
+                        let fileRaw = await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/partials/${name}.ejs`);
                         try {
                             fileRaw = await fileRaw.text();
                         } catch (error) {

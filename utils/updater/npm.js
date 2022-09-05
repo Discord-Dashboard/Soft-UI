@@ -1,4 +1,4 @@
-const fetch         = require('node-fetch');
+const fetch = require('node-fetch');
 const consolePrefix = `${"[".blue}${"dbd-soft-ui".yellow}${"]".blue} `;
 
 async function npmDashCheck() {
@@ -29,7 +29,6 @@ async function npmDashCheck() {
         }
     }
 }
-
 
 async function npmThemeCheck() {
     let failed = 0;

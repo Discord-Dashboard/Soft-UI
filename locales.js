@@ -86,7 +86,7 @@ module.exports = {
                 },
                 language: {
                     title: "Site Language",
-                    description: "Select your preffered language!",
+                    description: "Select your preferred language!",
                 }
             }
         }
