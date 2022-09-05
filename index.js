@@ -43,7 +43,6 @@ module.exports.cmdHandler = (commands, prefix) => {
     if (!commands) throw new Error('No commands were provided to the Soft UI cmdHandler.');
     if (!prefix) prefix = "!";
 
-    let = [];
     let finalCategories = [];
 
     for (const command of commands) {
