@@ -78,7 +78,7 @@ function optionEdited(element) {
 
     let option = jsonToSend.options.find(c => c?.id == element.id);
     if (!option) {
-        jsonToSend.options.push({id: element.id, value: null, defaultValue: element.defaultValue});
+        jsonToSend.options.push({ id: element.id, value: null, defaultValue: element.defaultValue });
         option = jsonToSend.options.find(c => c?.id == element.id);
     }
 
@@ -103,7 +103,7 @@ function optionEdited(element) {
             }, []).map(_ => typeof _ === 'number' ? _.toString(36) : _).join('');
             option.value = compressedImg; // Base64 Encoded String
         };
-        reader.onerror = function (error) {};
+        reader.onerror = function (error) { };
     } else {
         option.value = element.value;
     }
@@ -115,12 +115,16 @@ function optionEdited(element) {
 
 function discardChanges() {
     // TODO: [US-99] Discard changes
-    for (const option of jsonToSend.options) {
-        $(`#${option.id}`).val(option.defaultValue || "")
-    }
-    saveVisible = false;
-    jsonToSend = {};
-    $("#saveChanges").attr('style', 'bottom: -250px !important');
+
+    // reload window
+    window.location.reload();
+
+    // for (const option of jsonToSend.options) {
+    //     $(`#${option.id}`).val(option.defaultValue || "")
+    // }
+    // saveVisible = false;
+    // jsonToSend = {};
+    // $("#saveChanges").attr('style', 'bottom: -250px !important');
 }
 
 async function saveChanges() {
