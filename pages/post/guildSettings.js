@@ -218,6 +218,12 @@ module.exports = {
                 }
             }
         }
+
+        req.DBDEvents.emit('guildSettingsUpdated', {
+            user: req.session.user,
+            changes: {successes, errors}
+        });
+
         res.send({
             success: true,
             message: 'saved changed'
