@@ -32,7 +32,7 @@ module.exports = {
         onlineV = await onlineV.json();
 
         res.render('debug', {
-            license: require(`${__dirname}/../../../discord-dashboard`).licenseInfo().type, // replace with discord-dashboard
+            license: require(`discord-dashboard`).licenseInfo().type, // replace with discord-dashboard
             onlineV,
             localV,
             onlineFiles,
@@ -42,7 +42,7 @@ module.exports = {
             themeConfig,
             discordVersion: require('discord.js').version,
             dbdVersion: DBD.version,
-            themeVersion: require(`${__dirname}/../../`).version, // replace with dbd-soft-ui
+            themeVersion: require(`dbd-soft-ui`).version,
             themePartials: require(`${__dirname}/../../utils/updater/versions.json`),
             req,
             config,

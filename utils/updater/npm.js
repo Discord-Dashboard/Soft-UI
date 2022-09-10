@@ -22,7 +22,7 @@ async function npmDashCheck() {
         }
         if (failed2 === 0) {
             const latestVersion = checkArray["dist-tags"].latest;
-            const currentVersion = require('../../../node_modules/discord-dashboard/package.json').version;
+            const currentVersion = require('discord-dashboard').version;
             if (currentVersion < latestVersion) console.log(`${consolePrefix}${"Your version of discord-dashboard is".cyan} ${"outdated".red}${"!".cyan}`);
             else console.log(`${consolePrefix}${"Your version of discord-dashboard is".cyan} ${"up-to-date".green}${"!".cyan}`);
 
@@ -49,7 +49,7 @@ async function npmThemeCheck() {
         }
         if (failed2 === 0) {
             const latestVersion = checkArray["dist-tags"].latest;
-            const currentVersion = require('../../package.json').version;
+            const currentVersion = require('dbd-soft-ui').version;
             if (currentVersion < latestVersion) console.log(`${consolePrefix}${"Your version of dbd-soft-ui is".cyan} ${"outdated".red}${"!".cyan}`);
             else console.log(`${consolePrefix}${"Your version of dbd-soft-ui is".cyan} ${"up-to-date".green}${"!".cyan}`);
 
