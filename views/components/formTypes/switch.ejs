@@ -1,0 +1,78 @@
+<% let val = "";
+if (actual[s.categoryId][option.optionId]) val = "checked";
+%>
+<style>
+    /* The switch - the box around the slider */
+    .toggleSwitch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .toggleSwitch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* The slider */
+    .tslider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .tslider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .tslider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .tslider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .tslider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .tslider.round {
+        border-radius: 34px;
+    }
+
+    .tslider.round:before {
+        border-radius: 50%;
+    }
+</style>
+
+
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+<label class="toggleSwitch">
+    <input type="checkbox" id="<%= option.optionId %>"
+           formtype="switch"
+           defaultValue=""
+           id="<%= option.optionId %>" <%- val %>
+           <% if(option.optionType.disabled || !Allowed.allowed ){ %>disabled<% } %>
+    >
+    <span class="tslider round"></span>

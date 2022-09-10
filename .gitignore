@@ -1,0 +1,11 @@
+views/profile.ejs
+views/leaderboard.ejs
+utils/addonManager.js
+pages/get/leaderboard.js
+pages/get/profile.js
+addons/leaderboardPage.js
+views/blacklisted.ejs
+views/components/formTypes/visualEmbed.ejs
+views/components/formTypes/upload.ejs
+views/components/formTypes/modal.ejs
+views/components/formTypes/collapsable.ejs

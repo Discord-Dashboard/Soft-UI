@@ -1,0 +1,22 @@
+<div id="bigIconsList" style="display: none;">
+    <% icons.forEach(async(icon) => { %>
+        <div style="text-align:center;width:15%;float: left;padding-right:10px;">
+            <div class="icon-shape icon-sm shadow border-radius-md bg-white gray-icon-bg" style="margin: 0 auto">
+                <i class="fas fa-<%- icon %> feeds-icon"></i>
+            </div>
+            <span class="tagnamecolor feeds-desc">
+            <%- icon %>
+          </span>
+        </div>
+    <% });
+    otherIcons.forEach(async(icon) => { %>
+        <div style="text-align:center;width:15%;float: left;padding-right:10px;">
+            <div class="icon-shape icon-sm shadow border-radius-md bg-white gray-icon-bg" style="margin: 0 auto">
+                <i class="fab fa-<%- icon %> feeds-icon"></i>
+            </div>
+            <span class="tagnamecolor feeds-desc">
+              <%- icon %>
+            </span>
+        </div>
+    <% }); %>
+</div>

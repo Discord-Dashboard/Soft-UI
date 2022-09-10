@@ -1,0 +1,99 @@
+<style>
+.form-control.slider {
+    padding: 0 .75rem;
+}
+datalist.slider {
+    margin: 0 !important;
+
+}
+option.slider.text-sm {
+    font-weight: bold;
+}
+option.slider:nth-last-child(1) {
+    margin-right: 5px;
+}
+
+.form-control.slider::after {
+    background: none !important;
+}
+
+.form-control.slider::before {
+    background: none !important;
+}
+
+.form-control:focus {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.form-control.slider.slider {
+  -webkit-appearance: none;
+  padding: 0 !important;
+  margin-top: 10px;
+  width: 97.8%;
+  height: 15px;
+  border-radius: 5px;  
+  background-image: linear-gradient(var(--gradient));
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.form-control.slider.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-bottom: 8px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background-image: linear-gradient(310deg, rgb(16, 18, 31) 0%, rgb(46, 52, 89) 100%);
+
+  cursor: pointer;
+}
+
+.form-control.slider.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-image: linear-gradient(310deg, rgb(16, 18, 31) 0%, rgb(46, 52, 89) 100%);
+  cursor: pointer;
+}
+
+</style>
+
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+<% if(option?.themeOptions?.dataList) { %>
+    <datalist class="slider" id="steplist">
+        <% option.themeOptions.dataList.forEach(data => { %>
+            <option class="slider text-sm" style="user-select: none;"><strong><%- data %></strong></option>
+        <% }) %>
+    </datalist>
+<% } %>
+<input 
+<% if(actual[s.categoryId][option.optionId]){ %>
+    defaultValue="<%= actual[s.categoryId][option.optionId] %>"
+    value="<%= actual[s.categoryId][option.optionId] %>"
+<% } %>
+    class="form-control slider"
+    formType="slider" 
+    id="<%= option.optionId %>" 
+    type="range" 
+    list="steplist" 
+    step="<%= option.optionType.step %>"
+    min="<%= option.optionType.min %>"
+    max="<%= option.optionType.max %>"
+<% if (option.themeOptions?.showValue) { %>
+    oninput="updateSlider(this.value, this.id)"
+<% } %> 
+    style="border: none !important; <% if(!Allowed.allowed){ %> border-color: red; <% } %>"
+<% if(!Allowed.allowed){ %> 
+    disabled 
+<% } %>
+<% if (Allowed.allowed && option.optionType.disabled) { %>
+    disabled
+<% } %>
+>
+<% if (option.themeOptions?.showValue) { %>
+    <p class="mt-2" style="margin-bottom: 0 !important;">Slider is set to <b><span id="value_<%= option.optionId %>"><% if(actual[s.categoryId][option.optionId]){ %><%= actual[s.categoryId][option.optionId] %><% } %></span></b></p>
+<% } %>

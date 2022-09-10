@@ -1,0 +1,47 @@
+<%
+for(var i in req.session.guilds){ %>
+    <% if((req.session.guilds[i].permissions & 0x00000020) == 0x00000020){ %>
+        <% if(!bot.guilds.cache.get(req.session.guilds[i].id)){
+            let icon = `https://cdn.discordapp.com/icons/${req.session.guilds[i].id}/${req.session.guilds[i].icon}.png`;
+            const friendlyName = req.session.guilds[i].name.replace('`', '');
+            if (!req.session.guilds[i].icon) icon = themeConfig.iconURL;
+        %>
+        <a href="#">
+            <img id="servericon" onclick="select<%- req.session.guilds[i].id %>()" onerror="this.src = '<%= icon %>';"
+                 src="https://cdn.discordapp.com/icons/<%= req.session.guilds[i].id %>/<%= req.session.guilds[i].icon %>.png">
+        </a>
+        <script>
+            async function select<%- req.session.guilds[i].id %>() {
+                $('#select').html(`<%= friendlyName %>`);
+                $('#selectedImg').attr('src', '<%= icon %>');
+                $("#inviteButton").attr('href', "../invite?g=<%- req.session.guilds[i].id %>");
+                $("#notInServer").show();
+                setUser(`<%= friendlyName %>`, `<%= icon %>`, `Server ID: <%= req.session.guilds[i].id %>`);
+            }
+        </script>
+        <% }else{
+            const guild = bot.guilds.cache.get(req.session.guilds[i].id);
+            let icon;
+
+            if (!guild.iconURL()) icon = themeConfig.iconURL;
+            else icon = guild.iconURL();
+            const friendlyName = guild.name.replace('`', '');
+        %>
+        <a href="#" onclick="select<%- guild.id %>()">
+            <img id="servericon" onerror="this.src = '<%= themeConfig.iconURL %>';" src="<%= icon %>">
+        </a>
+        <script>
+            async function select<%- guild.id %>() {
+                $('#select').html(`<%= friendlyName %>`);
+                $('#selectedImg').attr('src', '<%= icon %>');
+                $("#notInServer").hide();
+                setUser(`<%= friendlyName %>`, `<%= icon %>`, `Server ID: <%= req.session.guilds[i].id %>`);
+                window.location = "../guild/<%= req.session.guilds[i].id %>";
+            }
+        </script>
+        <!--/guild/<%= req.session.guilds[i].id %>-->
+<%
+}
+}
+}
+%>

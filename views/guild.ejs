@@ -1,0 +1,662 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <%- include('partials/preloader.ejs', {now:'settings'}) %>
+    <link href='/css/dashboard/settings.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        .nav-tabs .nav-link.active {
+            border: none !important;
+            border-bottom: 4px solid var(--colone) !important;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-bottom: 0px solid;
+        }
+
+        .container {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 22px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        .container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+            transition: .3s
+        }
+
+        .container:hover input ~ .checkmark {
+            background-color: #ccc
+        }
+
+        .container input:checked ~ .checkmark {
+            background-color: #2196f3
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none
+        }
+
+        .container input:checked ~ .checkmark:after {
+            display: block
+        }
+
+        .container .checkmark:after {
+            left: 10px;
+            top: 7px;
+            width: 5px;
+            height: 10px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg)
+        }
+
+        .toggleSwitch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px
+        }
+
+        .toggleSwitch input {
+            opacity: 0;
+            width: 0;
+            height: 0
+        }
+
+        .tslider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s
+        }
+
+        .tslider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #fff;
+            -webkit-transition: .4s;
+            transition: .4s
+        }
+
+        input:checked + .tslider {
+            background-color: #2196f3
+        }
+
+        input:focus + .tslider {
+            box-shadow: 0 0 1px #2196f3
+        }
+
+        input:checked + .tslider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px)
+        }
+
+        .tslider.round {
+            border-radius: 34px
+        }
+
+        .tslider.round:before {
+            border-radius: 50%
+        }
+
+        .select2-selection.select2-selection--multiple {
+            background-color: #101112 !important;
+            border: none !important
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            background-color: #101112 !important;
+            border: none !important
+        }
+
+        .select2-results__option.select2-results__option--selectable {
+            background: #101112 !important;
+            background-color: #101112 !important
+        }
+
+        #select2-prefix-3r-results {
+            border: none !important
+        }
+
+        .select2-selection__choice {
+            background-color: #201f1f !important;
+            border: 1px solid #201f1f !important;
+            border-radius: 4px;
+            box-sizing: border-box;
+            display: inline-block;
+            margin-left: 5px;
+            margin-top: 5px;
+            padding: 0;
+            padding-left: 20px;
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: bottom;
+            white-space: nowrap
+        }
+
+        .scrollbar-nav {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden
+        }
+
+        h4 {
+            margin-top: 0 !important
+        }
+
+        .svgText {
+            text-transform: capitalize !important;
+            font-weight: 500 !important;
+            letter-spacing: .05em
+        }
+
+        .mleft15 {
+            margin-left: 15px
+        }
+
+        .mbottom6 {
+            margin-bottom: 6px
+        }
+
+        .cgray {
+            color: #c7c4c4 !important
+        }
+
+        .column {
+            width: 30%;
+            margin-left: 30px
+        }
+
+        .column2 {
+            width: 14%;
+            padding-left: 20px
+        }
+
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+                margin-top: 10px
+            }
+
+            .column2 {
+                width: 100%
+            }
+        }
+
+        .nav-tabs .nav-link {
+            color: gray;
+            border: 0;
+            border-bottom: 1px solid grey
+        }
+
+        .nav-tabs .nav-link:hover {
+            border: 0;
+            border-bottom: 1px solid grey
+        }
+
+        .iframe-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%
+        }
+
+        @media (max-width: 570px) {
+            .iframe-container {
+                padding-top: 150%
+            }
+        }
+
+        @media (min-width: 570px) and (max-width: 760px) {
+            .iframe-container {
+                padding-top: 130%
+            }
+        }
+
+        @media (min-width: 760px) and (max-width: 980px) {
+            .iframe-container {
+                padding-top: 110%
+            }
+        }
+
+        @media (min-width: 980px) and (max-width: 1247px) {
+            .iframe-container {
+                padding-top: 95%
+            }
+        }
+
+        .responsive-iframe {
+            border: none;
+            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        #container {
+            display: flex;
+            /* establish flex container */
+            flex-direction: row;
+            /* default value; can be omitted */
+            flex-wrap: nowrap;
+            /* default value; can be omitted */
+            justify-content: space-between;
+            overflow-x: scroll;
+        }
+
+        .comlumn {
+            width: auto;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+<%- include('partials/sidebar.ejs', {config: config, now:'manage'}) %>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+    <!-- Navbar -->
+
+    <%- include('partials/navbar.ejs', {now:'manage'}) %>
+    <% const guild = bot.guilds.cache.get(req.params.id); %>
+    <% const guildID = bot.guilds.cache.get(guildid); %>
+    <!-- End Navbar -->
+    <div class="container-fluid">
+        <%
+        const images = ["curved-1", "curved-2", "curved-3", "curved-4", "curved-5", "curved-6", "curved-7", "curved-8", "curved-9", "curved-10", "curved-11", "curved-12", "curved-13", "curved-14", "curved-15", "curved-16", "curved-17", "curved-18"];
+
+        const image = images[Math.floor(Math.random() * images.length)];
+        %>
+        <div class="page-header min-height-300 border-radius-xl mt-4"
+             style="background-image: url('/img/curved-images/<%- image %>.webp'); background-position-y: 50%;">
+            <span class="mask bg-gradient-primary opacity-6"></span>
+        </div>
+        <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
+            <div class="row gx-4">
+                <div class="col-auto">
+                    <div class="avatar avatar-xl position-relative">
+                        <img src="<%= guild.iconURL() %>"
+                             style="max-width: 100%; max-height: 100%; width: auto; height: auto;"
+                             alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                    </div>
+                </div>
+                <div class="col-auto my-auto">
+                    <div class="h-100">
+                        <h5 class="mb-1">
+                            <%= guild.name %>
+                        </h5>
+                        <p class="mb-0 font-weight-bold text-sm">
+                            <b>Server ID: </b><%= guild.id %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4">
+        <div id="server_info" style="display: none;">
+            <div class="row">
+                <div class="col-12 mt-4">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0 p-3" style="border-radius: 1rem;">
+                            <h3 style="text-align: center;" class="mb-1">Server Information</h3>
+                            <p style="text-align: center;" class="text-sm">View server info</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-xl-6" style="margin-bottom: 20px;">
+                    <div class="card h-100">
+                        <div class="card-header pb-0 p-3">
+                            <h5 class="mb-0">General</h5>
+                        </div>
+                        <div class="card-body p-3">
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder">Server name: </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-0">
+                                    <div class="form-check form-switch ps-0">
+                                        <img class="mbottom6" src="src/assets/images/badge_white_24dp.svg">
+                                        <%= guildID.name %>
+                                    </div>
+                                </li>
+                            </ul>
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder">Server ID: </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-0">
+                                    <div class="form-check form-switch ps-0">
+                                        <img class="mbottom6" src="src/assets/images/badge_white_24dp.svg">
+                                        <%= guildID.id %>
+                                    </div>
+                                </li>
+                            </ul>
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder">Member Count: </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-0">
+                                    <div class="form-check form-switch ps-0">
+                                        <img class="mbottom6" src="src/assets/images/badge_white_24dp.svg">
+                                        <%= guildID.memberCount %> Total members
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-6">
+                    <div class="card h-100">
+                        <div class="card-header pb-0 p-3">
+                            <h5 class="mb-0">Miscellaneous</h5>
+                        </div>
+                        <div class="card-body p-3">
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder">Server Verification: </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-0">
+                                    <div class="form-check form-switch ps-0">
+                                        <img class="mbottom6" src="src/assets/images/badge_white_24dp.svg">
+                                        <%= guildID.verificationLevel %>
+                                    </div>
+                                </li>
+                            </ul>
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder">Boost Count: </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-0">
+                                    <div class="form-check form-switch ps-0">
+                                        <img class="mbottom6" src="src/assets/images/badge_white_24dp.svg">
+                                        <%= guildID.premiumSubscriptionCount %>
+                                    </div>
+                                </li>
+                            </ul>
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder">Boost Tier: </h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 px-0">
+                                    <div class="form-check form-switch ps-0">
+                                        <img class="mbottom6" src="src/assets/images/badge_white_24dp.svg">
+                                        <%= guildID.premiumTier %>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4" style="padding-bottom: 0px !important; padding-top: 0px !important;">
+        <div class="col-12 col-xl-12">
+            <div class="card h-100">
+                <div class="card-body p-3">
+                    <nav>
+                        <div class="nav nav-tabs scrollbar-nav" id="nav-tab" role="tablist">
+                            <%
+                            let i22 = 0;
+                            settings.forEach(s=>{
+                                i22++; %>
+                            <a class="nav-item nav-link<% if(i22 == 1){ %> active<% } %>" id="<%= s.categoryId %>-tab"
+                               data-toggle="tab" href="#<%= s.categoryId %>" role="tab"
+                               aria-controls="<%= s.categoryId %>" aria-selected="true"
+                               style="white-space: nowrap;"><%= s.categoryName %></a>
+                            <% })
+                            %>
+                        </div>
+                    </nav>
+                    <% if(successes == null && errors == null){ %>
+                    <% }else if(successes && !errors) { %>
+                        <script>
+                            window.onload = function () {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    },
+                                    showClass: {
+                                        popup: 'animate__animated animate__fadeInDown'
+                                    },
+                                    hideClass: {
+                                        popup: 'animate__animated animate__fadeOutUp'
+                                    }
+                                })
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: '<% if(themeConfig.popupMsg){ %><%- themeConfig.popupMsg.savedSettings %><% } else{ %>Saved settings<% } %>'
+                                })
+                            };
+                        </script>
+                    <% }else{ %>
+                        <script>
+                            window.onload = function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'There was an error saving some of your settings',
+                                    html: `<% errors.forEach(e=>{ %><%= e.split('%is%')[0] %>: <%= e.split('%is%')[1] %><br> <% }) %>`
+                                })
+                            };
+                        </script>
+                    <% } %>
+                    <div class="tab-content" id="nav-tabContent">
+                        <%
+                        let i222 = 0;
+                        settings.forEach(s=>{
+                            i222++; %>
+                        <div class="tab-pane fade<% if(i222 == 1){ %> show active<% } %>" id="<%= s.categoryId %>"
+                             role="tabpanel" aria-labelledby="<%= s.categoryId %>-tab">
+                            <br>
+                            <form method="POST" action="/settings/update/<%= req.params.id %>/<%= s.categoryId %>">
+                                <% s.categoryOptionsList.forEach(option=>{ %>
+                                    <% try { %>
+                                        <%- include(`components/formTypes/free/${option.optionType.type}.ejs`, {option, s}); %>
+                                    <% } catch (error) { %>
+
+                                    <% } %>
+                                <% }) %>
+                                <br><br>
+                                <button class="btn bg-gradient-primary" type="submit">Submit</button>
+                            </form>
+                        </div>
+                        <% })
+                        %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4" style="padding-top: 0px !important">
+        <div class="row">
+            <div class="col-12 mt-4">
+                <div class="card mb-4">
+                    <div class="card-header pb-0 p-3">
+                        <h5 class="mb-1">Server List</h5>
+                        <p class="text-sm">Quick Select</p>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row" id="container">
+                            <% for(var i in req.session.guilds){ %>
+                                <% if((req.session.guilds[i].permissions & 0x00000020) == 0x00000020){ %>
+                                    <% if(!bot.guilds.cache.get(req.session.guilds[i].id)){ %>
+                                        <div class="col-xl-3 mb-xl-0 mb-4 comlumn">
+                                            <div class="card card-blog card-plain">
+                                                <div class="position-relative">
+                                                    <a class="d-block border-radius-xl">
+                                                        <img style="max-width: 130px; max-height: 130px;"
+                                                             onerror="this.src = `https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png`;"
+                                                             src="https://cdn.discordapp.com/icons/<%= req.session.guilds[i].id %>/<%= req.session.guilds[i].icon %>.png"
+                                                             alt="img-blur-shadow"
+                                                             class="img-fluid shadow border-radius-xl">
+                                                    </a>
+                                                </div>
+                                                <div class="card-body px-1 pb-0">
+                                                    <a href="javascript:">
+                                                        <h5>
+                                                            <%= req.session.guilds[i].name %>
+                                                        </h5>
+                                                    </a>
+                                                    <p class="mb-4 text-sm">
+                                                        Not in the server.
+                                                    </p>
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <a class="btn btn-outline-primary btn-sm mb-0" href="/invite">Invite
+                                                            To
+                                                            server</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }else{ %>
+                                        <div class="col-xl-3 mb-xl-0 mb-4 comlumn">
+                                            <div class="card card-blog card-plain">
+                                                <div class="position-relative">
+                                                    <a class="d-block border-radius-xl">
+                                                        <img style="max-width: 130px; max-height: 130px;"
+                                                             onerror="this.src = `https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png`;"
+                                                             src="https://cdn.discordapp.com/icons/<%= req.session.guilds[i].id %>/<%= req.session.guilds[i].icon %>.png"
+                                                             alt="img-blur-shadow"
+                                                             class="img-fluid shadow border-radius-xl">
+                                                    </a>
+                                                </div>
+                                                <div class="card-body px-1 pb-0">
+                                                    <a href="javascript:">
+                                                        <h5>
+                                                            <%= req.session.guilds[i].name %>
+                                                        </h5>
+                                                    </a>
+                                                    <p class="mb-4 text-sm">
+                                                        In the server.
+                                                    </p>
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <a class="btn btn-outline-primary btn-sm mb-0"
+                                                           href="/guild/<%= req.session.guilds[i].id %>">Manage
+                                                            Bot</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                            <div class="col-xl-3 col-md-6 mb-xl-0 mb-4" style="width: 180px !important;">
+                              <span onclick="window.location='/manage'">
+                                <div class="card h-100 card-plain border">
+                                  <div class="card-body d-flex flex-column justify-content-center text-center">
+                                    <a href="javascript:">
+                                      <i class="fa fa-plus text-secondary mb-3"></i>
+                                      <h5 class=" text-secondary"> View all servers </h5>
+                                    </a>
+                                  </div>
+                                </div>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('partials/footer.ejs') %>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script>
+    $(document).ready(function () {
+        $('.js-example-basic-multiple').select2();
+        $(".select2-selection").addClass("form-control")
+    });
+</script>
+<script src="https://adn.siondevelopment.xyz/dbd-dark/src/js/core/bootstrap.min.js"></script>
+
+
+<!--   Core JS Files   -->
+<script id="helper" category="<%= req.params.category %>" gid="<%= req.params.id %>"
+        src="/js/dashboard/functions.js"></script>
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('.multiSelect').select2({closeOnSelect: true});
+        $(".tags").select2({theme: "classic", tags: true})
+        $(".select2-selection").addClass("form-control")
+        $(".select2-search__field").attr('formType', 'tagInput');
+    });
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+<%- include('partials/scripts.ejs', {now: "settings"}) %>
+</body>
+
+</html>

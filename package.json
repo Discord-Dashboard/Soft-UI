@@ -1,0 +1,39 @@
+{
+  "name": "dbd-soft-ui",
+  "version": "1.0.0-beta.1",
+  "author": {
+    "name": "iMidnight"
+  },
+  "contributors": ["PlainDevelopment", "Breftejk"],
+  "bugs": {
+    "url": "https://github.com/Assistants-Center/dbd-soft-ui/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "node-fetch": "2.6.1",
+    "colors": "^1.4.0",
+    "nodeactyl": "^3.2.2",
+    "quick.db": "^7.1.3"
+  },
+  "deprecated": false,
+  "description": "Soft UI DBD Theme: An awesome - feature packed theme to use with discord-dashboard!",
+  "homepage": "https://softui.assistantscenter.com/",
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discordjs",
+    "discord dashboard",
+    "discord web dashboard",
+    "web dashboard",
+    "dashboard"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Assistants-Center/DBD-Soft-UI.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

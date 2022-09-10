@@ -1,0 +1,21 @@
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+<select <% if(option.optionType.disabled){ %>disabled
+        <% } %>
+        id="<%= option.optionId %>" class="col-md-12" style="height:30px;"
+        formType="rolesSelect"
+        defaultValue=""
+        <% if(!Allowed.allowed){ %>style="border-color: red;" disabled
+        <% } %>
+>
+    <%
+    let iooooooo = 0;
+    let functiona = option.optionType.function(bot, guildid);
+    functiona.values.forEach(value=>{ %>
+        <option value="<%= value %>"
+                <% if(actual[s.categoryId][option.optionId] == value){ %>selected
+                <% } %>
+        ><%= functiona.keys[iooooooo] %></option>
+    <%
+        iooooooo++;
+    }) %>
+</select>

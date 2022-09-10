@@ -1,0 +1,139 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/soft-ui-dashboard.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alatsi">
+    <link rel="stylesheet" href="/css/nucleo-icons.css">
+    <link rel="stylesheet" href="/css/nucleo-svg.css">
+    <link rel="stylesheet" href="/css/soft-ui-dashboard.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css">
+    <link rel="stylesheet" href="/css/jquery-ui.css">
+    <%- include('partials/colorscheme.ejs') %>
+    <title><%= themeConfig.websiteName %> - Loading</title>
+    <% if(req.cookies?.selectedTheme == "dark" || req.cookies?.selectedTheme == "auto" || !req.cookies?.selectedTheme) { %>
+        <link href="/css/darkMode.css" rel='stylesheet'
+        <% if(req?.cookies?.selectedTheme == "auto" || !req.cookies?.selectedTheme) { %>
+              media="(prefers-color-scheme: dark)"
+                <% } %>
+        >
+    <% } %>
+</head>
+<body>
+<style>
+    @media all and (min-width: 0px) and (max-width: 600px) {
+        .responsive {
+            width: calc(100vw - 30px)
+        }
+    }
+
+    @media all and (min-width: 0px) and (max-width: 590px) {
+        .responsive {
+            margin-top: calc(100vh / 4) !important;
+        }
+    }
+
+    .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 99999999;
+        background-repeat: no-repeat;
+        background-image: none;
+        background-color: #FFF;
+        background-position: center;
+    }
+
+    #scroll {
+        height: 100% !important;
+        /* overflow: hidden; */
+    }
+
+    .progress-bar {
+        transition: width 1s ease !important;
+    }
+</style>
+
+<div class="preloader">
+    <div class="progress-wrapper">
+        <div id="progress-bar" class="progress">
+            <div id="progress" class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="60"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+        </div>
+    </div>
+    <% if(themeConfig.preloader){ %>
+        <% if(themeConfig.preloader.image) { %>
+            <% if(!themeConfig.preloader.spinner) { %>
+                <div class="loader">
+                    <img class="responsive preloader-image" src="<%- themeConfig.preloader.image %>" alt=""
+                         style="border-radius: 5%; display: block; margin-left: auto; margin-right: auto; margin-top: calc(100vh / 5.8);">
+                </div>
+            <% } %>
+        <% } %>
+        <% if(themeConfig.preloader.text){ %>
+            <br>
+            <div style="text-align: center;<% if(themeConfig.preloader.spinner) { %>margin-top: calc(100vh / 2.7);<% } %>">
+                <h1 class="font-weight-bolder text-primary text-gradient"><span id="stateText">Loading...</span></h1>
+                <% if(themeConfig.preloader.spinner) { %>
+
+                    <div style="transform: scale(3); padding-top: 30px;">
+                        <div style="text-align: center; " class="spinner-border text-primary text-gradient"
+                             role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <span id="stateText"></span>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    <% } %>
+</div>
+<script>
+    <% if (req.session.user) { %>
+    window.onload = function () {
+        window.close()
+    }
+    <% } %>
+    let i = 0;
+    const reFetch = async () => {
+        const res = await fetch('/discord/status/');
+        const json = await res.json();
+        if (json.loading == false && json.success == true) {
+            location.href = '<%= `${req.session.r}?swal=logged` || `/?swal=logged` %>';
+        } else if (json.loading == false && json.success == false) {
+            location.href = '/?error=' + json.state.error;
+        }
+        if (json.loading == false && json.success == true) {
+            <% if (req.session.r == "/manage") { %>
+            location.href = '<%= `${req.session.r}?swal=logged` || `/?swal=logged` %>';
+            <% } else { %>
+            window.close();
+            <% } %>
+            document.getElementById('progress').style.width = 100 + '%';
+            return;
+        }
+        ;
+        if (json.loading == true) {
+            document.getElementById('stateText').innerHTML = json.state.data;
+            document.getElementById('progress').style.width = i + '%';
+            if (i > 100) {
+                document.getElementById('stateText').innerHTML = "Finishing up...";
+            }
+            i = i + 10;
+        } else if (json.loading == false && json.success == false) {
+            location.href = '/?error=' + json.state.error;
+        }
+        ;
+    }
+    setInterval(() => {
+        reFetch()
+    }, 300);
+</script>
+</body>
+</html>

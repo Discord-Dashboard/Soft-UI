@@ -1,0 +1,203 @@
+<%
+const data = customThemeOptions.graph;
+let currentScheme = themeConfig.colorScheme;
+let colone;
+let coltwo;
+let gradone;
+let gradtwo;
+
+if (currentScheme == "blue") {
+    colone = "#21d4fd";
+    coltwo = "#2152ff";
+    gradone = "rgba(33,212,253,0.1)";
+    gradtwo = "rgba(33,82,255,0.1)";
+}
+if (currentScheme == "pink") {
+    colone = "#FF0080";
+    coltwo = "#7928CA";
+    gradone = "rgba(255,0,128,0.1)";
+    gradtwo = "rgba(121,40,202,0.1)";
+}
+if (currentScheme == "red") {
+    colone = "#ea0606";
+    coltwo = "#ff667c";
+    gradone = "rgba(255,102,124,0.1)";
+    gradtwo = "rgba(234,6,6,0.1)";
+}
+if (currentScheme == "green") {
+    colone = "#17ad37";
+    coltwo = "#98ec2d";
+    gradone = "rgba(23,173,55,0.1)";
+    gradtwo = "rgba(152,236,45,0.1)";
+}
+if (currentScheme == "yellow") {
+    colone = "#f53939";
+    coltwo = "#fbcf33";
+    gradone = "rgba(245,57,57,0.1)";
+    gradtwo = "rgba(251,207,51,0.1)";
+}
+if (currentScheme == "dark") {
+    colone = "#141727";
+    coltwo = "#3A416F";
+    gradone = "rgba(20,23,39,0.1)";
+    gradtwo = "rgba(58,65,111,0.1)";
+}
+%>
+<script>
+    <%
+    let graphType = "chart-bars"; // line-graph
+    if (!themeConfig.index.graph.lineGraph) graphType = "chart-line";
+    %>
+    let ctx = document.getElementById("<%- graphType %>").getContext("2d"); // line graph
+
+    <% if(graphType === "chart-bars") { %>
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: <%- JSON.stringify(customThemeOptions.graph.labels) %>,
+            datasets: [{
+                label: "<%= themeConfig.index.graph.tag %>",
+                tension: 0.4,
+                borderWidth: 0,
+                borderRadius: 4,
+                borderSkipped: false,
+                backgroundColor: "#fff",
+                data: <%- JSON.stringify(data.values) %>,
+                maxBarThickness: 6
+            },],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 500,
+                        beginAtZero: true,
+                        padding: 15,
+                        font: {
+                            size: 14,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                        color: "#fff"
+                    },
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false
+                    },
+                    ticks: {
+                        display: false
+                    },
+                },
+            },
+        },
+    });
+    <% } else { %>
+
+    var gradientStroke1 = ctx.createLinearGradient(0, 230, 0, 50);
+
+    gradientStroke1.addColorStop(1, '<%= colone %>');
+    gradientStroke1.addColorStop(0.1, '<%= gradone %>');
+    gradientStroke1.addColorStop(0, '<%= gradtwo %>'); //purple colors
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: <%- JSON.stringify(customThemeOptions.graph.labels) %>,
+            datasets: [{
+                label: "<%= themeConfig.index.graph.tag %>",
+                tension: 0.4,
+                borderWidth: 0,
+                pointRadius: 0,
+                borderColor: "<%- colone %>",
+                borderWidth: 3,
+                backgroundColor: gradientStroke1,
+                fill: true,
+                data: <%- JSON.stringify(data.values) %>,
+                maxBarThickness: 6
+
+            },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    suggestedMin: 0,
+                    suggestedMax: <%- themeConfig.index.graph.max %>,
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        padding: 10,
+                        color: '#b2b9bf',
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: '#b2b9bf',
+                        padding: 20,
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+    });
+    <% } %>
+</script>

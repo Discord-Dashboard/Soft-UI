@@ -1,0 +1,72 @@
+<% if (req.cookies?.premiumCard == "false" || !req.cookies?.premiumCard) { %>
+    <div class="rightCircle"><i class="fas fa-times"></i></div>
+    <div class="premium-card card card-background shadow-none card-background-mask-primary" id="sidenavCard">
+        <div class="full-background"
+             style="background-image: url('<%- themeConfig.premium.card.bgImage %>'); margin-bottom: 0 !important;"></div>
+        <div class="card-body text-start p-3 w-100">
+        
+            <div class="docs-info">
+                <h6 class="hide-click text-white up mb-0"><%- req?.locales?.partials?.premium?.title %></h6>
+                <p class="hide-click text-xs font-weight-bold"><%- req?.locales?.partials?.premium?.description %></p>
+            
+                <a style="margin-bottom: 0 !important;" class="premium-button btn bg-gradient-primary mt-4 w-100"
+                   target="_blank"
+                   href="<%- themeConfig.premium.card.button.url %>"
+                   type="button"><%- req?.locales?.partials?.premium?.buttonText %></a>
+            </div>
+        </div>
+    </div>
+<% } %>
+<script>
+    $('.rightCircle').on('click', function () {
+        var date = new Date();
+        date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+        
+        document.cookie = "premiumCard=true" + expires + "; path=/";
+        $(".sidenav-footer").fadeOut("slow");
+    });
+</script>
+<style>
+
+
+    .margin-top-0 {
+        margin-top: 0 !important;
+    }
+
+    .sidenav-footer {
+        width: 90%;
+    }
+
+    .rightCircle {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        position: absolute;
+        right: -5px;
+        top: -5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        box-shadow: 0 0 0 1px #fff;
+        z-index: 100;
+    }
+
+    .sidebarPremium {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        position: absolute;
+        right: 10px;
+        width: 20px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: transparent;
+        z-index: 100;
+    }
+</style>

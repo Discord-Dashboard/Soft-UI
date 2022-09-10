@@ -1,0 +1,57 @@
+[
+    {
+      "name": "colorscheme",
+      "version": "1.0.64",
+      "type": "partial"
+    },
+    {
+      "name": "footer",
+      "version": "1.0.1",
+      "type": "partial"
+    },
+    {
+      "name": "graph",
+      "version": "1.0.2",
+      "type": "partial"
+    },
+    {
+      "name": "iconsList",
+      "version": "1.0.0",
+      "type": "partial"
+    },
+    {
+      "name": "navbar",
+      "version": "1.0.11",
+      "type": "partial"
+    },
+    {
+      "name": "popup",
+      "version": "1.1.5",
+      "type": "partial"
+    },
+    {
+      "name": "preloader",
+      "version": "1.1.14",
+      "type": "partial"
+    },
+    {
+      "name": "premium",
+      "version": "1.0.0",
+      "type": "partial"
+    },
+    {
+      "name": "secret",
+      "version": "1.0.0",
+      "type": "partial"
+    },
+    {
+      "name": "theme",
+      "version": "1.1.0",
+      "type": "partial"
+    },
+    {
+      "name": "preload",
+      "version": "0.0.0",
+      "type": "partial"
+    }
+]

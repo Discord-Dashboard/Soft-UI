@@ -1,0 +1,174 @@
+<!--
+=========================================================
+* Soft UI Design System - v1.0.5
+=========================================================
+
+* Product Page:  https://www.creative-tim.com/product/soft-ui-design-system 
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+<%
+let logged = `<a id="login" onclick="auth()" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1 mt-2 mt-md-0">Login</a>`;
+if (loggedIn) logged = '<a href="/discord/logout" class="btn btn-sm  bg-gradient-primary  btn-round mb-0 me-1 mt-2 mt-md-0">Logout</a>';
+let title,
+        contentTitle,
+        texts;
+if (defaultMaintenanceConfig !== {}) {
+    title = defaultMaintenanceConfig.title;
+    contentTitle = defaultMaintenanceConfig.contentTitle;
+    texts = defaultMaintenanceConfig.texts;
+    if (!texts) texts = [];
+}
+%>
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+    <%- include('partials/preloader.ejs', {now: 'maintenance'}) %>
+    <%- include('partials/colorscheme.ejs') %>
+    <style>
+        .blur.blur-rounded {
+            border-radius: 17px;
+        }
+
+        a.btn.btn-sm.bg-gradient-primary.btn-round.mb-0.me-1.mt-2.mt-md-0 {
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+        }
+    </style>
+    <script>
+        function auth() {
+            <% if (!req.session.user) { %>
+                const newWindow = window.open('/discord?r=/close%3Flogin=true', 'Log in with discord', `directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no, width=500, height=800`);
+                newWindow.focus();
+
+                setInterval(() => {
+                    if (newWindow.closed) window.location.href = `<%= req.originalUrl%>?swal=logged`
+                }, 500);
+            <% } else { %>
+                window.location.href = `<%= req.originalUrl%>?swal=logged`
+            <% } %>
+        }
+    </script>
+
+</head>
+
+<body class="presentation-page">
+<%- include('partials/preload.ejs') %>
+<!-- Navbar -->
+<div class="container position-sticky z-index-sticky top-0">
+    <div class="row">
+        <div class="col-12">
+            <nav class="maintenance navbar navbar-expand-lg  blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
+                <div class="container-fluid px-0" style="flex-wrap: unset;">
+                    <a class="navbar-brand font-weight-bolder ms-sm-3" href="/">
+                        <img src="<%- themeConfig.icons.favicon %>" class="h-100"
+                             style="border-radius: 50%; width:40px;" alt="main_logo">
+                        <a style="margin-top: auto !important; margin-bottom: auto !important; font-weight: 800;"><%- themeConfig.websiteName %></a>
+                    </a>
+                    <ul class="navbar-nav navbar-nav-hover ms-lg-12 ps-lg-5 w-100" style="flex-direction: row-reverse;">
+                        <li class="nav navbar-nav navbar-right">
+                            <%- logged %>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+    </div>
+</div>
+<header class="header-2">
+    <%
+    const images = ["curved-1", "curved-2", "curved-3", "curved-4", "curved-5", "curved-6", "curved-7", "curved-8", "curved-9", "curved-10", "curved-11", "curved-12", "curved-13", "curved-14", "curved-15", "curved-16", "curved-17", "curved-18"];
+
+    const image = images[Math.floor(Math.random() * images.length)];
+    %>
+    <div id="background" class="page-header min-vh-75 relative"
+         style="background-image: url('/img/curved-images/<%- image %>.webp');">
+        <span class="mask bg-gradient-primary opacity-6"></span>
+        <div class="container" style="margin-top: 10vh">
+            <div class="row">
+                <div class="col-lg-7 text-center mx-auto">
+                    <h1 class="text-white pt-3 mt-n5"><%- contentTitle %></h1>
+                    <p class="lead text-white mt-3">
+                        <%- texts.map(text => '<p class="text-white">' + text + '</p>').join('') %>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="position-absolute w-100 z-index-1 bottom-0">
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave"
+                          d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/>
+                </defs>
+                <g class="moving-waves">
+                    <use class="dark-wave-1" xlink:href="#gentle-wave" x="48" y="-1" fill="rgba(255,255,255,0.40"/>
+                    <use class="dark-wave-2" xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"/>
+                    <use class="dark-wave-3" xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"/>
+                    <use class="dark-wave-4" xlink:href="#gentle-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"/>
+                    <use class="dark-wave-5" xlink:href="#gentle-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"/>
+                    <use class="dark-wave-6" xlink:href="#gentle-wave" x="48" y="16" fill="rgba(255,255,255,0.95"/>
+                </g>
+            </svg>
+        </div>
+    </div>
+</header>
+<% if(defaultMaintenanceConfig.infoCards){ %>
+    <section class="pt-4 pb-5 info-maintenance" id="count-stats" style="padding-top: 7rem !important;">
+        <div class="container">
+            <div class="row">
+                <div style="box-shadow: none !important;"
+                     class="maintenance info col-lg-9 z-index-2 border-radius-xl mt-n10 mx-auto py-4 blur shadow-blur">
+                    <div class="row">
+                        <% let c = 1; defaultMaintenanceConfig.infoCards.forEach(card => { %>
+                            <div class="col-md-4 position-relative">
+                                <div class="p-3 text-center">
+                                    <% if(card.title){ %><h1 class="text-gradient text-primary">
+                                        <span><%- card.title %></span></h1>
+                                    <% } %>
+                                    <% if(card.subtitle){ %><h5 class="mt-3"><%- card.subtitle %></h5>
+                                    <% } %>
+                                    <% if(card.description){ %><p class="text-sm"><%- card.description %></p>
+                                    <% } %>
+                                </div>
+                                <% c++; if(c != 4) { %>
+                                    <hr class="vertical dark">
+                                <% } %>
+                            </div>
+                        <% }) %>
+
+                        <!-- <div class="col-md-4 position-relative">
+                          <div class="p-3 text-center">
+                            <h1 class="text-gradient text-primary"> <span id="state2" countTo="15">0</span>+</h1>
+                            <h5 class="mt-3">Design Blocks</h5>
+                            <p class="text-sm">Mix the sections, change the colors and unleash your creativity</p>
+                          </div>
+                          <hr class="vertical dark">
+                        </div>
+                        <div class="col-md-4">
+                          <div class="p-3 text-center">
+                            <h1 class="text-gradient text-primary" id="state3" countTo="4">0</h1>
+                            <h5 class="mt-3">Pages</h5>
+                            <p class="text-sm">Save 3-4 weeks of work when you use our pre-made pages for your website</p>
+                          </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<% } %>
+
+<!--   Core JS Files   -->
+<script src="./js/core/popper.min.js" type="text/javascript"></script>
+<script src="./js/core/bootstrap.min.js" type="text/javascript"></script>
+<script src="./js/plugins/perfect-scrollbar.min.js"></script>
+<%- include('partials/scripts.ejs', {now: "maintenance"}) %>
+</body>
+
+</html>

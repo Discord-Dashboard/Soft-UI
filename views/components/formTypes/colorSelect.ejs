@@ -1,0 +1,11 @@
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+<input type="color" id="<%= option.optionId %>"
+       id="<%= option.optionId %>"
+       formType="colorSelect"
+       class="form-control form-control-color"
+       value="<%= actual[s.categoryId][option.optionId] || option.optionType.data || "#ffffff" %>"
+       <% if(option.optionType.disabled){ %>disabled
+        <% } %>
+       <% if(!Allowed.allowed){ %>style="border-color: red;" disabled
+        <% } %>
+>

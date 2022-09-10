@@ -1,0 +1,203 @@
+<html>
+<head>
+    <link href="/types/styles.css" rel="stylesheet"/>
+    <script src="/types/code.js"></script>
+    <link rel="stylesheet" href="/testcdn/f47b986ff7b093031dc7.css">
+    <link rel="stylesheet" href="/testcdn/guild.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body class="gui emptyContent emptyEmbed">
+<button class="emojipicker">Emoji picker</button>
+<hr>
+<div class="slidecontainer">
+    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+</div>
+<p>Slider is set to <b><span id="val"></span></b></p>
+<hr>
+<select id="channelSelect">
+    <optgroup label="Category Name">
+        <option value="54321">general</option>
+        <option value="12345">commands</option>
+    </optgroup>
+</select>
+<hr>
+<div style="max-width: 640px;"><input type="number" value="0"></div>
+<hr>
+<label class="f76c">
+    <input type="checkbox" checked="">
+    <span class="_3319"></span>Checkbox
+</label>
+<hr>
+<div class="c945" style="width: 90%; margin: 5rem;">
+    <h2>Message content</h2>
+    <hr>
+    <div class="a437">
+        <div class="e91f">
+            <input type="text" placeholder="Message Content">
+        </div>
+        <div class="f039" style="border-left-color: rgb(134, 194, 50);">
+            <div class="_221e"></div>
+            <div class="_8d09">
+                <div class="e91f">
+                    <input type="text" placeholder="Embed Author">
+                </div>
+            </div>
+            <div class="_4956">
+                <div class="e91f">
+                    <input type="text" placeholder="Title" value="New User! :D">
+                </div>
+            </div>
+            <div class="_9c2a">
+                <div class="e91f">
+                    <input type="text" placeholder="Description" value="Embed Description">
+                </div>
+            </div>
+            <div class="_3594">
+                <div class="e91f">
+                    <input type="text" placeholder="Footer Text" value="Look ma, this is a footer!">
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div><label class="f76c"><input type="checkbox" checked=""><span class="_3319"></span>Show embed</label></div>
+    <div style="width: 1px; height: 5px;"></div>
+    <div><label class="f76c"><input type="checkbox"><span class="_3319"></span>Show welcoming image</label></div>
+</div>
+
+<script>
+    /* -- ON SLIDER CHANGE, UPDATE PREVIEW COUNTER -- */
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("val");
+    output.innerHTML = slider.value;
+
+    slider.oninput = function () {
+        output.innerHTML = this.value;
+    }
+
+    /* --                                           -- */
+    function formatState(state) {
+        if (!state.id) {
+            return state.text;
+        }
+        var $state = $(
+            `<span>#${state.text}</span>`
+        );
+        return $state;
+    }
+
+    $("#channelSelect").select2({
+        templateResult: formatState
+    });
+
+    new EmojiPicker({
+        trigger: [
+            {
+                selector: '.emojipicker'
+            }
+        ],
+        closeButton: true
+    });
+</script>
+<hr>
+<div class="c945" style="width: 90%; margin: 5rem;">
+    <h2>Items</h2>
+    <h3>Manage your shop. Add, edit or remove items.</h3>
+    <hr>
+    <div class="_2242">
+            <span>
+               <div class="_46a4">Item</div>
+            </span>
+        <div class="_46a4 _34a1"><i class="fa fa-plus">+</i></div>
+    </div>
+</div>
+<div class="c945" style="width: 90%; margin: 5rem;">
+    <script>
+        function myFunction(type) {
+            var x = document.getElementById(`${type}input`).value;
+            document.getElementById(type).innerHTML = x;
+        }
+
+        function setHref(item) {
+            var a = document.getElementById(item); //or grab it by tagname etc
+            var x = document.getElementById("authorurlinput").value;
+            a.href = x
+        }
+    </script>
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <h2>Currency</h2>
+            <h3>Set a custom currency symbol.</h3>
+            <hr>
+            <div>
+                <div class="row" style="display: flex;">
+                    <div class="col-sm" style="width: 30%;">
+                        <p>Basic Settings</p>
+                        <div style="max-width: 270px;">
+                            <input id="titleinput" style="margin-top: 10px;" type="text" placeholder="Title"
+                                   onkeyup="myFunction('title')">
+                            <input id="descriptioninput" style="margin-top: 10px;" type="text" placeholder="Description"
+                                   onkeyup="myFunction('description')">
+                            <input id="" style="margin-top: 10px;" type="text" placeholder="Url">
+                        </div>
+                        <br>
+                        <label class="f76c">
+                            <input type="checkbox">
+                            <span class="_3319">
+                        </span>Wallet enabled
+                        </label>
+                    </div>
+                    <div class="col-sm" style="width: 30%;">
+                        <p>Author settings</p>
+                        <div style="max-width: 270px;">
+                            <input id="authorinput" style="margin-top: 10px;" type="text" placeholder="Author Name"
+                                   onkeyup="myFunction('author')">
+                            <input id="authorurlinput" style="margin-top: 10px;" type="text" placeholder="Author Link"
+                                   onkeyup="setHref('author')">
+                            <input id="" style="margin-top: 10px;" type="text" placeholder="Author Icon">
+                        </div>
+                        <br>
+                        <label class="f76c">
+                            <input type="checkbox">
+                            <span class="_3319">
+                        </span>Wallet enabled
+                        </label>
+                    </div>
+                    <div class="co-sm" style="width: 40%;">
+                        <div class="">
+                            <div class="bce7">
+                                <div class="fcd5">
+                                    <div class="_25cb" style="font-size: 1.3rem;"><a id="author"></a></div>
+                                    <div id="title" class="_25cb">Server's store</div>
+                                    <div id="description" class="_03aa">You have <b>10$</b> in your bank.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" style="display: flex;">
+                    <div class="col-sm" style="width: 30%;">
+                        <p>Fields</p>
+                        <div style="max-width: 270px;">
+                            <input style="margin-top: 10px;" type="text" placeholder="Title">
+                            <input style="margin-top: 10px;" type="text" placeholder="Description">
+                            <input style="margin-top: 10px;" type="text" placeholder="Url">
+                        </div>
+                        <br>
+                        <label class="f76c">
+                            <input type="checkbox">
+                            <span class="_3319">
+                        </span>Wallet enabled
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('partials/scripts.ejs') %>
+</body>
+</html>

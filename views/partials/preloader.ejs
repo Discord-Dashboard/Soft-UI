@@ -1,0 +1,191 @@
+<%
+let currentPage = "Dashboard";
+if (now) {
+    const pages = req?.locales?.partials?.navbar?.pages;
+    if (now === 'manage') currentPage = pages?.manage || "Manage Guilds";
+    if (now === 'settings') currentPage = pages?.settings || "Manage Guilds";
+    if (now === 'commands') currentPage = pages?.commands || "Commands";
+    if (now === 'pp') currentPage = pages?.pp || "Privacy Policy";
+    if (now === 'admin') currentPage = pages?.admin || "Admin Panel";
+    if (now === 'error') currentPage = pages?.error || "Error";
+    if (now === 'credits') currentPage = pages?.credits || "Credits";
+    if (now === 'debug') currentPage = pages?.debug || "Debug";
+    if (now === 'leaderboard') currentPage = pages?.leaderboard || "Leaderboard";
+    if (now === 'profile') currentPage = pages?.profile || "Profile";
+    if (now === 'maintenance') currentPage = pages?.maintenance || "Under Maintenance";
+}
+%>
+
+<%- include('meta.ejs', {now: now}) %>
+
+<!-- Page Information -->
+<link rel="icon" type="image/png" href="<%= themeConfig.icons.favicon %>">
+<title>
+    <%= themeConfig.websiteName %> - <%- currentPage %>
+</title>
+<!-- End of Page Information -->
+
+<!-- Stylesheets -->
+<% if(themeConfig.preloader.image) { %>
+    <link rel="prefetch" href="<%- themeConfig.preloader.image %>"/><% } %>
+
+
+<link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://fonts.googleapis.com/css?family=Alatsi" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/nucleo-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/nucleo-svg.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/soft-ui-dashboard.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/jquery-ui.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alatsi">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/nucleo-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/nucleo-svg.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/soft-ui-dashboard.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI@beta/views/src/css/jquery-ui.min.css">
+</noscript>
+
+<% // By default system theme is loaded, unless a user has changed it. Probably could be optimised further but :shrug:
+if(req.cookies?.selectedTheme == "dark" || req.cookies?.selectedTheme == "auto" || !req.cookies?.selectedTheme) { %>
+    <link href="/css/darkMode.css" rel='stylesheet' <% if(req?.cookies?.selectedTheme == "auto" || !req.cookies?.selectedTheme) { %> media="(prefers-color-scheme: dark)"<% } %>>
+    <% if (themeConfig?.icons?.sidebar?.darkUrl) { %>
+        <style <% if(req?.cookies?.selectedTheme == "auto" || !req.cookies?.selectedTheme) { %> media="(prefers-color-scheme: dark)"<% } %>>
+            .navbar-brand-img {
+                content:url("<%= themeConfig.icons.sidebar.darkUrl %>") !important;
+            }
+        </style>
+    <% } %>
+<% } %>
+<!-- End of Stylesheets -->
+
+<!-- Scripts -->
+
+<script src="/js/jquery.min.js"></script>
+<script src="./js/jquery-ui.js"></script>
+
+<%- include('colorscheme.ejs') %>
+
+<script>
+    $(document).ready(function () {
+        const params = new URLSearchParams(window.location.search);
+        const swal = params.get('swal');
+        const result = params.get('result');
+        if (swal) {
+            <% if (req.session.user) { %>if (swal === "logged") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.login || 'Successfully logged in!' %>', 3000); <% } %>
+            <% if (!req.session.user) { %>if (swal === "loggedout") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.logout || 'Successfully logged out!' %>', 3000); <% } %>
+        }
+        if (result) {
+            if (result === "true") sweetalert('success', 'Checked for updates!', 3000);
+            if (result === "false") sweetalert('error', 'Failed to check for updates!', 3000);
+        }
+        setTimeout(function () {
+            if (window.location.search) {
+                const url = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, url);
+            }
+        }, 1);
+    });
+
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function deleteCookie(name) {
+        document.cookie = name + '=; Max-Age=0'
+    }
+
+    let prog_width = 0;
+    let disabled = false;
+    document.onreadystatechange = function (e) {
+        if (disabled) return;
+        if (document.readyState === "interactive") {
+            var all = document.getElementsByTagName("*");
+            for (var i = 0, max = all.length; i < max; i++) {
+                checkProgress(all[i]);
+            }
+        }
+    }
+
+    function checkProgress(ele) {
+        var all = document.getElementsByTagName("*");
+        var per_inc = 100 / all.length;
+        if (disabled) return;
+
+        prog_width = prog_width + per_inc;
+        $("#progress").width(`${Math.floor(prog_width)}%`);
+
+        if (prog_width >= 100 && !disabled) {
+            disabled = true;
+            $(".preloader").fadeOut("slow")
+            //() => { $(".preloader").remove() }
+            $("#scroll").css('overflow', 'auto');
+        } else {
+            checkProgress(ele);
+        }
+    }
+    <% if (req.session.user) { %>
+    let userID = '<%- req.session.user.id %>';
+    let userTag = '<%- req.session.user.tag %>';
+    <% } %>
+
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+</script>
+<!-- End of Scripts -->
+<% if(now !== "maintenance" && now !== "error") { %>
+    <%- include('theme.ejs') %>
+<% } %>
+

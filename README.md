@@ -2,7 +2,12 @@
 
 ## Information
 
-This theme has not released yet, for updates join the [discord-dashboard discord](https://discord.gg/CHbfcSbEgd).
+This theme is in beta release, more information at [discord-dashboard discord](https://discord.gg/CHbfcSbEgd).
+## Documentation
+Docs are available at [Soft-UI Docs](https://dbd-docs.assistantscenter.com/soft-ui/).
+
+## Preview
+![Preview](./soft-ui-preview.png)
 
 ## Features
 
