@@ -29,6 +29,11 @@ module.exports = (themeConfig = {}) => {
                 if (!check) outdated = true;
             })();
 
+            themeConfig = {
+                ...themeConfig,
+                defaultLocales: require('./locales.js'),
+            }
+
             require('./utils/functions/errorHandler')(config, themeConfig)
             require('./utils/functions/settingsPage')(config, themeConfig)
             // await require('./utils/addonManager').execute(themeConfig, config, app, module.exports.messages);

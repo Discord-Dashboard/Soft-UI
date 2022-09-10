@@ -47,8 +47,11 @@
             </div>
             <div class="d-flex">
                 <select name="languages" id="lang" class="form-control">
-                    <% Object.keys(themeConfig?.locales || themeConfig?.defaultLocales).forEach((lang) => { %>
-                        <option value="<%= lang %>" <%= lang === req.lang ? 'selected' : '' %>><%= themeConfig.locales[lang].name %></option>
+                    <% 
+                        let locales = {};
+                        locales = (themeConfig.locales) ? themeConfig.locales : themeConfig.defaultLocales;
+                        Object.keys(locales).forEach((lang) => { %>
+                        <option value="<%= lang %>" <%= lang === req?.lang ? 'selected' : '' %>><%= locales[lang].name %></option>
                     <% }) %>
                 </select>
             </div>
