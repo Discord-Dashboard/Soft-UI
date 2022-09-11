@@ -93,7 +93,7 @@ module.exports = {
                                         }
                                     }
                                 } else if (option.optionType.type == "embedBuilder") {
-                                    if (parsedOption.value == null || parsedOption.value == undefined) {
+                                    if (parsedOption.value !== null || parsedOption.value !== undefined) {
                                         setNewRes = await option.setNew({
                                             guild: {
                                                 id: req.params.guildId,
@@ -103,7 +103,7 @@ module.exports = {
                                                 id: req.session.user.id,
                                                 object: userGuildMemberObject,
                                             },
-                                            newData: option.optionType.data
+                                            newData: parsedOption.value
                                         }) || {};
                                         setNewRes ? null : setNewRes = {};
                                         if (setNewRes.error) {
