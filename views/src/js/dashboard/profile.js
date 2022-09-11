@@ -28,7 +28,6 @@ $("li .categories").click(function () {
 });
 
 $(".form-check-input").change(function (e) {
-    console.log(e.target)
     if (e.target.getAttribute("switch") == "true") {
         const categoryName = e.target.getAttribute("category");
 
@@ -49,8 +48,6 @@ $(".form-check-input").change(function (e) {
             saveVisible = true;
             $("#saveChanges").attr('style', 'bottom: 15px !important');
         }
-
-        console.log(jsonToSend)
     }
 });
 
@@ -71,8 +68,6 @@ $(".categories").click(function (e) {
 
 function optionEdited(element) {
     if (!element.id) return console.log("NO id found");
-    console.log(element)
-    console.log("element")
     if (!jsonToSend.options) jsonToSend.options = []
     const formType = element.getAttribute("formType");
 
@@ -89,7 +84,6 @@ function optionEdited(element) {
         if (formType == "channelMultiSelect") option.value = $(`#${element.id}.multiSelect`).val();
         if (formType == "tagInput") option.value = $(`#${element.id}.tags`).val();
     } else if (formType === "switch") {
-        console.log(element.checked)
         option.value = element.checked;
     } else if (formType === "upload") {
         var reader = new FileReader();
