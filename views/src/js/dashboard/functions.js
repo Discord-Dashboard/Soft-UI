@@ -73,7 +73,7 @@ $(".categories").click(function (e) {
 });
 
 function optionEdited(element) {
-    if (!jsonToSend.options) jsonToSend.options = []
+    if (!jsonToSend?.options) jsonToSend.options = []
     const formType = element.getAttribute("formType");
 
     let option = jsonToSend.options.find(c => c?.id == element.id);
@@ -84,6 +84,9 @@ function optionEdited(element) {
 
     if (!option) return;
 
+    // if (formType === "visualEmbed") {
+    //     option.value = JSON.stringify(element.value);
+    // } else 
     if (formType === "visualEmbed") {
         option.value = element.value;
     } else if (formType === "tagInput" || formType == "channelMultiSelect") {

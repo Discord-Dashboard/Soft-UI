@@ -83,12 +83,12 @@
                         },
                     ]
                 }
-          }`
+          }`;
         }
     } else {
-        embedContent = JSON.stringify(actual[s.categoryId][option.optionId]);
+        if (typeof actual[s.categoryId][option.optionId] === "string") embedContent = actual[s.categoryId][option.optionId];
+        else embedContent = JSON.stringify(actual[s.categoryId][option.optionId], null, 3);
     } 
-        embedContent = JSON.parse(embedContent);
 
     %>
     <iframe class="responsive-iframe"
