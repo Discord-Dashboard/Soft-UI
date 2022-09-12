@@ -84,9 +84,6 @@ function optionEdited(element) {
 
     if (!option) return;
 
-    // if (formType === "visualEmbed") {
-    //     option.value = JSON.stringify(element.value);
-    // } else 
     if (formType === "visualEmbed") {
         option.value = element.value;
     } else if (formType === "tagInput" || formType == "channelMultiSelect") {
