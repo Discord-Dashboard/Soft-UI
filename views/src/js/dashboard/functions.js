@@ -84,14 +84,13 @@ function optionEdited(element) {
 
     if (!option) return;
 
-    if (formType === "visualEmbed") {
-        option.value = element.value;
-    } else if (formType === "tagInput" || formType == "channelMultiSelect") {
+    if (formType === "visualEmbed") option.value = element.value
+    else if (formType === "switch") option.value = element.checked;
+    else if (formType === "tagInput" || formType == "channelMultiSelect") {
         if (formType == "channelMultiSelect") option.value = $(`#${element.id}.multiSelect`).val();
         if (formType == "tagInput") option.value = $(`#${element.id}.tags`).val();
-    } else if (formType === "switch") {
-        option.value = element.checked;
-    } else if (formType === "upload") {
+    }
+    else if (formType === "upload") {
         var reader = new FileReader();
         reader.readAsDataURL(element.files[0]);
 
@@ -104,9 +103,7 @@ function optionEdited(element) {
             option.value = compressedImg; // Base64 Encoded String
         };
         reader.onerror = function (error) { };
-    } else {
-        option.value = element.value;
-    }
+    } else option.value = element.value;
 
     saveVisible = true;
 
