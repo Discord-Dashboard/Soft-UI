@@ -4,8 +4,6 @@
        formType="colorSelect"
        class="form-control form-control-color"
        value="<%= actual[s.categoryId][option.optionId] || option.optionType.data || "#ffffff" %>"
-       <% if(option.optionType.disabled){ %>disabled
-        <% } %>
-       <% if(!Allowed.allowed){ %>style="border-color: red;" disabled
-        <% } %>
+       <% if(option.optionType.disabled){ %>disabled<% } %>
+       <% if(!Allowed.allowed){ %>style="border-color: red;" disabled<% } %>
 >

@@ -4,7 +4,7 @@
         <% } %>
         formType="select"
         id="<%= option.optionId %>"
-<% if(option.optionType.disabled){ %>
+<% if(!Allowed.allowed || option.optionType.disabled){ %>
         disabled
         <% } %>
         name="<%= option.optionId %>">

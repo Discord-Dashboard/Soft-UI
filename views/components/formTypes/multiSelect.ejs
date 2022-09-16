@@ -1,33 +1,29 @@
-<li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-    <div class="d-flex flex-column width-100">
-        <h4><%= option.optionName %></h4> <%= option.optionDescription %> <br>
-        <select placeholder="Select" class="js-example-basic-multiple"
-                <% if(option.optionType.disabled){ %>disabled
-                <% } %>
-                <% if(option.optionType.required){ %>required
-                <% } %>
-                id="<%= option.optionId %>"
-                defaultValue=""
-                formType="multiSelect"
-                style="width:100%;background: #f9f9ff;border-color: #f9f9ff;"
-                class="col-md-12" multiple="multiple"
-                <% if(!Allowed.allowed){ %>style="border-color: red;" disabled
-                <% } %>
-        >
-            <%
-            let ioo = 0;
-            option.optionType.data.values.forEach(value => {
-            %>
-                <option value="<%= value %>"
-                <% if(actual[s.categoryId][option.optionId].includes(value)) { %>
-                        selected
-                        <% }
-                        %>
-                > <%= option.optionType.data.keys[ioo] %> </option>
-            <%
-                ioo++;
-            })
-            %>
-        </select>
-    </div>
-</li>
+<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
+
+<select placeholder="Select" class="js-example-basic-multiple"
+        <% if(option.optionType.disabled){ %>disabled
+        <% } %>
+        <% if(option.optionType.required){ %>required
+        <% } %>
+        id="<%= option.optionId %>"
+        defaultValue=""
+        formType="multiSelect"
+        style="width:100%;background: #f9f9ff;border-color: #f9f9ff;"
+        class="col-md-12" multiple="multiple"
+        <% if(!Allowed.allowed){ %>style="border-color: red;" disabled<% } %>
+>
+    <%
+    let ioo = 0;
+    option.optionType.data.values.forEach(value => {
+    %>
+        <option value="<%= value %>"
+        <% if(actual[s.categoryId][option.optionId].includes(value)) { %>
+                selected
+                <% }
+                %>
+        > <%= option.optionType.data.keys[ioo] %> </option>
+    <%
+        ioo++;
+    })
+    %>
+</select>

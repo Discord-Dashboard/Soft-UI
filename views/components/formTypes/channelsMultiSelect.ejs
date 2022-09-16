@@ -14,10 +14,10 @@
         <% } %>
         <% if(option.optionType.required){ %>required
         <% } %>
-        style="width:100%;background: #f9f9ff;border-color: #f9f9ff;"
+        style="width:100%;background: #f9f9ff;border-color: #f9f9ff;<% if(!Allowed.allowed){ %>border-color: red;<% } %>"
         multiple="multiple"
-        <% if(!Allowed.allowed){ %>disabled
-        <% } %>
+        <% if(!Allowed.allowed || option.optionType.disabled){ %>disabled<% } %>
+        
 >
     <% if (actual[s.categoryId][option.optionId]) {
         let ioooooo = 0;
