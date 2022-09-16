@@ -10,7 +10,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "node-fetch": "2.6.1",
+    "node-fetch": "2.6.7",
     "colors": "1.4.0",
     "nodeactyl": "^3.2.2",
     "quick.db": "^7.1.3"
