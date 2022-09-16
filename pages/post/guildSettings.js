@@ -103,7 +103,7 @@ module.exports = {
                                                 id: req.session.user.id,
                                                 object: userGuildMemberObject,
                                             },
-                                            newData: parsedOption.value
+                                            newData: JSON.parse(parsedOption.value)
                                         }) || {};
                                         setNewRes ? null : setNewRes = {};
                                         if (setNewRes.error) {
