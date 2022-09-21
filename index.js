@@ -42,7 +42,7 @@ module.exports = (themeConfig = {}) => {
     }
 }
 
-
+module.exports.partials = __dirname + '/views/partials';
 module.exports.formTypes = require('./utils/formtypes');
 module.exports.Feed = require('./utils/feedHandler');
 module.exports.cmdHandler = require('./utils/cmdHandler');
