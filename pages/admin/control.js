@@ -1,3 +1,5 @@
+const Nodeactyl = require('nodeactyl');
+
 const npmUpdater = require('../../utils/updater/npm');
 const fileUpdater = require('../../utils/updater/files');
 
