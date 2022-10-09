@@ -3,7 +3,7 @@ const colors = require('colors');
 const consolePrefix = `${"[".blue}${"dbd-soft-ui".yellow}${"]".blue} `;
 
 module.exports = {
-    init: async function (config, themeConfig, app) {
+    init: async function (config, themeConfig, app, db) {
 
         let info;
         if (themeConfig?.customThemeOptions?.info) {
@@ -23,14 +23,14 @@ module.exports = {
                         app.get(e.page, async function (req, res) {
                             if (!req.session.user) return res.sendStatus(401);
                             if (!config.ownerIDs.includes(req.session.user.id)) return res.sendStatus(403);
-                            e.execute(req, res, app, config, themeConfig, info);
+                            e.execute(req, res, app, config, themeConfig, info, db);
                         });
                     }
                     else if (folder === "post") app.post(e.page, function (req, res) {
-                        e.execute(req, res, app, config, themeConfig, info);
+                        e.execute(req, res, app, config, themeConfig, info, db);
                     });
                     else if (folder === "get") app.use(e.page, async function (req, res) {
-                        e.execute(req, res, app, config, themeConfig, info);
+                        e.execute(req, res, app, config, themeConfig, info, db);
                     });
                 } catch (error) {
                     console.log(`${consolePrefix}${"Failed to load:".cyan} ${colors.red(e.page)}`);

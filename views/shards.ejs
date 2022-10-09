@@ -1,0 +1,90 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/preloader.ejs', {now:'index', req: req}) %>
+<% if (req.query?.guild_id) { %>
+    <script>
+        window.onload = function () {
+            window.onunload = refreshParent;
+
+            function refreshParent() {
+                window.opener.location = `/settings/<%= req.query?.guild_id %>`;
+                window.close();
+                return
+            };
+            window.opener.location = `/settings/<%= req.query?.guild_id %>`;
+            window.close();
+        }
+    </script>
+<% } %>
+<head>
+    <style>
+        .unselectable {
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+      </style>
+</head>
+<body class="g-sidenav-show bg-gray-100" id="scroll">
+<%- include('partials/preload.ejs') %>
+<%- include('partials/sidebar.ejs', {config: config, now:'shards'}) %>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs', {now:'shards'}) %>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4" style="padding-bottom: 0px !important;" id="shardlist">
+        <b style="color:#6bd163;" class="unselectable">No shards exist!</b>
+    <%- include('partials/footer.ejs') %>
+    </div>
+</div>
+</main>
+</div>
+<!--  Graph Code !-->
+<%- include('partials/scripts.ejs', {now: "shards"}) %>
+
+<script>
+    async function updateshards(){
+        $.get("/shards/get", function(data, status){
+            $('#shardlist').empty()
+
+            $('#shardlist').append($('<div class="row" id="shardlist2"></div>'));
+
+            data = data.sort((a, b) => a.id - b.id);
+
+            for(const shard in data) {
+                let row = $(`<div class="col-sm-1">
+                <a class="active nav-link" data-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title='<i class="ni ni-circle-08"></i> Users: ${data[shard].users.toLocaleString()}<br><i class="ni ni-laptop"></i> Servers: ${data[shard].guilds.toLocaleString()}<br><i class="ni ni-collection"></i> Channels: ${data[shard].channels.toLocaleString()}<br><i class="ni ni-cloud-download-95"></i> Latency: ${data[shard].ping}ms'>
+                    <div
+                        class="icon icon-shape icon-md shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <b style="color:#6bd163;" class="unselectable">${data[shard].id}</b>
+                    </div>
+                </a>
+            </div>`)
+
+                $('#shardlist2').append(row.clone(true))
+                $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            }
+        });
+    }
+    updateshards()
+</script>
+</body>
+
+</html>
