@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 module.exports = function (config, themeConfig) {
     config.guildSettings = async function (req, res, home, category) {
         if (!req.session.user) return res.redirect('/discord?r=/guild/' + req.params.id);
@@ -16,7 +17,12 @@ module.exports = function (config, themeConfig) {
             } catch (err) { }
         }
         for (let PermissionRequired of req.requiredPermissions) {
-            if (!bot.guilds.cache.get(req.params.id).members.cache.get(req.session.user.id).permissions.has(PermissionRequired[0])) return res.redirect('/manage?error=noPermsToManageGuild');
+            let converted = PermissionRequired[0];
+            const DiscordJsVersion = Discord.version.split('.')[0]
+
+            if (DiscordJsVersion === "14") converted = await convert14(PermissionRequired[0])
+
+            if (!bot.guilds.cache.get(req.params.id).members.cache.get(req.session.user.id).permissions.has(converted)) return res.redirect('/manage?error=noPermsToManageGuild');
         }
 
         if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
@@ -155,4 +161,82 @@ module.exports = function (config, themeConfig) {
             config,
         });
     }
+}
+
+async function convert14(perm) {
+    var final = "NULL";
+
+    switch (perm) {
+        case "CREATE_INSTANT_INVITE":
+            final = "CreateInstantInvite"
+            break;
+        case "KICK_MEMBERS":
+            final = "KickMembers"
+            break;
+        case "BAN_MEMBERS":
+            final = "BanMembers"
+            break;
+        case "ADMINISTRATOR":
+            final = "Administrator"
+            break;
+        case "MANAGE_CHANNELS":
+            final = "ManageChannels"
+            break;
+        case "MANAGE_GUILD":
+            final = "ManageGuild"
+            break;
+        case "ADD_REACTIONS":
+            final = "AddReactions"
+            break;
+        case "VIEW_AUDIT_LOG":
+            final = "ViewAuditLog"
+            break;
+        case "PRIORITY_SPEAKER":
+            final = "PrioritySpeaker"
+            break;
+        case "STREAM":
+            final = "Stream"
+            break;
+        case "VIEW_CHANNEL":
+            final = "ViewChannel"
+            break;
+        case "SEND_MESSAGES":
+            final = "SendMessages"
+            break;
+        case "SEND_TTS_MESSAGES":
+            final = "SendTTSMessages"
+            break;
+        case "MANAGE_MESSAGES":
+            final = "ManageMessages"
+            break;
+        case "EMBED_LINKS":
+            final = "ManageMessages"
+            break;
+        case "ATTACH_FILES":
+            final = "AttachFiles"
+            break;
+        case "READ_MESSAGE_HISTORY":
+            final = "ReadMessageHistory"
+            break;
+        case "MENTION_EVERYONE":
+            final = "MentionEveryone"
+            break;
+        case "USE_EXTERNAL_EMOJIS":
+            final = "UseExternalEmojis"
+            break;
+        case "VIEW_GUILD_INSIGHTS":
+            final = "ViewGuildInsughts"
+            break;
+        case "CONNECT":
+            final = "Connect"
+            break;
+        case "SPEAK":
+            final = "Speak"
+            break;
+
+
+
+    }
+
+    return final
 }
