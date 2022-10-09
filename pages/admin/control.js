@@ -1,12 +1,9 @@
-const Nodeactyl = require('nodeactyl');
-
 const npmUpdater = require('../../utils/updater/npm');
 const fileUpdater = require('../../utils/updater/files');
 
 module.exports = {
     page: '/control',
     execute: async (req, res, app, config, themeConfig, info) => {
-        const pterodactyl = new Nodeactyl.NodeactylClient(themeConfig.admin.pterodactyl.panelLink, themeConfig.admin.pterodactyl.apiKey);
         const {
             uuid,
             action
