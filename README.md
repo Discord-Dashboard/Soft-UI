@@ -28,3 +28,4 @@ The table below shows the features **dbd-soft-ui** has compared to other themes 
 |Premium|<p align="center">✅</p>|<p align="center">❌</p>|<p align="center">❌</p>
 |Statistics|<p align="center">✅</p>|<p align="center">❌</p>|<p align="center">❌</p>
 |Commands Search|<p align="center">✅</p>|<p align="center">❌</p>|<p align="center">❌</p>
+|Shard Statistics|<p align="center">✅</p>|<p align="center">❌</p>|<p align="center">❌</p>
