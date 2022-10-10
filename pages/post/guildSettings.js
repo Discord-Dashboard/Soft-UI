@@ -9,6 +9,8 @@ module.exports = {
         let errors = [];
         let successes = [];
 
+        if (!req.session?.user) return res.send({success: false, message: "User is not logged in"})
+
         const userGuildMemberObject = config.bot.guilds.cache.get(req.params.guildId).members.cache.get(req.session.user.id);
         const guildObject = config.bot.guilds.cache.get(req.params.guildId);
 
