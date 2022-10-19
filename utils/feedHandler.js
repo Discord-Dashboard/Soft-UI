@@ -1,4 +1,6 @@
 const db = require('quick.db');
+const consolePrefix = `${"[".blue}${"dbd-soft-ui".yellow}${"]".blue} `;
+const colors = require('colors');
 const { icons, otherIcons } = require('../icons');
 
 module.exports = class Feed {
@@ -24,6 +26,39 @@ module.exports = class Feed {
             if (!icons.includes(icon) && !otherIcons.includes(icon)) throw new Error(`${consolePrefix}${`Failed to modify feed. ${colors.red("Invalid icon.")}`.cyan}`);
 
             this.icon = icon;
+
+            return this;
+        }
+
+        this.getFeed = function (id) {
+            if (!id) throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red("Invalid id.")}`.cyan}`);
+
+            let feedName = ""
+            switch (id) {
+                case 1:
+                    feedName = "one";
+                    break;
+                case 2:
+                    feedName = "two";
+                    break;
+                case 3:
+                    feedName = "three";
+                    break;
+                default:
+                    throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red("Invalid id.")}`.cyan}`);
+            }
+
+            let feed = db.get(`feeds.${feedName}`);
+            if (!feed) throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red("Feed not found.")}`.cyan}`);
+
+            this.feed = feed;
+            return this;
+        }
+
+        this.delete = function () {
+            if (!this.feed) throw new Error(`${consolePrefix}${`Failed to delete feed. ${colors.red("Feed not selected")}`.cyan}`);
+
+            db.delete(`feeds.${this.feed.id}`);
 
             return this;
         }
