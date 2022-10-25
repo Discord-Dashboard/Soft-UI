@@ -78,6 +78,7 @@
 
     var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(debug));
     %>
+    <%- themeConfig?.customHtml %>
 </head>
 <body class="g-sidenav-show bg-gray-100" id="scroll">
 <%- include('partials/preload.ejs') %>
