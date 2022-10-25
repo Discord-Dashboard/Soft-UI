@@ -86,8 +86,8 @@ function optionEdited(element) {
 
     if (formType === "visualEmbed") option.value = element.value
     else if (formType === "switch") option.value = element.checked;
-    else if (formType === "tagInput" || formType == "channelMultiSelect") {
-        if (formType == "channelMultiSelect") option.value = $(`#${element.id}.multiSelect`).val();
+    else if (formType === "tagInput" || formType == "channelMultiSelect" || formType == "rolesMultiSelect") {
+        if (formType == "channelMultiSelect" || formType == "rolesMultiSelect" ) option.value = $(`#${element.id}.multiSelect`).val();
         if (formType == "tagInput") option.value = $(`#${element.id}.tags`).val();
     }
     else if (formType === "upload") {
