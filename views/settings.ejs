@@ -469,18 +469,9 @@
                         <% } %>
                         <div class="card-body px-0 pt-0 pb-2" style="padding: 0 1.5rem 1.5rem !important;">
                             <% } %>
-                            <% if(option.optionType.type !== "collapsable" && option.optionType.type !== "modal") {
-                            if (themeOptions?.startNewSection) { %>
-                                <% if (!option.themeOptions?.hideOptionName || !option.optionName) { %>
-                                    <h4><%- option.optionName %></h4>
-                                <% } %>
-                                <% if (!option.themeOptions?.hideOptionDesc || !option.optionDescription) { %>
-                                    <a><%- option.optionDescription %></a>
-                                <% } %>
-                                <br>
-                            <% }
-                            } %>
-                            <%- include(`components/formTypes/${option.optionType.type}.ejs`, {option, s, Allowed}); %>
+                            <div class="mt-3">
+                                <%- include(`components/formTypes/${option.optionType.type}.ejs`, {option, s, Allowed}); %>
+                            </div>
                             <% if (!themeOptions?.startNewSection || themeOptions?.startNewSection && themeOptions?.startNewSection?.last && !themeOptions?.startNewSection?.first) { %>
                         </div>
                     </div>
