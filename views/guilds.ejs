@@ -71,7 +71,7 @@
                                         else icon = icon + "?size=256"
                                     %>
                                     <!--href="../invite?g=<%- req.session.guilds[i].id %>"-->
-                                    <a onclick="const newWindow = window.open(`/invite?g=<%- req.session.guilds[i].id %>&redirect=<%- req.headers.referer.split(':')[0] %>://<%- req.get(`host`) %>`, 'Add bot to guild', 'scrollbars=no, resizable=no, status=no, location=no, toolbar=no, menubar=no, width=500, height=800'); checkRefresh()">
+                                    <a onclick="const newWindow = window.open(`/invite?g=<%- req.session.guilds[i].id %>&redirect=<%- config.redirectUri.split('discord/callback')[0] %>`, 'Add bot to guild', 'scrollbars=no, resizable=no, status=no, location=no, toolbar=no, menubar=no, width=500, height=800'); checkRefresh()">
                                         <div max="20" scale="110" perspective="700" class="_82d1"
                                              data-guildname="<%- req.session.guilds[i].name %>"
                                              style="background-image: url(&quot;<%- icon %>&quot;); filter: grayscale(1);"></div>
