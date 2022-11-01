@@ -125,7 +125,7 @@ if (currentScheme == "dark") {
     new Chart(ctx, {
         type: "line",
         data: {
-            labels: <%- JSON.stringify(customThemeOptions.graph.labels) %>,
+            labels: <%- JSON.stringify(customThemeOptions?.graph?.labels) %>,
             datasets: [{
                 label: "<%= themeConfig.index.graph.tag %>",
                 tension: 0.4,
@@ -135,7 +135,7 @@ if (currentScheme == "dark") {
                 borderWidth: 3,
                 backgroundColor: gradientStroke1,
                 fill: true,
-                data: <%- JSON.stringify(data.values) %>,
+                data: <%- JSON.stringify(data?.values) %>,
                 maxBarThickness: 6
 
             },
