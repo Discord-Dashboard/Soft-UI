@@ -1,11 +1,11 @@
 module.exports = {
-    page: '/privacy-policy',
+    page: "/privacy-policy",
     execute: async (req, res, app, config, themeConfig, info) => {
-        res.render('pp', {
+        res.render("pp", {
             req,
             config,
             themeConfig,
-            info
-        });
-    }
+            info,
+        })
+    },
 }

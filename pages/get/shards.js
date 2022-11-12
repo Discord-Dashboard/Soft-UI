@@ -1,11 +1,11 @@
 module.exports = {
-    page: '/shards',
+    page: "/shards",
     execute: async (req, res, app, config, themeConfig, info, db) => {
-        res.render('shards', {
+        res.render("shards", {
             req: req,
             config,
             themeConfig,
-            info
-        });
-    }
+            info,
+        })
+    },
 }

@@ -1,11 +1,11 @@
 module.exports = {
-    page: '/credits',
+    page: "/credits",
     execute: async (req, res, app, config, themeConfig, info) => {
-        res.render('credits', {
+        res.render("credits", {
             req: req,
             config,
             themeConfig,
-            info
-        });
-    }
+            info,
+        })
+    },
 }

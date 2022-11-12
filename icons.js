@@ -256,7 +256,7 @@ const icons = [
     "volume-off",
     "volume-up",
     "wifi",
-    "wrench"
+    "wrench",
 ]
 const otherIcons = [
     "youtube",
@@ -275,14 +275,14 @@ const otherIcons = [
     "npm",
     "spotify",
     "usb",
-    "windows"
+    "windows",
 ]
 
 function run() {
     return {
         icons,
-        otherIcons
+        otherIcons,
     }
 }
 
-module.exports = run();
+module.exports = run()

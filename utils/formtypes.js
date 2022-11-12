@@ -6,28 +6,28 @@ module.exports = {
             max,
             step,
             disabled,
-            themeOptions
-        };
+            themeOptions,
+        }
     },
     date: (disabled, themeOptions = {}) => {
         return {
             type: "date",
             disabled,
-            themeOptions
-        };
+            themeOptions,
+        }
     },
     numberPicker: (disabled, themeOptions = {}) => {
         return {
             type: "numberPicker",
             disabled,
-            themeOptions
-        };
+            themeOptions,
+        }
     },
     tagInput: (disabled, themeOptions = {}) => {
         return {
             type: "tagInput",
             disabled,
-            themeOptions
-        };
+            themeOptions,
+        }
     },
 }

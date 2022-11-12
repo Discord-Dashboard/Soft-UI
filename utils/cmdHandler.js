@@ -1,17 +1,24 @@
 module.exports = (commands, prefix) => {
-    if (!commands) throw new Error('No commands were provided to the Soft UI cmdHandler.');
-    if (!prefix) prefix = "!";
+    if (!commands)
+        throw new Error("No commands were provided to the Soft UI cmdHandler.")
+    if (!prefix) prefix = "!"
 
-    let finalCategories = [];
+    let finalCategories = []
 
     for (const command of commands) {
-        if (!command.category) continue;
-        if (!categories?.includes(command.category)) categories.push(command.category);
+        if (!command.category) continue
+        if (!categories?.includes(command.category))
+            categories.push(command.category)
     }
 
     for (const category of categories) {
-        if (category === "admin" || category === "owner" || category === "development") continue;
-        let commandsArr = [];
+        if (
+            category === "admin" ||
+            category === "owner" ||
+            category === "development"
+        )
+            continue
+        let commandsArr = []
 
         for (const command of commands) {
             if (command.category === category) {
@@ -19,9 +26,9 @@ module.exports = (commands, prefix) => {
                     commandName: command.name,
                     commandUsage: `${prefix}${command.name} ${command.usage}`,
                     commandDescription: command.description,
-                    commandAlias: command.aliases?.join(', ') || 'None',
+                    commandAlias: command.aliases?.join(", ") || "None",
                 }
-                commandsArr.push(obj);
+                commandsArr.push(obj)
             }
         }
 
@@ -32,11 +39,11 @@ module.exports = (commands, prefix) => {
             list: commandsArr,
         }
 
-        finalCategories.push(categoryObj);
+        finalCategories.push(categoryObj)
     }
 
     function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+        return string.charAt(0).toUpperCase() + string.slice(1)
     }
 
     return finalCategories

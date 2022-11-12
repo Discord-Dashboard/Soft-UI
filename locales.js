@@ -1,15 +1,16 @@
 module.exports = {
-    "enUS": {
-        name: 'English',
+    enUS: {
+        name: "English",
         index: {
             feeds: ["Current Users", "CPU", "System Platform", "Server Count"],
             card: {
                 category: "Soft UI",
                 title: "Assistants - The center of everything",
-                description: "Assistants Discord Bot management panel. Assistants Bot was created to give others the ability to do what they want. Just.<br>That's an example text.<br><br><b><i>Feel free to use HTML</i></b>",
+                description:
+                    "Assistants Discord Bot management panel. Assistants Bot was created to give others the ability to do what they want. Just.<br>That's an example text.<br><br><b><i>Feel free to use HTML</i></b>",
                 footer: "Learn More",
                 image: "/img/soft-ui.webp",
-                linkText: "Learn more"
+                linkText: "Learn more",
             },
             feedsTitle: "Feeds",
             graphTitle: "Graphs",
@@ -19,9 +20,9 @@ module.exports = {
                 memberCount: "Members",
                 info: {
                     info: "Info",
-                    server: "Server Information"
-                }
-            }
+                    server: "Server Information",
+                },
+            },
         },
         privacyPolicy: {
             title: "Privacy Policy",
@@ -36,7 +37,7 @@ module.exports = {
                 admin: "Admin",
                 account: "Account Pages",
                 login: "Sign In",
-                logout: "Sign Out"
+                logout: "Sign Out",
             },
             navbar: {
                 home: "Home",
@@ -52,7 +53,7 @@ module.exports = {
                     leaderboard: "Leaderboard",
                     profile: "Profile",
                     maintenance: "Under Maintenance",
-                }
+                },
             },
             title: {
                 pages: {
@@ -67,10 +68,10 @@ module.exports = {
                     leaderboard: "Leaderboard",
                     profile: "Profile",
                     maintenance: "Under Maintenance",
-                }
+                },
             },
             preloader: {
-                text: "Page is loading..."
+                text: "Page is loading...",
             },
             premium: {
                 title: "Want more from Assistants?",
@@ -87,8 +88,8 @@ module.exports = {
                 language: {
                     title: "Site Language",
                     description: "Select your preferred language!",
-                }
-            }
-        }
-    }
+                },
+            },
+        },
+    },
 }
