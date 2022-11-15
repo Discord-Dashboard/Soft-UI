@@ -1,8 +1,8 @@
-const Discord = require("discord.js")
+const Discord = require('discord.js')
 module.exports = function (config, themeConfig) {
     config.guildSettings = async function (req, res, home, category) {
         if (!req.session.user)
-            return res.redirect("/discord?r=/guild/" + req.params.id)
+            return res.redirect('/discord?r=/guild/' + req.params.id)
 
         let bot = config.bot
         if (!bot.guilds.cache.get(req.params.id)) {
@@ -12,7 +12,7 @@ module.exports = function (config, themeConfig) {
         }
 
         if (!bot.guilds.cache.get(req.params.id))
-            return res.redirect("/manage?error=noPermsToManageGuild")
+            return res.redirect('/manage?error=noPermsToManageGuild')
         if (
             !bot.guilds.cache
                 .get(req.params.id)
@@ -26,9 +26,9 @@ module.exports = function (config, themeConfig) {
         }
         for (let PermissionRequired of req.requiredPermissions) {
             let converted = PermissionRequired[0]
-            const DiscordJsVersion = Discord.version.split(".")[0]
+            const DiscordJsVersion = Discord.version.split('.')[0]
 
-            if (DiscordJsVersion === "14")
+            if (DiscordJsVersion === '14')
                 converted = await convert14(PermissionRequired[0])
 
             if (
@@ -37,7 +37,7 @@ module.exports = function (config, themeConfig) {
                     .members.cache.get(req.session.user.id)
                     .permissions.has(converted)
             )
-                return res.redirect("/manage?error=noPermsToManageGuild")
+                return res.redirect('/manage?error=noPermsToManageGuild')
         }
 
         if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
@@ -65,8 +65,8 @@ module.exports = function (config, themeConfig) {
                 }
                 toggle[s.categoryId] = await s.getActualSet({
                     guild: {
-                        id: req.params.id,
-                    },
+                        id: req.params.id
+                    }
                 })
             }
             if (s.premium) {
@@ -75,12 +75,12 @@ module.exports = function (config, themeConfig) {
                 }
                 premium[s.categoryId] = await s.premiumUser({
                     guild: {
-                        id: req.params.id,
+                        id: req.params.id
                     },
                     user: {
                         id: req.session.user.id,
-                        tag: req.session.user.tag,
-                    },
+                        tag: req.session.user.tag
+                    }
                 })
             }
 
@@ -96,9 +96,9 @@ module.exports = function (config, themeConfig) {
                 if (c.allowedCheck) {
                     const canUse = await c.allowedCheck({
                         guild: { id: req.params.id },
-                        user: { id: req.session.user.id },
+                        user: { id: req.session.user.id }
                     })
-                    if (typeof canUse != "object")
+                    if (typeof canUse != 'object')
                         throw new TypeError(
                             `${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
                         )
@@ -106,22 +106,22 @@ module.exports = function (config, themeConfig) {
                 } else {
                     canUseList[s.categoryId][c.optionId] = {
                         allowed: true,
-                        errorMessage: null,
+                        errorMessage: null
                     }
                 }
 
                 if (!actual[s.categoryId]) actual[s.categoryId] = {}
 
-                if (c.optionType == "spacer") {
+                if (c.optionType == 'spacer') {
                 } else if (
-                    c.optionType.type == "collapsable" ||
-                    c.optionType.type == "modal"
+                    c.optionType.type == 'collapsable' ||
+                    c.optionType.type == 'modal'
                 ) {
                     for (const item of c.optionType.options) {
                         if (
-                            item.optionType.type == "channelsMultiSelect" ||
-                            item.optionType.type == "roleMultiSelect" ||
-                            item.optionType.type == "tagInput"
+                            item.optionType.type == 'channelsMultiSelect' ||
+                            item.optionType.type == 'roleMultiSelect' ||
+                            item.optionType.type == 'tagInput'
                         )
                             actual[s.categoryId][item.optionId] = []
                     }
@@ -134,14 +134,14 @@ module.exports = function (config, themeConfig) {
                             {
                                 guild: {
                                     id: req.params.id,
-                                    object: bot.guilds.cache.get(req.params.id),
+                                    object: bot.guilds.cache.get(req.params.id)
                                 },
                                 user: {
                                     id: req.session.user.id,
                                     object: bot.guilds.cache
                                         .get(req.params.id)
-                                        .members.cache.get(req.session.user.id),
-                                },
+                                        .members.cache.get(req.session.user.id)
+                                }
                             }
                         )
                     }
@@ -153,17 +153,17 @@ module.exports = function (config, themeConfig) {
         let success
 
         if (req.session.errors) {
-            if (String(req.session.errors).includes("%is%")) {
-                errors = req.session.errors.split("%and%")
+            if (String(req.session.errors).includes('%is%')) {
+                errors = req.session.errors.split('%and%')
             }
         }
 
         if (req.session.success) {
-            if (typeof req.session.success == "boolean") {
+            if (typeof req.session.success == 'boolean') {
                 success = true
             } else {
-                if (String(req.session.success).includes("%is%")) {
-                    success = req.session.success.split("%and%")
+                if (String(req.session.success).includes('%is%')) {
+                    success = req.session.success.split('%and%')
                 }
             }
         }
@@ -177,7 +177,7 @@ module.exports = function (config, themeConfig) {
         if (!guild.iconURL()) gIcon = themeConfig.icons.noGuildIcon
         else gIcon = guild.iconURL()
 
-        res.render("settings", {
+        res.render('settings', {
             successes: success,
             errors: errors,
             settings: config.settings,
@@ -191,80 +191,80 @@ module.exports = function (config, themeConfig) {
             req: req,
             guildid: req.params.id,
             themeConfig: req.themeConfig,
-            config,
+            config
         })
     }
 }
 
 async function convert14(perm) {
-    var final = "NULL"
+    var final = 'NULL'
 
     switch (perm) {
-        case "CREATE_INSTANT_INVITE":
-            final = "CreateInstantInvite"
+        case 'CREATE_INSTANT_INVITE':
+            final = 'CreateInstantInvite'
             break
-        case "KICK_MEMBERS":
-            final = "KickMembers"
+        case 'KICK_MEMBERS':
+            final = 'KickMembers'
             break
-        case "BAN_MEMBERS":
-            final = "BanMembers"
+        case 'BAN_MEMBERS':
+            final = 'BanMembers'
             break
-        case "ADMINISTRATOR":
-            final = "Administrator"
+        case 'ADMINISTRATOR':
+            final = 'Administrator'
             break
-        case "MANAGE_CHANNELS":
-            final = "ManageChannels"
+        case 'MANAGE_CHANNELS':
+            final = 'ManageChannels'
             break
-        case "MANAGE_GUILD":
-            final = "ManageGuild"
+        case 'MANAGE_GUILD':
+            final = 'ManageGuild'
             break
-        case "ADD_REACTIONS":
-            final = "AddReactions"
+        case 'ADD_REACTIONS':
+            final = 'AddReactions'
             break
-        case "VIEW_AUDIT_LOG":
-            final = "ViewAuditLog"
+        case 'VIEW_AUDIT_LOG':
+            final = 'ViewAuditLog'
             break
-        case "PRIORITY_SPEAKER":
-            final = "PrioritySpeaker"
+        case 'PRIORITY_SPEAKER':
+            final = 'PrioritySpeaker'
             break
-        case "STREAM":
-            final = "Stream"
+        case 'STREAM':
+            final = 'Stream'
             break
-        case "VIEW_CHANNEL":
-            final = "ViewChannel"
+        case 'VIEW_CHANNEL':
+            final = 'ViewChannel'
             break
-        case "SEND_MESSAGES":
-            final = "SendMessages"
+        case 'SEND_MESSAGES':
+            final = 'SendMessages'
             break
-        case "SEND_TTS_MESSAGES":
-            final = "SendTTSMessages"
+        case 'SEND_TTS_MESSAGES':
+            final = 'SendTTSMessages'
             break
-        case "MANAGE_MESSAGES":
-            final = "ManageMessages"
+        case 'MANAGE_MESSAGES':
+            final = 'ManageMessages'
             break
-        case "EMBED_LINKS":
-            final = "ManageMessages"
+        case 'EMBED_LINKS':
+            final = 'ManageMessages'
             break
-        case "ATTACH_FILES":
-            final = "AttachFiles"
+        case 'ATTACH_FILES':
+            final = 'AttachFiles'
             break
-        case "READ_MESSAGE_HISTORY":
-            final = "ReadMessageHistory"
+        case 'READ_MESSAGE_HISTORY':
+            final = 'ReadMessageHistory'
             break
-        case "MENTION_EVERYONE":
-            final = "MentionEveryone"
+        case 'MENTION_EVERYONE':
+            final = 'MentionEveryone'
             break
-        case "USE_EXTERNAL_EMOJIS":
-            final = "UseExternalEmojis"
+        case 'USE_EXTERNAL_EMOJIS':
+            final = 'UseExternalEmojis'
             break
-        case "VIEW_GUILD_INSIGHTS":
-            final = "ViewGuildInsughts"
+        case 'VIEW_GUILD_INSIGHTS':
+            final = 'ViewGuildInsughts'
             break
-        case "CONNECT":
-            final = "Connect"
+        case 'CONNECT':
+            final = 'Connect'
             break
-        case "SPEAK":
-            final = "Speak"
+        case 'SPEAK':
+            final = 'Speak'
             break
     }
 

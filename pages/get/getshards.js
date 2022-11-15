@@ -1,8 +1,8 @@
 module.exports = {
-    page: "/shards/get",
+    page: '/shards/get',
     execute: async (req, res, app, config, themeConfig, info, db) => {
-        let returned = await db.get("stats")
+        let returned = await db.get('stats')
 
         res.json(returned)
-    },
+    }
 }

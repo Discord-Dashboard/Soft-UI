@@ -1,10 +1,10 @@
-const fetch = require("node-fetch")
-const consolePrefix = `${"[".blue}${"dbd-soft-ui".yellow}${"]".blue} `
+const fetch = require('node-fetch')
+const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
 
 async function npmDashCheck() {
     console.log(
-        `${consolePrefix}${"Checking".cyan} ${"NPM".red} ${
-            "for updates..".cyan
+        `${consolePrefix}${'Checking'.cyan} ${'NPM'.red} ${
+            'for updates..'.cyan
         }`
     )
     await npmThemeCheck()
@@ -29,19 +29,19 @@ async function npmDashCheck() {
             )
         }
         if (failed2 === 0) {
-            const latestVersion = checkArray["dist-tags"].latest
-            const currentVersion = require("discord-dashboard").version
+            const latestVersion = checkArray['dist-tags'].latest
+            const currentVersion = require('discord-dashboard').version
             if (currentVersion < latestVersion)
                 console.log(
                     `${consolePrefix}${
-                        "Your version of discord-dashboard is".cyan
-                    } ${"outdated".red}${"!".cyan}`
+                        'Your version of discord-dashboard is'.cyan
+                    } ${'outdated'.red}${'!'.cyan}`
                 )
             else
                 console.log(
                     `${consolePrefix}${
-                        "Your version of discord-dashboard is".cyan
-                    } ${"up-to-date".green}${"!".cyan}`
+                        'Your version of discord-dashboard is'.cyan
+                    } ${'up-to-date'.green}${'!'.cyan}`
                 )
         }
     }
@@ -69,19 +69,19 @@ async function npmThemeCheck() {
             )
         }
         if (failed2 === 0) {
-            const latestVersion = checkArray["dist-tags"].latest
-            const currentVersion = require("dbd-soft-ui").version
+            const latestVersion = checkArray['dist-tags'].latest
+            const currentVersion = require('dbd-soft-ui').version
             if (currentVersion < latestVersion)
                 console.log(
-                    `${consolePrefix}${"Your version of dbd-soft-ui is".cyan} ${
-                        "outdated".red
-                    }${"!".cyan}`
+                    `${consolePrefix}${'Your version of dbd-soft-ui is'.cyan} ${
+                        'outdated'.red
+                    }${'!'.cyan}`
                 )
             else
                 console.log(
-                    `${consolePrefix}${"Your version of dbd-soft-ui is".cyan} ${
-                        "up-to-date".green
-                    }${"!".cyan}`
+                    `${consolePrefix}${'Your version of dbd-soft-ui is'.cyan} ${
+                        'up-to-date'.green
+                    }${'!'.cyan}`
                 )
         }
     }

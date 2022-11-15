@@ -1,11 +1,11 @@
 module.exports = {
-    page: "/blacklisted",
+    page: '/blacklisted',
     execute: async (req, res, app, config, themeConfig, info) => {
-        res.render("blacklisted", {
+        res.render('blacklisted', {
             req,
             config,
             themeConfig,
-            info,
+            info
         })
-    },
+    }
 }

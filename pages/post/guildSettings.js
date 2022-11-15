@@ -1,5 +1,5 @@
 module.exports = {
-    page: "/guild/update/:guildId/",
+    page: '/guild/update/:guildId/',
     execute: async (req, res, app, config, themeConfig, info) => {
         const data = req.body
 
@@ -12,7 +12,7 @@ module.exports = {
         if (!req.session?.user)
             return res.send({
                 success: false,
-                message: "User is not logged in",
+                message: 'User is not logged in'
             })
 
         const userGuildMemberObject = config.bot.guilds.cache
@@ -34,7 +34,7 @@ module.exports = {
                             if (option.allowedCheck) {
                                 canUse = await option.allowedCheck({
                                     guild: { id: req.params.guildId },
-                                    user: { id: req.session.user.id },
+                                    user: { id: req.session.user.id }
                                 })
                             } else {
                                 canUse = { allowed: true, errorMessage: null }
@@ -44,20 +44,20 @@ module.exports = {
                                 setNewRes = { error: canUse.errorMessage }
                                 errors.push(
                                     option.optionName +
-                                        "%is%" +
+                                        '%is%' +
                                         setNewRes.error +
-                                        "%is%" +
+                                        '%is%' +
                                         option.optionId
                                 )
                             } else {
-                                if (option.optionType == "spacer") {
+                                if (option.optionType == 'spacer') {
                                 } else if (
                                     option.optionType.type ==
-                                        "rolesMultiSelect" ||
+                                        'rolesMultiSelect' ||
                                     option.optionType.type ==
-                                        "channelsMultiSelect" ||
-                                    option.optionType.type == "multiSelect" ||
-                                    option.optionType.type == "tagInput"
+                                        'channelsMultiSelect' ||
+                                    option.optionType.type == 'multiSelect' ||
+                                    option.optionType.type == 'tagInput'
                                 ) {
                                     if (
                                         !parsedOption.value ||
@@ -67,47 +67,47 @@ module.exports = {
                                         setNewRes = await option.setNew({
                                             guild: {
                                                 id: req.params.guildId,
-                                                object: guildObject,
+                                                object: guildObject
                                             },
                                             user: {
                                                 id: req.session.user.id,
-                                                object: userGuildMemberObject,
+                                                object: userGuildMemberObject
                                             },
-                                            newData: [],
+                                            newData: []
                                         })
                                         setNewRes ? null : (setNewRes = {})
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     setNewRes.error +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
                                         }
                                     } else if (
-                                        typeof parsedOption.value != "object"
+                                        typeof parsedOption.value != 'object'
                                     ) {
                                         setNewRes = await option.setNew({
                                             guild: {
                                                 id: req.params.guildId,
-                                                object: guildObject,
+                                                object: guildObject
                                             },
                                             user: {
                                                 id: req.session.user.id,
-                                                object: userGuildMemberObject,
+                                                object: userGuildMemberObject
                                             },
-                                            newData: [parsedOption.value],
+                                            newData: [parsedOption.value]
                                         })
                                         setNewRes ? null : (setNewRes = {})
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     setNewRes.error +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     option.optionId
                                             )
                                         } else {
@@ -117,21 +117,21 @@ module.exports = {
                                         setNewRes = await option.setNew({
                                             guild: {
                                                 id: req.params.guildId,
-                                                object: guildObject,
+                                                object: guildObject
                                             },
                                             user: {
                                                 id: req.session.user.id,
-                                                object: userGuildMemberObject,
+                                                object: userGuildMemberObject
                                             },
-                                            newData: parsedOption.value,
+                                            newData: parsedOption.value
                                         })
                                         setNewRes ? null : (setNewRes = {})
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     setNewRes.error +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     option.optionId
                                             )
                                         } else {
@@ -139,7 +139,7 @@ module.exports = {
                                         }
                                     }
                                 } else if (
-                                    option.optionType.type == "embedBuilder"
+                                    option.optionType.type == 'embedBuilder'
                                 ) {
                                     if (
                                         parsedOption.value !== null ||
@@ -149,23 +149,23 @@ module.exports = {
                                             (await option.setNew({
                                                 guild: {
                                                     id: req.params.guildId,
-                                                    object: guildObject,
+                                                    object: guildObject
                                                 },
                                                 user: {
                                                     id: req.session.user.id,
-                                                    object: userGuildMemberObject,
+                                                    object: userGuildMemberObject
                                                 },
                                                 newData: JSON.parse(
                                                     parsedOption.value
-                                                ),
+                                                )
                                             })) || {}
                                         setNewRes ? null : (setNewRes = {})
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     setNewRes.error +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     option.optionId
                                             )
                                         } else {
@@ -180,21 +180,21 @@ module.exports = {
                                                 (await option.setNew({
                                                     guild: {
                                                         id: req.params.guildId,
-                                                        object: guildObject,
+                                                        object: guildObject
                                                     },
                                                     user: {
                                                         id: req.session.user.id,
-                                                        object: userGuildMemberObject,
+                                                        object: userGuildMemberObject
                                                     },
-                                                    newData: parsedResponse,
+                                                    newData: parsedResponse
                                                 })) || {}
                                             setNewRes ? null : (setNewRes = {})
                                             if (setNewRes.error) {
                                                 errors.push(
                                                     option.optionName +
-                                                        "%is%" +
+                                                        '%is%' +
                                                         setNewRes.error +
-                                                        "%is%" +
+                                                        '%is%' +
                                                         option.optionId
                                                 )
                                             } else {
@@ -207,24 +207,24 @@ module.exports = {
                                                 (await option.setNew({
                                                     guild: {
                                                         id: req.params.guildId,
-                                                        object: guildObject,
+                                                        object: guildObject
                                                     },
                                                     user: {
                                                         id: req.session.user.id,
-                                                        object: userGuildMemberObject,
+                                                        object: userGuildMemberObject
                                                     },
                                                     newData:
-                                                        option.optionType.data,
+                                                        option.optionType.data
                                                 })) || {}
                                             setNewRes = {
-                                                error: "JSON parse for embed builder went wrong, your settings have been reset.",
+                                                error: 'JSON parse for embed builder went wrong, your settings have been reset.'
                                             }
                                             if (setNewRes.error) {
                                                 errors.push(
                                                     option.optionName +
-                                                        "%is%" +
+                                                        '%is%' +
                                                         setNewRes.error +
-                                                        "%is%" +
+                                                        '%is%' +
                                                         option.optionId
                                                 )
                                             } else {
@@ -243,21 +243,21 @@ module.exports = {
                                             (await option.setNew({
                                                 guild: {
                                                     id: req.params.guildId,
-                                                    object: guildObject,
+                                                    object: guildObject
                                                 },
                                                 user: {
                                                     id: req.session.user.id,
-                                                    object: userGuildMemberObject,
+                                                    object: userGuildMemberObject
                                                 },
-                                                newData: null,
+                                                newData: null
                                             })) || {}
                                         setNewRes ? null : (setNewRes = {})
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     setNewRes.error +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     option.optionId
                                             )
                                         } else {
@@ -268,21 +268,21 @@ module.exports = {
                                             (await option.setNew({
                                                 guild: {
                                                     id: req.params.guildId,
-                                                    object: guildObject,
+                                                    object: guildObject
                                                 },
                                                 user: {
                                                     id: req.session.user.id,
-                                                    object: userGuildMemberObject,
+                                                    object: userGuildMemberObject
                                                 },
-                                                newData: parsedOption.value,
+                                                newData: parsedOption.value
                                             })) || {}
                                         setNewRes ? null : (setNewRes = {})
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     setNewRes.error +
-                                                    "%is%" +
+                                                    '%is%' +
                                                     option.optionId
                                             )
                                         } else {
@@ -297,7 +297,7 @@ module.exports = {
             } catch (err) {
                 return res.send({
                     success: false,
-                    message: `An error occured: ${err}`,
+                    message: `An error occured: ${err}`
                 })
             }
         }
@@ -310,25 +310,25 @@ module.exports = {
                     )
                     await category.setNew({
                         guild: { id: req.params.guildId },
-                        newData: s.value,
+                        newData: s.value
                     })
                 } catch (err) {
                     return res.send({
                         success: false,
-                        message: `An error occured: ${err}`,
+                        message: `An error occured: ${err}`
                     })
                 }
             }
         }
 
-        req.DBDEvents.emit("guildSettingsUpdated", {
+        req.DBDEvents.emit('guildSettingsUpdated', {
             user: req.session.user,
-            changes: { successes, errors },
+            changes: { successes, errors }
         })
 
         res.send({
             success: true,
-            message: "saved changed",
+            message: 'saved changed'
         })
-    },
+    }
 }

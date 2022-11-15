@@ -1,12 +1,12 @@
 module.exports = {
-    page: "/commands",
+    page: '/commands',
     execute: async (req, res, app, config, themeConfig, info) => {
         if (themeConfig.commands)
-            res.render("commands.ejs", {
+            res.render('commands.ejs', {
                 req,
                 config,
                 themeConfig,
-                info,
+                info
             })
-    },
+    }
 }

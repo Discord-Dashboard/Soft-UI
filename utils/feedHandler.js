@@ -1,7 +1,7 @@
-const db = require("quick.db")
-const consolePrefix = `${"[".blue}${"dbd-soft-ui".yellow}${"]".blue} `
-const colors = require("colors")
-const { icons, otherIcons } = require("../icons")
+const db = require('quick.db')
+const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
+const colors = require('colors')
+const { icons, otherIcons } = require('../icons')
 
 module.exports = class Feed {
     constructor() {
@@ -9,22 +9,22 @@ module.exports = class Feed {
             if (!color)
                 throw new Error(
                     `${consolePrefix}${
-                        `Failed to modify feed. ${colors.red("Invalid color.")}`
+                        `Failed to modify feed. ${colors.red('Invalid color.')}`
                             .cyan
                     }`
                 )
             if (
-                color !== "red" &&
-                color !== "orange" &&
-                color !== "pink" &&
-                color !== "gray" &&
-                color !== "green" &&
-                color !== "blue" &&
-                color !== "dark"
+                color !== 'red' &&
+                color !== 'orange' &&
+                color !== 'pink' &&
+                color !== 'gray' &&
+                color !== 'green' &&
+                color !== 'blue' &&
+                color !== 'dark'
             )
                 throw new Error(
                     `${consolePrefix}${
-                        `Failed to modify feed. ${colors.red("Invalid color.")}`
+                        `Failed to modify feed. ${colors.red('Invalid color.')}`
                             .cyan
                     }`
                 )
@@ -38,12 +38,12 @@ module.exports = class Feed {
                 throw new Error(
                     `${consolePrefix}${
                         `Failed to modify feed. ${colors.red(
-                            "Invalid description."
+                            'Invalid description.'
                         )}`.cyan
                     }`
                 )
             if (description.length < 3 || description.length > 128)
-                console.log(`${consolePrefix}${"Invalid description".cyan}`)
+                console.log(`${consolePrefix}${'Invalid description'.cyan}`)
 
             this.description = description
 
@@ -53,14 +53,14 @@ module.exports = class Feed {
             if (!icon)
                 throw new Error(
                     `${consolePrefix}${
-                        `Failed to modify feed. ${colors.red("Invalid icon.")}`
+                        `Failed to modify feed. ${colors.red('Invalid icon.')}`
                             .cyan
                     }`
                 )
             if (!icons.includes(icon) && !otherIcons.includes(icon))
                 throw new Error(
                     `${consolePrefix}${
-                        `Failed to modify feed. ${colors.red("Invalid icon.")}`
+                        `Failed to modify feed. ${colors.red('Invalid icon.')}`
                             .cyan
                     }`
                 )
@@ -74,25 +74,25 @@ module.exports = class Feed {
             if (!id)
                 throw new Error(
                     `${consolePrefix}${
-                        `Failed to get feed. ${colors.red("Invalid id.")}`.cyan
+                        `Failed to get feed. ${colors.red('Invalid id.')}`.cyan
                     }`
                 )
 
-            let feedName = ""
+            let feedName = ''
             switch (id) {
                 case 1:
-                    feedName = "one"
+                    feedName = 'one'
                     break
                 case 2:
-                    feedName = "two"
+                    feedName = 'two'
                     break
                 case 3:
-                    feedName = "three"
+                    feedName = 'three'
                     break
                 default:
                     throw new Error(
                         `${consolePrefix}${
-                            `Failed to get feed. ${colors.red("Invalid id.")}`
+                            `Failed to get feed. ${colors.red('Invalid id.')}`
                                 .cyan
                         }`
                     )
@@ -102,7 +102,7 @@ module.exports = class Feed {
             if (!feed)
                 throw new Error(
                     `${consolePrefix}${
-                        `Failed to get feed. ${colors.red("Feed not found.")}`
+                        `Failed to get feed. ${colors.red('Feed not found.')}`
                             .cyan
                     }`
                 )
@@ -116,7 +116,7 @@ module.exports = class Feed {
                 throw new Error(
                     `${consolePrefix}${
                         `Failed to delete feed. ${colors.red(
-                            "Feed not selected"
+                            'Feed not selected'
                         )}`.cyan
                     }`
                 )
@@ -132,91 +132,91 @@ module.exports = class Feed {
             let col
             if (otherIcons.includes(icon)) diff = true
 
-            if (color === "red") col = "danger"
-            if (color === "orange") col = "warning"
-            if (color === "pink") col = "primary"
-            if (color === "gray") col = "secondary"
-            if (color === "green") col = "success"
-            if (color === "blue") col = "info"
-            if (color === "dark") col = "dark"
+            if (color === 'red') col = 'danger'
+            if (color === 'orange') col = 'warning'
+            if (color === 'pink') col = 'primary'
+            if (color === 'gray') col = 'secondary'
+            if (color === 'green') col = 'success'
+            if (color === 'blue') col = 'info'
+            if (color === 'dark') col = 'dark'
 
             if (
-                db.get("feeds.three") &&
-                db.get("feeds.two") &&
-                db.get("feeds.one")
+                db.get('feeds.three') &&
+                db.get('feeds.two') &&
+                db.get('feeds.one')
             ) {
-                await db.delete("feeds.one")
-                const f3 = db.get("feeds.three")
-                const f2 = db.get("feeds.two")
-                await db.set("feeds.two", {
+                await db.delete('feeds.one')
+                const f3 = db.get('feeds.three')
+                const f2 = db.get('feeds.two')
+                await db.set('feeds.two', {
                     color: f3.color,
                     description: f3.description,
                     published: f3.published,
                     icon: f3.icon,
-                    diff: f3.diff,
+                    diff: f3.diff
                 })
-                await db.set("feeds.one", {
+                await db.set('feeds.one', {
                     color: f2.color,
                     description: f2.description,
                     published: f2.published,
                     icon: f2.icon,
-                    diff: f2.diff,
+                    diff: f2.diff
                 })
-                await db.set("feeds.three", {
+                await db.set('feeds.three', {
                     color: col,
                     description: description,
                     published: Date.now(),
                     icon: icon,
-                    diff: diff,
+                    diff: diff
                 })
             } else {
-                if (!db.get("feeds.three"))
-                    await db.set("feeds.three", {
+                if (!db.get('feeds.three'))
+                    await db.set('feeds.three', {
                         color: col,
                         description: description,
                         published: Date.now(),
                         icon: icon,
-                        diff: diff,
+                        diff: diff
                     })
-                else if (!db.get("feeds.two")) {
-                    const f3 = db.get("feeds.three")
-                    await db.set("feeds.two", {
+                else if (!db.get('feeds.two')) {
+                    const f3 = db.get('feeds.three')
+                    await db.set('feeds.two', {
                         color: f3.color,
                         description: f3.description,
                         published: f3.published,
                         icon: f3.icon,
-                        diff: f3.diff,
+                        diff: f3.diff
                     })
-                    await db.set("feeds.three", {
+                    await db.set('feeds.three', {
                         color: col,
                         description: description,
                         published: Date.now(),
                         icon: icon,
-                        diff: diff,
+                        diff: diff
                     })
                 } else {
-                    const f3 = db.get("feeds.three")
-                    const f2 = db.get("feeds.two")
-                    await db.set("feeds.one", {
+                    const f3 = db.get('feeds.three')
+                    const f2 = db.get('feeds.two')
+                    await db.set('feeds.one', {
                         color: f2.color,
                         description: f2.description,
                         published: f2.published,
                         icon: f2.icon,
-                        diff: f2.diff,
+                        diff: f2.diff
                     })
-                    await db.set("feeds.two", {
+                    await db.set('feeds.two', {
                         color: f3.color,
                         description: f3.description,
                         published: f3.published,
                         icon: f3.icon,
-                        diff: f3.diff,
+                        diff: f3.diff
                     })
-                    await db.set("feeds.three", {
+                    await db.set('feeds.three', {
                         color: col,
                         description: description,
                         published: Date.now(),
                         icon: icon,
-                        diff: diff,
+                        diff: diff
                     })
                 }
             }

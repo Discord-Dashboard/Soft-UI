@@ -1,7 +1,7 @@
 module.exports = (commands, prefix) => {
     if (!commands)
-        throw new Error("No commands were provided to the Soft UI cmdHandler.")
-    if (!prefix) prefix = "!"
+        throw new Error('No commands were provided to the Soft UI cmdHandler.')
+    if (!prefix) prefix = '!'
 
     let finalCategories = []
 
@@ -13,9 +13,9 @@ module.exports = (commands, prefix) => {
 
     for (const category of categories) {
         if (
-            category === "admin" ||
-            category === "owner" ||
-            category === "development"
+            category === 'admin' ||
+            category === 'owner' ||
+            category === 'development'
         )
             continue
         let commandsArr = []
@@ -26,7 +26,7 @@ module.exports = (commands, prefix) => {
                     commandName: command.name,
                     commandUsage: `${prefix}${command.name} ${command.usage}`,
                     commandDescription: command.description,
-                    commandAlias: command.aliases?.join(", ") || "None",
+                    commandAlias: command.aliases?.join(', ') || 'None'
                 }
                 commandsArr.push(obj)
             }
@@ -36,7 +36,7 @@ module.exports = (commands, prefix) => {
             categoryId: category,
             category: `${capitalizeFirstLetter(category)}`,
             subTitle: `${capitalizeFirstLetter(category)} commands`,
-            list: commandsArr,
+            list: commandsArr
         }
 
         finalCategories.push(categoryObj)

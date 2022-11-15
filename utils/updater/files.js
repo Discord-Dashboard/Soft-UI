@@ -1,7 +1,7 @@
-const fetch = require("node-fetch")
-const fs = require("fs")
+const fetch = require('node-fetch')
+const fs = require('fs')
 const consolePrefix = `\x1b[34m[\x1b[33mdbd-soft-ui\x1b[34m]\x1b[36m `
-const colors = require("colors")
+const colors = require('colors')
 
 async function update() {
     const consolePrefix = `\x1b[34m[\x1b[33mdbd-soft-ui\x1b[34m]\x1b[36m `
@@ -32,17 +32,17 @@ async function update() {
         }
         if (failed4 === 0) {
             let latestVersions = []
-            let currentVersions = fs.readFileSync(__dirname + "/versions.json")
+            let currentVersions = fs.readFileSync(__dirname + '/versions.json')
             currentVersions = JSON.parse(currentVersions)
             let needsUpdating = []
             for (const latestFile of checkArray) {
                 if (latestFile.version > currentVersions[latestFile.name]) {
                     needsUpdating.push({
                         name: latestFile.name,
-                        type: latestFile.type,
+                        type: latestFile.type
                     })
                     const { name, type } = latestFile
-                    if (type === "partial") {
+                    if (type === 'partial') {
                         let failedFile = 0
                         let fileRaw = await fetch(
                             `https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/views/partials/${name}.ejs`

@@ -1,6 +1,6 @@
-const fs = require("fs")
-const colors = require("colors")
-const consolePrefix = `${"[".blue}${"dbd-soft-ui".yellow}${"]".blue} `
+const fs = require('fs')
+const colors = require('colors')
+const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
 
 module.exports = {
     init: async function (config, themeConfig, app, db) {
@@ -14,11 +14,11 @@ module.exports = {
         for (const folder of eventFolders) {
             const eventFiles = fs
                 .readdirSync(`${__dirname}/../pages/${folder}`)
-                .filter((file) => file.endsWith(".js"))
+                .filter((file) => file.endsWith('.js'))
             for (const file of eventFiles) {
                 const e = require(`${__dirname}/../pages/${folder}/${file}`)
                 try {
-                    if (folder === "admin") {
+                    if (folder === 'admin') {
                         app.get(e.page, async function (req, res) {
                             if (!req.session.user) return res.sendStatus(401)
                             if (!config.ownerIDs.includes(req.session.user.id))
@@ -33,7 +33,7 @@ module.exports = {
                                 db
                             )
                         })
-                    } else if (folder === "post")
+                    } else if (folder === 'post')
                         app.post(e.page, function (req, res) {
                             e.execute(
                                 req,
@@ -45,7 +45,7 @@ module.exports = {
                                 db
                             )
                         })
-                    else if (folder === "get")
+                    else if (folder === 'get')
                         app.use(e.page, async function (req, res) {
                             e.execute(
                                 req,
@@ -59,7 +59,7 @@ module.exports = {
                         })
                 } catch (error) {
                     console.log(
-                        `${consolePrefix}${"Failed to load:".cyan} ${colors.red(
+                        `${consolePrefix}${'Failed to load:'.cyan} ${colors.red(
                             e.page
                         )}`
                     )
@@ -67,7 +67,7 @@ module.exports = {
                 }
             }
         }
-        app.use("*", async function (req, res) {
+        app.use('*', async function (req, res) {
             res.status(404)
             config.errorPage(req, res, undefined, 404)
         })
@@ -75,6 +75,6 @@ module.exports = {
             res.status(500)
             config.errorPage(req, res, err, 500)
         })
-        console.log(`${consolePrefix}${"Initialised all pages!".cyan}`)
-    },
+        console.log(`${consolePrefix}${'Initialised all pages!'.cyan}`)
+    }
 }
