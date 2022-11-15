@@ -6,6 +6,6 @@ module.exports = {
             config,
             themeConfig,
             info
-        });
+        })
     }
 }

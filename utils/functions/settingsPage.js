@@ -1,64 +1,77 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js')
 module.exports = function (config, themeConfig) {
     config.guildSettings = async function (req, res, home, category) {
-        if (!req.session.user) return res.redirect('/discord?r=/guild/' + req.params.id);
+        if (!req.session.user)
+            return res.redirect('/discord?r=/guild/' + req.params.id)
 
-        let bot = config.bot;
+        let bot = config.bot
         if (!bot.guilds.cache.get(req.params.id)) {
             try {
-                await bot.guilds.fetch(req.params.id);
-            } catch (err) { }
+                await bot.guilds.fetch(req.params.id)
+            } catch (err) {}
         }
 
-        if (!bot.guilds.cache.get(req.params.id)) return res.redirect('/manage?error=noPermsToManageGuild');
-        if (!bot.guilds.cache.get(req.params.id).members.cache.get(req.session.user.id)) {
+        if (!bot.guilds.cache.get(req.params.id))
+            return res.redirect('/manage?error=noPermsToManageGuild')
+        if (
+            !bot.guilds.cache
+                .get(req.params.id)
+                .members.cache.get(req.session.user.id)
+        ) {
             try {
-                await bot.guilds.cache.get(req.params.id).members.fetch(req.session.user.id);
-            } catch (err) { }
+                await bot.guilds.cache
+                    .get(req.params.id)
+                    .members.fetch(req.session.user.id)
+            } catch (err) {}
         }
         for (let PermissionRequired of req.requiredPermissions) {
-            let converted = PermissionRequired[0];
+            let converted = PermissionRequired[0]
             const DiscordJsVersion = Discord.version.split('.')[0]
 
-            if (DiscordJsVersion === "14") converted = await convert14(PermissionRequired[0])
+            if (DiscordJsVersion === '14')
+                converted = await convert14(PermissionRequired[0])
 
-            if (!bot.guilds.cache.get(req.params.id).members.cache.get(req.session.user.id).permissions.has(converted)) return res.redirect('/manage?error=noPermsToManageGuild');
+            if (
+                !bot.guilds.cache
+                    .get(req.params.id)
+                    .members.cache.get(req.session.user.id)
+                    .permissions.has(converted)
+            )
+                return res.redirect('/manage?error=noPermsToManageGuild')
         }
 
         if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
             try {
-                await bot.guilds.cache.get(req.params.id).channels.fetch();
-            } catch (err) {
-            }
+                await bot.guilds.cache.get(req.params.id).channels.fetch()
+            } catch (err) {}
         }
 
         if (bot.guilds.cache.get(req.params.id).roles.cache.size < 2) {
             try {
-                await bot.guilds.cache.get(req.params.id).roles.fetch();
-            } catch (err) {
-            }
+                await bot.guilds.cache.get(req.params.id).roles.fetch()
+            } catch (err) {}
         }
 
-        let actual = {};
-        let toggle = {};
-        let premium = {};
+        let actual = {}
+        let toggle = {}
+        let premium = {}
 
-        let canUseList = {};
+        let canUseList = {}
         for (const s of config.settings) {
-            if (!canUseList[s.categoryId]) canUseList[s.categoryId] = {};
+            if (!canUseList[s.categoryId]) canUseList[s.categoryId] = {}
             if (s.toggleable) {
                 if (!toggle[s.categoryId]) {
-                    toggle[s.categoryId] = {};
+                    toggle[s.categoryId] = {}
                 }
                 toggle[s.categoryId] = await s.getActualSet({
                     guild: {
                         id: req.params.id
                     }
-                });
+                })
             }
             if (s.premium) {
                 if (!premium[s.categoryId]) {
-                    premium[s.categoryId] = {};
+                    premium[s.categoryId] = {}
                 }
                 premium[s.categoryId] = await s.premiumUser({
                     guild: {
@@ -68,12 +81,14 @@ module.exports = function (config, themeConfig) {
                         id: req.session.user.id,
                         tag: req.session.user.tag
                     }
-                });
+                })
             }
 
             if (category) {
                 if (s.premium && premium[category] == false) {
-                    return res.redirect(`/settings/${req.params.id}?error=premiumRequired`);
+                    return res.redirect(
+                        `/settings/${req.params.id}?error=premiumRequired`
+                    )
                 }
             }
 
@@ -82,67 +97,85 @@ module.exports = function (config, themeConfig) {
                     const canUse = await c.allowedCheck({
                         guild: { id: req.params.id },
                         user: { id: req.session.user.id }
-                    });
-                    if (typeof (canUse) != 'object') throw new TypeError(`${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`);
-                    canUseList[s.categoryId][c.optionId] = canUse;
+                    })
+                    if (typeof canUse != 'object')
+                        throw new TypeError(
+                            `${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
+                        )
+                    canUseList[s.categoryId][c.optionId] = canUse
                 } else {
-                    canUseList[s.categoryId][c.optionId] = { allowed: true, errorMessage: null };
+                    canUseList[s.categoryId][c.optionId] = {
+                        allowed: true,
+                        errorMessage: null
+                    }
                 }
 
-                if (!actual[s.categoryId]) actual[s.categoryId] = {};
+                if (!actual[s.categoryId]) actual[s.categoryId] = {}
 
                 if (c.optionType == 'spacer') {
-                } else if (c.optionType.type == 'collapsable' || c.optionType.type == 'modal') {
+                } else if (
+                    c.optionType.type == 'collapsable' ||
+                    c.optionType.type == 'modal'
+                ) {
                     for (const item of c.optionType.options) {
-                        if (item.optionType.type == 'channelsMultiSelect' || item.optionType.type == 'roleMultiSelect' || item.optionType.type == 'tagInput') actual[s.categoryId][item.optionId] = [];
+                        if (
+                            item.optionType.type == 'channelsMultiSelect' ||
+                            item.optionType.type == 'roleMultiSelect' ||
+                            item.optionType.type == 'tagInput'
+                        )
+                            actual[s.categoryId][item.optionId] = []
                     }
                 } else {
                     if (!actual[s.categoryId]) {
-                        actual[s.categoryId] = {};
+                        actual[s.categoryId] = {}
                     }
                     if (!actual[s.categoryId][c.optionId]) {
-                        actual[s.categoryId][c.optionId] = await c.getActualSet({
-                            guild: {
-                                id: req.params.id,
-                                object: bot.guilds.cache.get(req.params.id),
-                            },
-                            user: {
-                                id: req.session.user.id,
-                                object: bot.guilds.cache.get(req.params.id).members.cache.get(req.session.user.id),
+                        actual[s.categoryId][c.optionId] = await c.getActualSet(
+                            {
+                                guild: {
+                                    id: req.params.id,
+                                    object: bot.guilds.cache.get(req.params.id)
+                                },
+                                user: {
+                                    id: req.session.user.id,
+                                    object: bot.guilds.cache
+                                        .get(req.params.id)
+                                        .members.cache.get(req.session.user.id)
+                                }
                             }
-                        });
+                        )
                     }
                 }
             }
         }
 
-        let errors;
-        let success;
+        let errors
+        let success
 
         if (req.session.errors) {
             if (String(req.session.errors).includes('%is%')) {
-                errors = req.session.errors.split('%and%');
+                errors = req.session.errors.split('%and%')
             }
         }
 
         if (req.session.success) {
-            if (typeof (req.session.success) == 'boolean') {
-                success = true;
+            if (typeof req.session.success == 'boolean') {
+                success = true
             } else {
                 if (String(req.session.success).includes('%is%')) {
-                    success = req.session.success.split('%and%');
+                    success = req.session.success.split('%and%')
                 }
             }
         }
 
-        req.session.errors = null;
-        req.session.success = null;
+        req.session.errors = null
+        req.session.success = null
 
-        const guild = bot.guilds.cache.get(req.params.id);
-        let gIcon;
+        const guild = bot.guilds.cache.get(req.params.id)
+        let gIcon
 
-        if (!guild.iconURL()) gIcon = themeConfig.icons.noGuildIcon;
-        else gIcon = guild.iconURL();
+        if (!guild.iconURL()) gIcon = themeConfig.icons.noGuildIcon
+        else gIcon = guild.iconURL()
 
         res.render('settings', {
             successes: success,
@@ -158,84 +191,81 @@ module.exports = function (config, themeConfig) {
             req: req,
             guildid: req.params.id,
             themeConfig: req.themeConfig,
-            config,
-        });
+            config
+        })
     }
 }
 
 async function convert14(perm) {
-    var final = "NULL";
+    var final = 'NULL'
 
     switch (perm) {
-        case "CREATE_INSTANT_INVITE":
-            final = "CreateInstantInvite"
-            break;
-        case "KICK_MEMBERS":
-            final = "KickMembers"
-            break;
-        case "BAN_MEMBERS":
-            final = "BanMembers"
-            break;
-        case "ADMINISTRATOR":
-            final = "Administrator"
-            break;
-        case "MANAGE_CHANNELS":
-            final = "ManageChannels"
-            break;
-        case "MANAGE_GUILD":
-            final = "ManageGuild"
-            break;
-        case "ADD_REACTIONS":
-            final = "AddReactions"
-            break;
-        case "VIEW_AUDIT_LOG":
-            final = "ViewAuditLog"
-            break;
-        case "PRIORITY_SPEAKER":
-            final = "PrioritySpeaker"
-            break;
-        case "STREAM":
-            final = "Stream"
-            break;
-        case "VIEW_CHANNEL":
-            final = "ViewChannel"
-            break;
-        case "SEND_MESSAGES":
-            final = "SendMessages"
-            break;
-        case "SEND_TTS_MESSAGES":
-            final = "SendTTSMessages"
-            break;
-        case "MANAGE_MESSAGES":
-            final = "ManageMessages"
-            break;
-        case "EMBED_LINKS":
-            final = "ManageMessages"
-            break;
-        case "ATTACH_FILES":
-            final = "AttachFiles"
-            break;
-        case "READ_MESSAGE_HISTORY":
-            final = "ReadMessageHistory"
-            break;
-        case "MENTION_EVERYONE":
-            final = "MentionEveryone"
-            break;
-        case "USE_EXTERNAL_EMOJIS":
-            final = "UseExternalEmojis"
-            break;
-        case "VIEW_GUILD_INSIGHTS":
-            final = "ViewGuildInsughts"
-            break;
-        case "CONNECT":
-            final = "Connect"
-            break;
-        case "SPEAK":
-            final = "Speak"
-            break;
-
-
-
+        case 'CREATE_INSTANT_INVITE':
+            final = 'CreateInstantInvite'
+            break
+        case 'KICK_MEMBERS':
+            final = 'KickMembers'
+            break
+        case 'BAN_MEMBERS':
+            final = 'BanMembers'
+            break
+        case 'ADMINISTRATOR':
+            final = 'Administrator'
+            break
+        case 'MANAGE_CHANNELS':
+            final = 'ManageChannels'
+            break
+        case 'MANAGE_GUILD':
+            final = 'ManageGuild'
+            break
+        case 'ADD_REACTIONS':
+            final = 'AddReactions'
+            break
+        case 'VIEW_AUDIT_LOG':
+            final = 'ViewAuditLog'
+            break
+        case 'PRIORITY_SPEAKER':
+            final = 'PrioritySpeaker'
+            break
+        case 'STREAM':
+            final = 'Stream'
+            break
+        case 'VIEW_CHANNEL':
+            final = 'ViewChannel'
+            break
+        case 'SEND_MESSAGES':
+            final = 'SendMessages'
+            break
+        case 'SEND_TTS_MESSAGES':
+            final = 'SendTTSMessages'
+            break
+        case 'MANAGE_MESSAGES':
+            final = 'ManageMessages'
+            break
+        case 'EMBED_LINKS':
+            final = 'ManageMessages'
+            break
+        case 'ATTACH_FILES':
+            final = 'AttachFiles'
+            break
+        case 'READ_MESSAGE_HISTORY':
+            final = 'ReadMessageHistory'
+            break
+        case 'MENTION_EVERYONE':
+            final = 'MentionEveryone'
+            break
+        case 'USE_EXTERNAL_EMOJIS':
+            final = 'UseExternalEmojis'
+            break
+        case 'VIEW_GUILD_INSIGHTS':
+            final = 'ViewGuildInsughts'
+            break
+        case 'CONNECT':
+            final = 'Connect'
+            break
+        case 'SPEAK':
+            final = 'Speak'
+            break
     }
 
     return final

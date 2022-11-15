@@ -1,6 +1,6 @@
-var saveVisible = false;
+var saveVisible = false
 
-let jsonToSend = {};
+let jsonToSend = {}
 
 let categoryId = document.getElementById("helper").getAttribute("category")
 if (!categoryId) categoryId = "home"
@@ -9,7 +9,7 @@ const guildId = document.getElementById("helper").getAttribute("gid")
 
 window.onbeforeunload = function () {
     if (saveVisible) {
-        return "Dude, are you sure you want to leave? Think of the kittens!";
+        return "Dude, are you sure you want to leave? Think of the kittens!"
     }
 }
 
@@ -20,101 +20,119 @@ $(".settings").on("change keyup paste", function (event) {
 $(document).ready(function () {
     $(document.body).on("change", ".tags", function (e) {
         optionEdited(e.currentTarget)
-    });
+    })
     $(document.body).on("change", ".multiSelect", function (e) {
         optionEdited(e.currentTarget)
-    });
-});
+    })
+})
 
 $(".form-check-input").change(function (e) {
     if (e.target.getAttribute("switch") == "true") {
-        const categoryName = e.target.getAttribute("category");
+        const categoryName = e.target.getAttribute("category")
 
         if (!jsonToSend.categoryToggle) jsonToSend.categoryToggle = []
-        let exists = jsonToSend.categoryToggle.find(c => c?.id == e.target.name);
+        let exists = jsonToSend.categoryToggle.find(
+            (c) => c?.id == e.target.name
+        )
 
-        const items = $(`[name="${e.target.name}"]`).toArray();
+        const items = $(`[name="${e.target.name}"]`).toArray()
 
         for (item of items) {
-            if (item.checked === e.target.checked) continue;
-            item.checked = e.target.checked;
+            if (item.checked === e.target.checked) continue
+            item.checked = e.target.checked
         }
 
         if (exists) {
-            exists.value = e.target.checked;
+            exists.value = e.target.checked
 
-            saveVisible = true;
-            $("#saveChanges").attr('style', 'bottom: 15px !important');
+            saveVisible = true
+            $("#saveChanges").attr("style", "bottom: 15px !important")
         } else if (!exists) {
             jsonToSend.categoryToggle.push({
                 id: e.target.name,
                 name: categoryName,
-                value: e.target.checked
+                value: e.target.checked,
             })
-            saveVisible = true;
-            $("#saveChanges").attr('style', 'bottom: 15px !important');
+            saveVisible = true
+            $("#saveChanges").attr("style", "bottom: 15px !important")
         }
     }
-});
+})
 
 $(".categories").click(function (e) {
-    const target = e.currentTarget.id;
+    const target = e.currentTarget.id
 
-    if (e.target.getAttribute("switch") == "true") return;
+    if (e.target.getAttribute("switch") == "true") return
 
     if (saveVisible) {
-        $("#saveChanges").attr('style', 'box-shadow: red 0px 0px 15px 2px !important; bottom: 15px !important');
-        $("#saveChanges").effect("shake", 15);
-
+        $("#saveChanges").attr(
+            "style",
+            "box-shadow: red 0px 0px 15px 2px !important; bottom: 15px !important"
+        )
+        $("#saveChanges").effect("shake", 15)
     } else {
-        if (target == categoryId) return;
-        window.location.href = `/settings/${guildId}/${target}/`;
+        if (target == categoryId) return
+        window.location.href = `/settings/${guildId}/${target}/`
     }
-});
+})
 
 function optionEdited(element) {
     if (!jsonToSend?.options) jsonToSend.options = []
-    const formType = element.getAttribute("formType");
+    const formType = element.getAttribute("formType")
 
-    let option = jsonToSend.options.find(c => c?.id == element.id);
+    let option = jsonToSend.options.find((c) => c?.id == element.id)
     if (!option) {
-        jsonToSend.options.push({ id: element.id, value: null, defaultValue: element.defaultValue });
-        option = jsonToSend.options.find(c => c?.id == element.id);
+        jsonToSend.options.push({
+            id: element.id,
+            value: null,
+            defaultValue: element.defaultValue,
+        })
+        option = jsonToSend.options.find((c) => c?.id == element.id)
     }
 
-    if (!option) return;
+    if (!option) return
 
     if (formType === "visualEmbed") option.value = element.value
-    else if (formType === "switch") option.value = element.checked;
-    else if (formType === "tagInput" || formType == "channelMultiSelect" || formType == "rolesMultiSelect") {
-        if (formType == "channelMultiSelect" || formType == "rolesMultiSelect" ) option.value = $(`#${element.id}.multiSelect`).val();
-        if (formType == "tagInput") option.value = $(`#${element.id}.tags`).val();
-    }
-    else if (formType === "upload") {
-        var reader = new FileReader();
-        reader.readAsDataURL(element.files[0]);
+    else if (formType === "switch") option.value = element.checked
+    else if (
+        formType === "tagInput" ||
+        formType == "channelMultiSelect" ||
+        formType == "rolesMultiSelect"
+    ) {
+        if (formType == "channelMultiSelect" || formType == "rolesMultiSelect")
+            option.value = $(`#${element.id}.multiSelect`).val()
+        if (formType == "tagInput")
+            option.value = $(`#${element.id}.tags`).val()
+    } else if (formType === "upload") {
+        var reader = new FileReader()
+        reader.readAsDataURL(element.files[0])
 
         reader.onload = function () {
-            let compressedImg = reader.result.split('').reduce((o, c) => {
-                if (o[o.length - 2] === c && o[o.length - 1] < 35) o[o.length - 1]++;
-                else o.push(c, 0);
-                return o;
-            }, []).map(_ => typeof _ === 'number' ? _.toString(36) : _).join('');
-            option.value = compressedImg; // Base64 Encoded String
-        };
-        reader.onerror = function (error) { };
-    } else option.value = element.value;
+            let compressedImg = reader.result
+                .split("")
+                .reduce((o, c) => {
+                    if (o[o.length - 2] === c && o[o.length - 1] < 35)
+                        o[o.length - 1]++
+                    else o.push(c, 0)
+                    return o
+                }, [])
+                .map((_) => (typeof _ === "number" ? _.toString(36) : _))
+                .join("")
+            option.value = compressedImg // Base64 Encoded String
+        }
+        reader.onerror = function (error) {}
+    } else option.value = element.value
 
-    saveVisible = true;
+    saveVisible = true
 
-    $("#saveChanges").attr('style', 'bottom: 15px !important');
+    $("#saveChanges").attr("style", "bottom: 15px !important")
 }
 
 function discardChanges() {
     // TODO: [US-99] Discard changes
 
     // reload window
-    window.location.reload();
+    window.location.reload()
 
     // for (const option of jsonToSend.options) {
     //     $(`#${option.id}`).val(option.defaultValue || "")
@@ -125,83 +143,85 @@ function discardChanges() {
 }
 
 async function saveChanges() {
-    if (Object.keys(jsonToSend).size <= 0) return;
+    if (Object.keys(jsonToSend).size <= 0) return
 
     try {
         let category
         if (categoryId) category = `?categoryId=${categoryId}`
 
-
-        let required = 0;
+        let required = 0
 
         for (const e of $("input").toArray()) {
             if (e.required && !e.value) {
-                required++;
-                e.style.border = "1px solid red";
-                e.style.boxShadow = "0px 0px 15px 2px red";
-                e.title = "This field is required";
-                e.datatoggle = "tooltip";
-                $(e).tooltip('enable')
-                $(e).tooltip('show')
+                required++
+                e.style.border = "1px solid red"
+                e.style.boxShadow = "0px 0px 15px 2px red"
+                e.title = "This field is required"
+                e.datatoggle = "tooltip"
+                $(e).tooltip("enable")
+                $(e).tooltip("show")
             } else if (e.required && e.value) {
-                e.style.border = "";
-                e.style.boxShadow = "";
-                e.title = "";
-                e.datatoggle = "";
-                $(e).tooltip('disable')
+                e.style.border = ""
+                e.style.boxShadow = ""
+                e.title = ""
+                e.datatoggle = ""
+                $(e).tooltip("disable")
             }
         }
 
         if (required > 0) {
-            $("#saveChanges").attr('style', 'box-shadow: red 0px 0px 15px 2px !important; bottom: 15px !important');
-            $("#saveChanges").effect("shake", 15);
-            return;
+            $("#saveChanges").attr(
+                "style",
+                "box-shadow: red 0px 0px 15px 2px !important; bottom: 15px !important"
+            )
+            $("#saveChanges").effect("shake", 15)
+            return
         }
 
         const response = await fetch(`/guild/update/${guildId}/${category}`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(jsonToSend)
+            body: JSON.stringify(jsonToSend),
         })
-        const content = await response.json();
+        const content = await response.json()
         if (content.success) {
-            saveVisible = false;
-            jsonToSend = {};
-            $("#saveChanges").attr('style', 'bottom: -250px !important');
-            $('.modal:visible').modal('hide');
+            saveVisible = false
+            jsonToSend = {}
+            $("#saveChanges").attr("style", "bottom: -250px !important")
+            $(".modal:visible").modal("hide")
         }
     } catch (err) {
-        console.error(`Error: ${err}`);
+        console.error(`Error: ${err}`)
     }
 }
 
-let active = 'defaultSection';
-let disable = false;
+let active = "defaultSection"
+let disable = false
 
 function info() {
     if ($("li.info").hasClass("pillactive")) {
-        $('li.info').removeClass('pillactive');
-        $('#info').collapse('hide')
-        $('#app').collapse('hide')
+        $("li.info").removeClass("pillactive")
+        $("#info").collapse("hide")
+        $("#app").collapse("hide")
     } else {
-        $('li.info').addClass('pillactive');
-        $('li.app').removeClass('pillactive');
-        $('#app').collapse('hide')
-        $('#info').collapse('toggle')
+        $("li.info").addClass("pillactive")
+        $("li.app").removeClass("pillactive")
+        $("#app").collapse("hide")
+        $("#info").collapse("toggle")
     }
 }
 
 function app() {
     if ($("li.app").hasClass("pillactive")) {
-        $('li.app').removeClass('pillactive');
-        $('#info').collapse('hide')
-        $('#app').collapse('hide')
+        $("li.app").removeClass("pillactive")
+        $("#info").collapse("hide")
+        $("#app").collapse("hide")
     } else {
-        $('li.app').addClass('pillactive');
-        $('li.info').removeClass('pillactive');
-        $('#info').collapse('hide')
-        $('#app').collapse('toggle')
+        $("li.app").addClass("pillactive")
+        $("li.info").removeClass("pillactive")
+        $("#info").collapse("hide")
+        $("#app").collapse("toggle")
     }
 }
