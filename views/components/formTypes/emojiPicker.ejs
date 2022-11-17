@@ -1,2 +1,180 @@
-<% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
-<button class="emojipicker">Emoji picker</button>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    img {
+        display: block;
+    }
+
+
+    .emoji-picker {
+        background-color: #303841;
+        width: 400px;
+        border-radius: 5px;
+        height: 400px;
+        display: flex;
+    }
+
+    .emoji-selectables {
+        background-color: #212427;
+        width: 45px;
+        height: 100%;
+        padding: 10px 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .emoji-selectables span {
+        margin-bottom: 7px;
+        cursor: pointer;
+    }
+
+    .emoji-selectables span.active img {
+        filter: none;
+    }
+
+    .emoji-selectables span img {
+        width: 25px;
+        display: block;
+        display: flex;
+        align-items: center;
+        filter: grayscale(100%)
+    }
+
+    .emoji-content div {
+        width: 100%;
+
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 5px;
+    }
+
+    .emoji-content span {
+        display: block;
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .emoji-content span:hover {
+        transform: scale(1.1);
+        background-color: #3f4953;
+        border-radius: 5px;
+    }
+
+    .picker-emoji-content {
+        display: none;
+
+    }
+
+    .picker-emoji-sel.face {
+        color: aliceblue;
+        font-size: 10px;
+    }
+
+    .picker-emoji-content.active {
+        display: flex;
+        display: flex;
+        height: 100%;
+        overflow-y: scroll;
+    }
+
+    .emoji-content span img {
+        width: 32px;
+        height: 32px;
+    }
+
+
+    .picker-emoji-content::-webkit-scrollbar-thumb {
+        height: 10px;
+        background-color: #65B88D;
+        border-radius: 100px;
+    }
+
+    .picker-emoji-content::-webkit-scrollbar-track {
+        background-color: #303841;
+    }
+
+    .picker-emoji-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    img {
+        display: block;
+    }
+</style>
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
+<% if(!Allowed.allowed){ %>
+    <span style="color: red;">
+        <%- Allowed.errorMessage %>
+    </span>
+    <br>
+<% } %>
+
+<% console.log(actual[s.categoryId][option.optionId]) %>
+
+<input defaultValue="<%= actual[s.categoryId][option.optionId] || "" %>" class="d-none" type="text" id="<%= option.optionId %>" formType="emojiPicker" type="text" onchange="optionEdited(this)">
+
+<div class="dropdown">
+    <a href="javascript:;" class="btn bg-transparent" data-bs-toggle="dropdown" id="navbarDropdownMenuLink2" style="width: fit-content; height: fit-content; aspect-ratio: 1/1; justify-content: center; display: flex; align-items: center; max-width: 100px; <% if (option.optionType.disabled && !Allowed.allowed) { %>border-color: red;<% } %>">
+        <% if(actual[s.categoryId][option.optionId]){ %>
+            <% if (/\d/.test(actual[s.categoryId][option.optionId])) { %>
+                <img src="https://cdn.discordapp.com/emojis/<%= actual[s.categoryId][option.optionId] %>.png" style="width: 72px; height: 72px;">
+            <% } else { %>
+                <span style="font-size: 20px;"><%= actual[s.categoryId][option.optionId] %></span>
+            <% } %>
+        <% } %>
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+        <div id="emojis">
+        </div>
+    </div>
+  </div>
+
+<script src="/js/core/DisMojiPicker.js"></script>
+<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+<% if(!option.optionType.disabled && Allowed.allowed){ %>
+    <script>
+        const emojis = <%- JSON.stringify(bot.guilds.cache.get(req.params.id).emojis.cache.map(e => {
+            return {
+                animated: e.animated,
+                name: e.name,
+                id: e.id
+            }
+        })) %>
+        $(".dropdown").click(function(e){
+           e.stopPropagation();
+        })
+        $("#emojis").disMojiPicker(emojis)
+        $("#emojis").picker(emoji => {
+            let custom = {}
+            
+            if (emoji)
+                $("#navbarDropdownMenuLink2").dropdown("toggle")
+
+            if (emojis.find(x => x.name === emoji)) {
+                custom = emojis.find(x => x.name === emoji)
+            }
+
+            $("#<%= option.optionId %>").val(custom ? custom.id : emoji)
+            $("#<%= option.optionId %>").trigger("change")
+    
+            console.log(custom)
+
+            if (custom?.id)
+                return $("#navbarDropdownMenuLink2").html(
+                    `<img src="https://cdn.discordapp.com/emojis/${custom.id}.${custom.animated ? "gif" : "png"}" alt="${custom.name}" style="width: 72px; height: 72px;"/>`
+                )
+            else $("#navbarDropdownMenuLink2").html(`
+                <span style="width: 72px; height: 72px;">
+                    ${twemoji.parse(emoji)}
+                </span>
+            `)
+        });
+        twemoji.parse(document.body, "<%= bot.guilds.cache.get(req.params.id).emojis.cache.map(e => e.id) %>");
+    </script>
+<% } %>

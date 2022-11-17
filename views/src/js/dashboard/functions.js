@@ -7,6 +7,8 @@ if (!categoryId) categoryId = "home"
 
 const guildId = document.getElementById("helper").getAttribute("gid")
 
+const refresh = document.getElementById("helper").getAttribute("refresh") === "true" ? true : false;
+
 window.onbeforeunload = function () {
     if (saveVisible) {
         return "Dude, are you sure you want to leave? Think of the kittens!"
@@ -187,10 +189,12 @@ async function saveChanges() {
         })
         const content = await response.json()
         if (content.success) {
-            saveVisible = false
-            jsonToSend = {}
-            $("#saveChanges").attr("style", "bottom: -250px !important")
-            $(".modal:visible").modal("hide")
+            saveVisible = false;
+            jsonToSend = {};
+            $("#saveChanges").attr('style', 'bottom: -250px !important');
+            $('.modal:visible').modal('hide');
+
+            if (refresh) window.location.reload();
         }
     } catch (err) {
         console.error(`Error: ${err}`)

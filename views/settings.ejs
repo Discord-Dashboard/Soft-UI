@@ -435,30 +435,30 @@
         </div>
         </main>
 
-        <!--   Core JS Files   -->
-        <script id="helper" category="<%= req.params.category %>" gid="<%= req.params.id %>"
-            src="/js/dashboard/functions.js"></script>
-        <script src="../assets/js/core/popper.min.js"></script>
-        <script src="../assets/js/core/bootstrap.min.js"></script>
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-        <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
-        <script>
-            $(document).ready(function () {
-        <% if (req.query.error === "premiumRequired") { %>
-                    sweetalert("error", "<%= themeConfig?.sweetalert?.error?.requirePremium || 'Premium is required for this category' %>", 2000);
-                    window.history.replaceState({}, title, window.location.href.split('?')[0]);
+<!--   Core JS Files   -->
+<script id="helper" category="<%= req.params.category %>" gid="<%= req.params.id %>" refresh="<%= settings.find(s => s.categoryId === req.params?.category)?.refreshOnSave || false %>"
+        src="/js/dashboard/functions.js"></script>
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        <% if ( req.query.error === "premiumRequired" ) { %>
+        sweetalert("error", "<%= themeConfig?.sweetalert?.error?.requirePremium || 'Premium is required for this category' %>", 2000);
+        window.history.replaceState({}, title, window.location.href.split('?')[0]);
         <% } %>
                     $('.multiSelect').select2({ closeOnSelect: true });
                 $(".tags").select2({ theme: "classic", tags: true })

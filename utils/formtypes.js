@@ -1,4 +1,11 @@
 module.exports = {
+    emojiPicker: (disabled, themeOptions = {}) => {
+        return {
+            type: 'emojiPicker',
+            disabled,
+            themeOptions
+        }
+    },
     slider: (min, max, step, disabled, themeOptions = {}) => {
         return {
             type: 'slider',
