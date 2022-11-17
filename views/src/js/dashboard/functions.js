@@ -194,9 +194,16 @@ async function saveChanges() {
             $("#saveChanges").attr('style', 'bottom: -250px !important');
             $('.modal:visible').modal('hide');
 
-            if (refresh) window.location.reload();
+            if (refresh) {
+                const url = new URL(window.location.href)
+                url.searchParams.set("swal", "savedSuccess")
+                window.history.pushState({}, "", url)
+
+                window.location.reload()
+            } else sweetalert("success", "Successfully saved setttings!", 3000)
         }
     } catch (err) {
+        sweetalert("error", "Failed to save setttings!", 3000)
         console.error(`Error: ${err}`)
     }
 }

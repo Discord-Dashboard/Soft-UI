@@ -73,6 +73,9 @@ if(req.cookies?.selectedTheme == "dark" || req.cookies?.selectedTheme == "auto" 
         const swal = params.get('swal');
         const result = params.get('result');
         if (swal) {
+            if (swal === "savedSuccess") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.settingsSave || 'Successfully saved setttings!' %>', 3000);
+            if (swal === "savedError") sweetalert('error', '<%= themeConfig?.sweetalert?.error?.settingsSave || 'Failed to save setttings!' %>', 3000);
+
             <% if (req.session.user) { %>if (swal === "logged") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.login || 'Successfully logged in!' %>', 3000); <% } %>
             <% if (!req.session.user) { %>if (swal === "loggedout") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.logout || 'Successfully logged out!' %>', 3000); <% } %>
         }
