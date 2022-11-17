@@ -516,7 +516,7 @@
 </main>
 
 <!--   Core JS Files   -->
-<script id="helper" category="<%= req.params.category %>" gid="<%= req.params.id %>"
+<script id="helper" category="<%= req.params.category %>" gid="<%= req.params.id %>" refresh="<%= settings.find(s => s.categoryId === req.params?.category)?.refreshOnSave || false %>"
         src="/js/dashboard/functions.js"></script>
 <script src="../assets/js/core/popper.min.js"></script>
 <script src="../assets/js/core/bootstrap.min.js"></script>

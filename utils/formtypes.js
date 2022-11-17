@@ -1,33 +1,40 @@
 module.exports = {
+    emojiPicker: (disabled, themeOptions = {}) => {
+        return {
+            type: 'emojiPicker',
+            disabled,
+            themeOptions
+        }
+    },
     slider: (min, max, step, disabled, themeOptions = {}) => {
         return {
-            type: "slider",
+            type: 'slider',
             min,
             max,
             step,
             disabled,
             themeOptions
-        };
+        }
     },
     date: (disabled, themeOptions = {}) => {
         return {
-            type: "date",
+            type: 'date',
             disabled,
             themeOptions
-        };
+        }
     },
     numberPicker: (disabled, themeOptions = {}) => {
         return {
-            type: "numberPicker",
+            type: 'numberPicker',
             disabled,
             themeOptions
-        };
+        }
     },
     tagInput: (disabled, themeOptions = {}) => {
         return {
-            type: "tagInput",
+            type: 'tagInput',
             disabled,
             themeOptions
-        };
-    },
+        }
+    }
 }
