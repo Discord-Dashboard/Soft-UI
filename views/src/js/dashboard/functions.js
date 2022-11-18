@@ -122,7 +122,7 @@ function optionEdited(element) {
                 .join("")
             option.value = compressedImg // Base64 Encoded String
         }
-        reader.onerror = function (error) {}
+        reader.onerror = function (error) { }
     } else option.value = element.value
 
     saveVisible = true
@@ -189,10 +189,39 @@ async function saveChanges() {
         })
         const content = await response.json()
         if (content.success) {
+            $("#form-error")
+                .toArray()
+                .forEach((e) => {
+                    e.remove()
+                })
+            if (content.errors.length > 0)
+                for (const error of content.errors) {
+                    if (!error) continue
+                    if (!$(`#${error.split("%is%")[2]}`)) continue
+                    $(`#${error.split("%is%")[2]}`).before(`<span id="form-error" style="color: red; font-style: bold; font-weight: 800;">${error.split("%is%")[1]}</span>`)
+
+                    setTimeout(() => {
+                        $(`#${error.split("%is%")[2]}`).prev().remove()
+                    }, 30000)
+                }
+
+
             saveVisible = false;
             jsonToSend = {};
             $("#saveChanges").attr('style', 'bottom: -250px !important');
             $('.modal:visible').modal('hide');
+
+            if (content.errors.length > 0) {
+                if (refresh) {
+                    const url = new URL(window.location.href)
+                    url.searchParams.set("swal", "savedError")
+                    window.history.pushState({}, "", url)
+
+                    window.location.reload()
+                } else
+                    sweetalert("error", "Failed to save setttings!", 3000)
+                return
+            }
 
             if (refresh) {
                 const url = new URL(window.location.href)

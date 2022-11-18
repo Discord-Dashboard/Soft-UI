@@ -163,8 +163,6 @@
             $("#<%= option.optionId %>").val(custom ? custom.id : emoji)
             $("#<%= option.optionId %>").trigger("change")
     
-            console.log(custom)
-
             if (custom?.id)
                 return $("#navbarDropdownMenuLink2").html(
                     `<img src="https://cdn.discordapp.com/emojis/${custom.id}.${custom.animated ? "gif" : "png"}" alt="${custom.name}" style="width: 72px; height: 72px;"/>`

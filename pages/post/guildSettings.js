@@ -44,18 +44,18 @@ module.exports = {
                                 setNewRes = { error: canUse.errorMessage }
                                 errors.push(
                                     option.optionName +
-                                        '%is%' +
-                                        setNewRes.error +
-                                        '%is%' +
-                                        option.optionId
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
                                 )
                             } else {
                                 if (option.optionType == 'spacer') {
                                 } else if (
                                     option.optionType.type ==
-                                        'rolesMultiSelect' ||
+                                    'rolesMultiSelect' ||
                                     option.optionType.type ==
-                                        'channelsMultiSelect' ||
+                                    'channelsMultiSelect' ||
                                     option.optionType.type == 'multiSelect' ||
                                     option.optionType.type == 'tagInput'
                                 ) {
@@ -79,10 +79,10 @@ module.exports = {
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    '%is%' +
-                                                    setNewRes.error +
-                                                    '%is%' +
-                                                    option.optionId
+                                                '%is%' +
+                                                setNewRes.error +
+                                                '%is%' +
+                                                option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
@@ -105,10 +105,10 @@ module.exports = {
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    '%is%' +
-                                                    setNewRes.error +
-                                                    '%is%' +
-                                                    option.optionId
+                                                '%is%' +
+                                                setNewRes.error +
+                                                '%is%' +
+                                                option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
@@ -129,10 +129,10 @@ module.exports = {
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    '%is%' +
-                                                    setNewRes.error +
-                                                    '%is%' +
-                                                    option.optionId
+                                                '%is%' +
+                                                setNewRes.error +
+                                                '%is%' +
+                                                option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
@@ -163,10 +163,10 @@ module.exports = {
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    '%is%' +
-                                                    setNewRes.error +
-                                                    '%is%' +
-                                                    option.optionId
+                                                '%is%' +
+                                                setNewRes.error +
+                                                '%is%' +
+                                                option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
@@ -192,10 +192,10 @@ module.exports = {
                                             if (setNewRes.error) {
                                                 errors.push(
                                                     option.optionName +
-                                                        '%is%' +
-                                                        setNewRes.error +
-                                                        '%is%' +
-                                                        option.optionId
+                                                    '%is%' +
+                                                    setNewRes.error +
+                                                    '%is%' +
+                                                    option.optionId
                                                 )
                                             } else {
                                                 successes.push(
@@ -222,10 +222,10 @@ module.exports = {
                                             if (setNewRes.error) {
                                                 errors.push(
                                                     option.optionName +
-                                                        '%is%' +
-                                                        setNewRes.error +
-                                                        '%is%' +
-                                                        option.optionId
+                                                    '%is%' +
+                                                    setNewRes.error +
+                                                    '%is%' +
+                                                    option.optionId
                                                 )
                                             } else {
                                                 successes.push(
@@ -255,10 +255,10 @@ module.exports = {
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    '%is%' +
-                                                    setNewRes.error +
-                                                    '%is%' +
-                                                    option.optionId
+                                                '%is%' +
+                                                setNewRes.error +
+                                                '%is%' +
+                                                option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
@@ -280,10 +280,10 @@ module.exports = {
                                         if (setNewRes.error) {
                                             errors.push(
                                                 option.optionName +
-                                                    '%is%' +
-                                                    setNewRes.error +
-                                                    '%is%' +
-                                                    option.optionId
+                                                '%is%' +
+                                                setNewRes.error +
+                                                '%is%' +
+                                                option.optionId
                                             )
                                         } else {
                                             successes.push(option.optionName)
@@ -328,7 +328,9 @@ module.exports = {
 
         res.send({
             success: true,
-            message: 'saved changed'
+            message: 'saved changed',
+            errors,
+            successes
         })
     }
 }
