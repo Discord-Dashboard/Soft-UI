@@ -15,6 +15,26 @@ window.onbeforeunload = function () {
     }
 }
 
+window.onload = function () {
+    const params = new URLSearchParams(window.location.search)
+    const errors = params.get('errors');
+
+    if (errors) {
+        const errorArray = errors.split("%split%")
+        for (const error of errorArray) {
+            if (!error) continue
+            if (!$(`#${error.split("%is%")[2]}`)) continue
+            $(`#${error.split("%is%")[2]}`).before(`<span id="form-error" style="color: red; font-style: bold; font-weight: 800;">${error.split("%is%")[1]}</span>`)
+
+            setTimeout(() => {
+                $(`#${error.split("%is%")[2]}`).prev().remove()
+            }, 30000)
+        }
+    }
+    params.delete('errors')
+    window.history.replaceState({}, document.title, `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`)
+}
+
 $(".settings").on("change keyup paste", function (event) {
     optionEdited(event.target)
 })
@@ -215,6 +235,8 @@ async function saveChanges() {
                 if (refresh) {
                     const url = new URL(window.location.href)
                     url.searchParams.set("swal", "savedError")
+                    url.searchParams.set("errors", content.errors.join("%split%"))
+
                     window.history.pushState({}, "", url)
 
                     window.location.reload()

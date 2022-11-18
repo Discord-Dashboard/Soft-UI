@@ -75,20 +75,20 @@ if(req.cookies?.selectedTheme == "dark" || req.cookies?.selectedTheme == "auto" 
         if (swal) {
             if (swal === "savedSuccess") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.settingsSave || 'Successfully saved setttings!' %>', 3000);
             if (swal === "savedError") sweetalert('error', '<%= themeConfig?.sweetalert?.error?.settingsSave || 'Failed to save setttings!' %>', 3000);
-
+            
             <% if (req.session.user) { %>if (swal === "logged") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.login || 'Successfully logged in!' %>', 3000); <% } %>
             <% if (!req.session.user) { %>if (swal === "loggedout") sweetalert('success', '<%= themeConfig?.sweetalert?.success?.logout || 'Successfully logged out!' %>', 3000); <% } %>
+
+            params.delete('swal');
         }
         if (result) {
             if (result === "true") sweetalert('success', 'Checked for updates!', 3000);
             if (result === "false") sweetalert('error', 'Failed to check for updates!', 3000);
+
+            params.delete('result');
         }
-        setTimeout(function () {
-            if (window.location.search) {
-                const url = window.location.href.split('?')[0];
-                window.history.replaceState({}, document.title, url);
-            }
-        }, 1);
+
+        window.history.replaceState({}, document.title, `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`);
     });
 
     var win = navigator.platform.indexOf('Win') > -1;
