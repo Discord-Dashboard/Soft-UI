@@ -95,8 +95,7 @@
             src="data:text/html;charset=utf-8,<%= encodeURIComponent(config.theme.embedBuilderComponent.replace('{{ContentJsonReplacer}}', embedContent).replace('{{msgSource}}', option.optionId).replace('{{botusername}}', option.optionType.data.username).replace('{{botavatar}}', option.optionType.data.avatarURL)) %>"></iframe>
 </div>
 <script>
-    window.onload = () => {
-        setTimeout(() => {
+    setTimeout(() => {
         window.addEventListener('message', function (e) {
             if (e.data[0] === '<%= option.optionId %>') {
                 document.getElementById('<%= option.optionId %>').innerHTML = JSON.stringify(e.data[1]);
@@ -104,5 +103,4 @@
             }
         }, false);
     }, 1200);
-    }
 </script>
