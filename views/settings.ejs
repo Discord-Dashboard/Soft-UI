@@ -280,7 +280,8 @@
                         <div class="container-fluid py-4 settings">
                             <div class="row">
                                 <% settings.forEach(s=> { %>
-                                    <div style="flex: 50%;" class="item" id="divtable">
+                                    <a style="color: inherit; text-decoration: none;" href="/settings/<%- req.params.id %>/<%= s.categoryId %>">
+                                        <div style="flex: 50%;" class="item" id="divtable">
                                         <div class="card mb-4">
                                             <div class="card-header d-flex"
                                                 style="border-radius: 10px; justify-content: space-between;">
@@ -315,6 +316,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </a>
                                     <% }) %>
                             </div>
                         </div>
