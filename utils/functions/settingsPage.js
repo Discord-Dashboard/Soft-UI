@@ -112,7 +112,11 @@ module.exports = function (config, themeConfig) {
 
                 if (!actual[s.categoryId]) actual[s.categoryId] = {}
 
-                if (c.optionType == 'spacer') {
+                if (c.optionType.type == 'spacer') {
+                    actual[s.categoryId][c.optionId] = {
+                        type: 'spacer',
+                        themeOptions: c.themeOptions
+                    }
                 } else if (
                     c.optionType.type == 'collapsable' ||
                     c.optionType.type == 'modal'
