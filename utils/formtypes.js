@@ -1,4 +1,10 @@
 module.exports = {
+    spacer: (themeOptions = {}) => {
+        return {
+            type: 'spacer',
+            themeOptions
+        }
+    },
     emojiPicker: (disabled, themeOptions = {}) => {
         return {
             type: 'emojiPicker',
