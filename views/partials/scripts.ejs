@@ -24,7 +24,7 @@
         $('.theme').removeClass('active');
         $(this).addClass('active');
         const theme = $(this).attr('data-theme');
-        setCookie('theme', theme, 365);
+        setCookie('selectedTheme', theme, 365);
         location.reload();
     });
 
