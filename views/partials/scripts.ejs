@@ -23,8 +23,8 @@
     $('.theme').click(function () {
         $('.theme').removeClass('active');
         $(this).addClass('active');
-        var theme = $(this).attr('data-theme');
-        document.cookie = `selectedTheme=${theme}; expires=Thu, 01 Dec 2022 00:00:00 UTC; path=/;`;
+        const theme = $(this).attr('data-theme');
+        setCookie('theme', theme, 365);
         location.reload();
     });
 
