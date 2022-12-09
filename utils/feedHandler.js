@@ -89,6 +89,9 @@ module.exports = class Feed {
                 case 3:
                     feedName = 'three'
                     break
+                case "all":
+                    feedName = 'all'
+                    break
                 default:
                     throw new Error(
                         `${consolePrefix}${
@@ -98,7 +101,7 @@ module.exports = class Feed {
                     )
             }
 
-            let feed = db.get(`feeds.${feedName}`)
+            let feed = db.get(`feeds${feedName === "all" ? "" : `.${feedName}`}`)
             if (!feed)
                 throw new Error(
                     `${consolePrefix}${

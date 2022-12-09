@@ -6,11 +6,11 @@ module.exports = (commands, prefix) => {
     let finalCategories = []
     let categories = []
 
-    for (const command of commands) {
-        if (!command.category) continue
-        if (!categories?.includes(command.category))
-            categories.push(command.category)
-    }
+    commands.map((cmd) => {
+        if (!categories.includes(cmd.category)) {
+            categories.push(cmd.category)
+        }
+    })
 
     for (const category of categories) {
         if (
@@ -21,17 +21,18 @@ module.exports = (commands, prefix) => {
             continue
         let commandsArr = []
 
-        for (const command of commands) {
-            if (command.category === category) {
+        commands
+            .filter((cmd) => cmd.category === category)
+            .map((cmd) => {
                 let obj = {
-                    commandName: command.name,
-                    commandUsage: `${prefix}${command.name} ${command.usage}`,
-                    commandDescription: command.description,
-                    commandAlias: command.aliases?.join(', ') || 'None'
+                    commandName: cmd.name,
+                    commandUsage: `${cmd.usage ? cmd.usage : `${prefix}${cmd.name}`}`,
+                    commandDescription: cmd.description,
+                    commandAlias: cmd.aliases?.join(', ') || 'None'
                 }
                 commandsArr.push(obj)
-            }
-        }
+            })
+
 
         const categoryObj = {
             categoryId: category,
