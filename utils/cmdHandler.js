@@ -4,6 +4,7 @@ module.exports = (commands, prefix) => {
     if (!prefix) prefix = '!'
 
     let finalCategories = []
+    let categories = []
 
     for (const command of commands) {
         if (!command.category) continue
