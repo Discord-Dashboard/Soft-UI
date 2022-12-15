@@ -1,6 +1,5 @@
 module.exports = (commands, prefix) => {
-    if (!commands)
-        throw new Error('No commands were provided to the Soft UI cmdHandler.')
+    if (!commands) throw new Error('No commands were provided to the Soft UI cmdHandler.')
     if (!prefix) prefix = '!'
 
     let finalCategories = []
