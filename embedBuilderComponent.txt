@@ -63,7 +63,8 @@ var params = new URL(location).searchParams,
     },
     base64ToJson = data => {
         jsonData = unescape(atob(data || dataSpecified));
-        if (typeof jsonData === 'string') jsonData = JSON.parse(jsonData);
+        if (typeof jsonData === 'string')
+            jsonData = JSON.parse(jsonData);
         return jsonData;
     },
     toRGB = (hex, reversed, integer) => {
@@ -77,7 +78,8 @@ var params = new URL(location).searchParams,
     jsonKeys = ["embed", "content", ...mainKeys],
     json = {{ContentJsonReplacer}}
 
-if (dataSpecified) window.json = base64ToJson();
+if (dataSpecified)
+    window.json = base64ToJson();
 
 window.onload = () => {
     let body = document.body;
@@ -472,16 +474,15 @@ window.onload = () => {
                     elm.classList.add('active');
                     if (inlineField) inlineField.querySelector('.ttle~input').focus();
                     else if (input) {
-                        if (!smallerScreen.matches) input.focus();
+                        if (!smallerScreen.matches)
+                            input.focus();
                         input.selectionStart = input.selectionEnd = input.value.length;
-                    } else if (txt && !smallerScreen.matches) {
+                    } else if (txt && !smallerScreen.matches)
                         txt.focus();
-                    }
                     if (elm.classList.contains('fields')) {
-                        if (reverseColmns && smallerScreen.matches) {
+                        if (reverseColmns && smallerScreen.matches)
                             // return elm.nextElementSibling.scrollIntoView({ behavior: 'smooth', block: "end" });
                             return elm.parentNode.scrollTop = elm.offsetTop;
-                        }
                         elm.scrollIntoView({ behavior: "smooth", block: "center" });
                     }
                 }
@@ -679,7 +680,8 @@ window.onload = () => {
                                 index = i, gridCol = '1 / 7';
                             }
                             // The next field.
-                            if (index === i - 1) gridCol = '7 / 13';
+                            if (index === i - 1)
+                                gridCol = '7 / 13';
 
                             if (!f.inline)
                                 fieldElement.outerHTML = `
@@ -704,9 +706,8 @@ window.onload = () => {
                     });
 
                     document.querySelectorAll('.embedField[style="grid-column: 1 / 5;"]').forEach(e => {
-                        if (!e.nextElementSibling || e.nextElementSibling.style.gridColumn === '1 / 13') {
+                        if (!e.nextElementSibling || e.nextElementSibling.style.gridColumn === '1 / 13')
                             e.style.gridColumn = '1 / 13';
-                        }
                     });
                     colNum = 1;
 
@@ -744,11 +745,11 @@ window.onload = () => {
         try {
             if (dataKeys.length && !jsonKeys.some(key => dataKeys.includes(key))) {
                 let usedKeys = dataKeys.filter(key => !jsonKeys.includes(key));
-                if (usedKeys.length > 2) return error(`'${usedKeys[0] + "', '" + usedKeys.slice(1, usedKeys.length - 1).join("', '")}', and '${usedKeys[usedKeys.length - 1]}' are invalid keys.`);
+                if (usedKeys.length > 2)
+                    return error(`'${usedKeys[0] + "', '" + usedKeys.slice(1, usedKeys.length - 1).join("', '")}', and '${usedKeys[usedKeys.length - 1]}' are invalid keys.`);
                 return error(`'${usedKeys.length == 2 ? usedKeys[0] + "' and '" + usedKeys[usedKeys.length - 1] + "' are invalid keys." : usedKeys[0] + "' is an invalid key."}`);
-            } else if (!validationError) {
+            } else if (!validationError)
                 error(false);
-            }
             update(jsonData);
         }
         catch (e) {
@@ -837,7 +838,8 @@ window.onload = () => {
         picker.source.style.removeProperty('background');
         update(json); buildGui(json); editor.setValue('{\n\t\n}');
         document.querySelectorAll('.gui>.item').forEach(e => e.classList.add('active'));
-        if (!smallerScreen.matches) content.focus();
+        if (!smallerScreen.matches)
+            content.focus();
     })
 
     document.querySelectorAll('.img').forEach(e => {
