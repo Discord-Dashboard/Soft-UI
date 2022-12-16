@@ -1,5 +1,14 @@
 declare module "dbd-soft-ui" {
-    export default function (options: Record<string, any>): typeof Feed;
+    import { Express } from "express";
+
+    export default function (options: Record<string, any>): {
+        themeCodename: string,
+        viewsPath: string,
+        staticPath: string,
+        themeConfig: Record<string, any>,
+        embedBuilderComponent: string,
+        init: (app: Express, config: Record<string, any>) => void;
+    };
 
     export const partials: any;
     export const formTypes: FormTypes;
