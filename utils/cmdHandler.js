@@ -1,5 +1,6 @@
 module.exports = (commands, prefix) => {
-    if (!commands) throw new Error('No commands were provided to the Soft UI cmdHandler.')
+    if (!commands)
+        throw new Error('No commands were provided to the Soft UI cmdHandler.')
     if (!prefix) prefix = '!'
 
     let finalCategories = []
@@ -13,9 +14,9 @@ module.exports = (commands, prefix) => {
 
     for (const category of categories) {
         if (
-            category === 'admin' ||
-            category === 'owner' ||
-            category === 'development'
+            category.toLowerCase().includes('admin') ||
+            category.toLowerCase().includes('owner') ||
+            category.toLowerCase().includes('development')
         )
             continue
         let commandsArr = []
