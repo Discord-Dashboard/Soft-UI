@@ -1,8 +1,7 @@
 const Discord = require('discord.js')
 module.exports = function (config, themeConfig) {
     config.guildSettings = async function (req, res, home, category) {
-        if (!req.session.user)
-            return res.redirect('/discord?r=/guild/' + req.params.id)
+        if (!req.session.user) return res.redirect('/discord?r=/guild/' + req.params.id)
 
         let bot = config.bot
         if (!bot.guilds.cache.get(req.params.id)) {
@@ -11,8 +10,7 @@ module.exports = function (config, themeConfig) {
             } catch (err) {}
         }
 
-        if (!bot.guilds.cache.get(req.params.id))
-            return res.redirect('/manage?error=noPermsToManageGuild')
+        if (!bot.guilds.cache.get(req.params.id)) return res.redirect('/manage?error=noPermsToManageGuild')
         if (
             !bot.guilds.cache
                 .get(req.params.id)
@@ -27,17 +25,16 @@ module.exports = function (config, themeConfig) {
         for (let PermissionRequired of req.requiredPermissions) {
             let converted = PermissionRequired[0]
             const DiscordJsVersion = Discord.version.split('.')[0]
-
-            if (DiscordJsVersion === '14')
-                converted = await convert14(PermissionRequired[0])
+            if (DiscordJsVersion === '14') converted = await convert14(PermissionRequired[0])
 
             if (
                 !bot.guilds.cache
                     .get(req.params.id)
                     .members.cache.get(req.session.user.id)
                     .permissions.has(converted)
-            )
+            ) {
                 return res.redirect('/manage?error=noPermsToManageGuild')
+            }
         }
 
         if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
@@ -98,10 +95,11 @@ module.exports = function (config, themeConfig) {
                         guild: { id: req.params.id },
                         user: { id: req.session.user.id }
                     })
-                    if (typeof canUse != 'object')
+                    if (typeof canUse != 'object') {
                         throw new TypeError(
                             `${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
                         )
+                    }
                     canUseList[s.categoryId][c.optionId] = canUse
                 } else {
                     canUseList[s.categoryId][c.optionId] = {
@@ -126,8 +124,9 @@ module.exports = function (config, themeConfig) {
                             item.optionType.type == 'channelsMultiSelect' ||
                             item.optionType.type == 'roleMultiSelect' ||
                             item.optionType.type == 'tagInput'
-                        )
+                        ) {
                             actual[s.categoryId][item.optionId] = []
+                        }
                     }
                 } else {
                     if (!actual[s.categoryId]) {

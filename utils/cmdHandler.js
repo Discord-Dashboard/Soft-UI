@@ -14,9 +14,9 @@ module.exports = (commands, prefix) => {
 
     for (const category of categories) {
         if (
-            category === 'admin' ||
-            category === 'owner' ||
-            category === 'development'
+            category.toLowerCase().includes('admin') ||
+            category.toLowerCase().includes('owner') ||
+            category.toLowerCase().includes('development')
         )
             continue
         let commandsArr = []
