@@ -4,6 +4,7 @@
         <% if(!Allowed.allowed || option.optionType.disabled){ %>disabled<% } %>
         formType="channelSelect"
         defaultValue=""
+        class="form-select"
         id="<%= option.optionId %>" class="col-md-12"
         style="height:30px; <% if(!Allowed.allowed){ %>border-color: red;<% } %> ">
     <%
