@@ -16,7 +16,7 @@ module.exports = {
                 const e = require(`${__dirname}/../pages/${folder}/${file}`);
                 try {
                     if (folder === 'admin') {
-                        app.get(e.page, async function (req, res) {
+                        await app.get(e.page, async function (req, res) {
                             if (!req.session.user) return res.sendStatus(401)
                             if (!config.ownerIDs.includes(req.session.user.id)) return res.sendStatus(403);
                             e.execute(
@@ -30,7 +30,7 @@ module.exports = {
                             )
                         })
                     } else if (folder === 'post') {
-                        app.post(e.page, function (req, res) {
+                        await app.post(e.page, function (req, res) {
                             e.execute(
                                 req,
                                 res,
@@ -42,7 +42,7 @@ module.exports = {
                             )
                         })
                     } else if (folder === 'get') {
-                        app.use(e.page, async function (req, res) {
+                        await app.use(e.page, async function (req, res) {
                             e.execute(
                                 req,
                                 res,
