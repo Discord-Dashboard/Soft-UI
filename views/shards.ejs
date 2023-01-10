@@ -16,21 +16,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/preloader.ejs', {now:'index', req: req}) %>
-<% if (req.query?.guild_id) { %>
-    <script>
-        window.onload = function () {
-            window.onunload = refreshParent;
-
-            function refreshParent() {
-                window.opener.location = `/settings/<%= req.query?.guild_id %>`;
-                window.close();
-                return
-            };
-            window.opener.location = `/settings/<%= req.query?.guild_id %>`;
-            window.close();
-        }
-    </script>
-<% } %>
 <head>
     <style>
         .unselectable {
