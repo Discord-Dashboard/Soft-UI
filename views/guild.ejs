@@ -20,7 +20,7 @@
 <head>
     <script>
         window.onload = function () {
-            if(window.location.search.startsWith("?guild=")) window.location.href = `settings/${window.location.search.replace("?guild=", "")}`;
+            if(window.location.search.startsWith("?redirect=")) window.opener.location = window.location.replace("?redirect=", "");
             else window.location.href = `settings/<%= req.params.id %>`;
         }
     </script>
