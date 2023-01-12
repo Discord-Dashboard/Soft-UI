@@ -20,7 +20,8 @@
 <head>
     <script>
         window.onload = function () {
-            window.location.href = `settings/<%= req.params.id %>`;
+            if(window.location.search.startsWith("?guild=")) window.location.href = `settings/${window.location.search.replace("?guild=", "")}`;
+            else window.location.href = `settings/<%= req.params.id %>`;
         }
     </script>
 </head>
