@@ -20,7 +20,8 @@
 <head>
     <script>
         window.onload = function () {
-            window.location.href = `settings/<%= req.params.id %>`;
+            if(window.location.search.startsWith("?redirect=")) window.opener.location = window.location.replace("?redirect=", "");
+            else window.location.href = `settings/<%= req.params.id %>`;
         }
     </script>
 </head>

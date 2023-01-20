@@ -7,7 +7,7 @@ module.exports = function (config, themeConfig) {
         if (!bot.guilds.cache.get(req.params.id)) {
             try {
                 await bot.guilds.fetch(req.params.id)
-            } catch (err) {}
+            } catch (err) { }
         }
 
         if (!bot.guilds.cache.get(req.params.id)) return res.redirect('/manage?error=noPermsToManageGuild')
@@ -20,7 +20,7 @@ module.exports = function (config, themeConfig) {
                 await bot.guilds.cache
                     .get(req.params.id)
                     .members.fetch(req.session.user.id)
-            } catch (err) {}
+            } catch (err) { }
         }
         for (let PermissionRequired of req.requiredPermissions) {
             let converted = PermissionRequired[0]
@@ -40,13 +40,13 @@ module.exports = function (config, themeConfig) {
         if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
             try {
                 await bot.guilds.cache.get(req.params.id).channels.fetch()
-            } catch (err) {}
+            } catch (err) { }
         }
 
         if (bot.guilds.cache.get(req.params.id).roles.cache.size < 2) {
             try {
                 await bot.guilds.cache.get(req.params.id).roles.fetch()
-            } catch (err) {}
+            } catch (err) { }
         }
 
         let actual = {}
@@ -54,99 +54,203 @@ module.exports = function (config, themeConfig) {
         let premium = {}
 
         let canUseList = {}
-        for (const s of config.settings) {
-            if (!canUseList[s.categoryId]) canUseList[s.categoryId] = {}
-            if (s.toggleable) {
-                if (!toggle[s.categoryId]) {
-                    toggle[s.categoryId] = {}
-                }
-                toggle[s.categoryId] = await s.getActualSet({
+
+        if (config.settings.length) for (const category of config.settings) {
+            if (!canUseList[category.categoryId]) canUseList[category.categoryId] = {};
+            if (!actual[category.categoryId]) actual[category.categoryId] = {}
+
+            if (config.useCategorySet) {
+                let catGAS = await category.getActualSet({
                     guild: {
-                        id: req.params.id
-                    }
-                })
-            }
-            if (s.premium) {
-                if (!premium[s.categoryId]) {
-                    premium[s.categoryId] = {}
-                }
-                premium[s.categoryId] = await s.premiumUser({
-                    guild: {
-                        id: req.params.id
+                        id: req.params.id,
+                        object: bot.guilds.cache.get(req.params.id),
                     },
                     user: {
                         id: req.session.user.id,
-                        tag: req.session.user.tag
-                    }
-                })
-            }
+                        object: bot.guilds.cache
+                            .get(req.params.id)
+                            .members.cache.get(req.session.user.id),
+                    },
+                });
 
-            if (category) {
-                if (s.premium && premium[category] == false) {
-                    return res.redirect(
-                        `/settings/${req.params.id}?error=premiumRequired`
-                    )
+                if (category.toggleable) {
+                    if (!toggle[category.categoryId]) {
+                        toggle[category.categoryId] = {}
+                    }
+                    toggle[category.categoryId] = catGAS.categoryToggle || null;
+                    catGAS = catGAS.filter((c) => c.optionId !== 'categoryToggle')
                 }
-            }
-
-            for (const c of s.categoryOptionsList) {
-                if (c.allowedCheck) {
-                    const canUse = await c.allowedCheck({
-                        guild: { id: req.params.id },
-                        user: { id: req.session.user.id }
-                    })
-                    if (typeof canUse != 'object') {
-                        throw new TypeError(
-                            `${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
-                        )
+                if (category.premium) {
+                    if (!premium[category.categoryId]) {
+                        premium[category.categoryId] = {}
                     }
-                    canUseList[s.categoryId][c.optionId] = canUse
-                } else {
-                    canUseList[s.categoryId][c.optionId] = {
-                        allowed: true,
-                        errorMessage: null
-                    }
-                }
-
-                if (!actual[s.categoryId]) actual[s.categoryId] = {}
-
-                if (c.optionType.type == 'spacer') {
-                    actual[s.categoryId][c.optionId] = {
-                        type: 'spacer',
-                        themeOptions: c.themeOptions
-                    }
-                } else if (
-                    c.optionType.type == 'collapsable' ||
-                    c.optionType.type == 'modal'
-                ) {
-                    for (const item of c.optionType.options) {
-                        if (
-                            item.optionType.type == 'channelsMultiSelect' ||
-                            item.optionType.type == 'roleMultiSelect' ||
-                            item.optionType.type == 'tagInput'
-                        ) {
-                            actual[s.categoryId][item.optionId] = []
+                    premium[category.categoryId] = await s.premiumUser({
+                        guild: {
+                            id: req.params.id
+                        },
+                        user: {
+                            id: req.session.user.id,
+                            tag: req.session.user.tag
                         }
+                    })
+                }
+
+                if (category.premium && premium[category.categoryId] == false) return res.redirect(
+                    `/settings/${req.params.id}?error=premiumRequired`
+                )
+
+
+                for (const o of catGAS) {
+                    if (!o || !o?.optionId) {
+                        console.log(
+                            "WARNING: You haven't set the optionId for a category option in your config. This is required for the category option to work."
+                        )
+                        continue;
                     }
-                } else {
-                    if (!actual[s.categoryId]) {
-                        actual[s.categoryId] = {}
-                    }
-                    if (!actual[s.categoryId][c.optionId]) {
-                        actual[s.categoryId][c.optionId] = await c.getActualSet(
-                            {
+                    const option = category.categoryOptionsList.find(
+                        (c) => c.optionId == o.optionId
+                    )
+                    if (option) {
+                        if (option.allowedCheck) {
+                            const canUse = await option.allowedCheck({
                                 guild: {
                                     id: req.params.id,
-                                    object: bot.guilds.cache.get(req.params.id)
                                 },
                                 user: {
                                     id: req.session.user.id,
-                                    object: bot.guilds.cache
-                                        .get(req.params.id)
-                                        .members.cache.get(req.session.user.id)
-                                }
+                                },
+                            })
+
+                            if (typeof canUse != "object")
+                                throw new TypeError(
+                                    `${category.categoryId} category option with id ${option.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
+                                )
+                            canUseList[category.categoryId][
+                                option.optionId
+                            ] = canUse
+                        } else {
+                            canUseList[category.categoryId][
+                                option.optionId
+                            ] = {
+                                allowed: true,
+                                errorMessage: null,
                             }
+                        }
+
+                        if (option.optionType !== "spacer") {
+                            if (!actual[category.categoryId]) {
+                                actual[category.categoryId] = {}
+                            }
+                            if (
+                                !actual[category.categoryId][
+                                option.optionId
+                                ]
+                            ) {
+                                actual[category.categoryId][
+                                    option.optionId
+                                ] = o.data
+                            }
+                        } else actual[category.categoryId][option.optionId] = {
+                            type: 'spacer',
+                            themeOptions: option.themeOptions
+                        }
+                    } else console.log(`WARNING: Option ${o.optionId} in category ${category.categoryId} doesn't exist in your config.`)
+
+                }
+            } else for (const s of config.settings) {
+                if (!canUseList[s.categoryId]) canUseList[s.categoryId] = {}
+                if (s.toggleable) {
+                    if (!toggle[s.categoryId]) {
+                        toggle[s.categoryId] = {}
+                    }
+                    toggle[s.categoryId] = await s.getActualSet({
+                        guild: {
+                            id: req.params.id
+                        }
+                    })
+                }
+                if (s.premium) {
+                    if (!premium[s.categoryId]) {
+                        premium[s.categoryId] = {}
+                    }
+                    premium[s.categoryId] = await s.premiumUser({
+                        guild: {
+                            id: req.params.id
+                        },
+                        user: {
+                            id: req.session.user.id,
+                            tag: req.session.user.tag
+                        }
+                    })
+                }
+
+                if (category) {
+                    if (s.premium && premium[category] == false) {
+                        return res.redirect(
+                            `/settings/${req.params.id}?error=premiumRequired`
                         )
+                    }
+                }
+
+                for (const c of s.categoryOptionsList) {
+                    if (c.allowedCheck) {
+                        const canUse = await c.allowedCheck({
+                            guild: { id: req.params.id },
+                            user: { id: req.session.user.id }
+                        })
+                        if (typeof canUse != 'object') {
+                            throw new TypeError(
+                                `${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
+                            )
+                        }
+                        canUseList[s.categoryId][c.optionId] = canUse
+                    } else {
+                        canUseList[s.categoryId][c.optionId] = {
+                            allowed: true,
+                            errorMessage: null
+                        }
+                    }
+
+                    if (!actual[s.categoryId]) actual[s.categoryId] = {}
+
+                    if (c.optionType.type == 'spacer') {
+                        actual[s.categoryId][c.optionId] = {
+                            type: 'spacer',
+                            themeOptions: c.themeOptions
+                        }
+                    } else if (
+                        c.optionType.type == 'collapsable' ||
+                        c.optionType.type == 'modal'
+                    ) {
+                        for (const item of c.optionType.options) {
+                            if (
+                                item.optionType.type == 'channelsMultiSelect' ||
+                                item.optionType.type == 'roleMultiSelect' ||
+                                item.optionType.type == 'tagInput'
+                            ) {
+                                actual[s.categoryId][item.optionId] = []
+                            }
+                        }
+                    } else {
+                        if (!actual[s.categoryId]) {
+                            actual[s.categoryId] = {}
+                        }
+                        if (!actual[s.categoryId][c.optionId]) {
+                            actual[s.categoryId][c.optionId] = await c.getActualSet(
+                                {
+                                    guild: {
+                                        id: req.params.id,
+                                        object: bot.guilds.cache.get(req.params.id)
+                                    },
+                                    user: {
+                                        id: req.session.user.id,
+                                        object: bot.guilds.cache
+                                            .get(req.params.id)
+                                            .members.cache.get(req.session.user.id)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -154,7 +258,7 @@ module.exports = function (config, themeConfig) {
 
         let errors
         let success
-
+        // boo
         if (req.session.errors) {
             if (String(req.session.errors).includes('%is%')) {
                 errors = req.session.errors.split('%and%')
