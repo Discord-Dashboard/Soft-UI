@@ -58,7 +58,7 @@ module.exports = {
             let d = data.options.find((o) => o.id === option.optionId);
             let canUse = {}
 
-            if (!d || !d?.value) continue;
+            if (!d || (!d?.value && typeof d?.value !== 'boolean')) continue;
 
             if (option.allowedCheck) canUse = await option.allowedCheck({
                 guild: { id: req.params.guildId },
@@ -95,21 +95,21 @@ module.exports = {
                         if (
                             d.value ||
                             d.value == null ||
-                            d.value == undefined
+                            d.value == undefined ||
+                            d.value == false
                         ) {
-                            if (
-                                d.value == null ||
-                                d.value == undefined
-                            )
-                                catO.push({
-                                    optionId: option.optionId,
-                                    data: false,
-                                })
-                            else
-                                catO.push({
-                                    optionId: option.optionId,
-                                    data: true,
-                                })
+                            if (d.value || d.value == null || d.value == undefined || d.value == false) {
+                                if (d.value == null || d.value == undefined || d.value == false)
+                                    catO.push({
+                                        optionId: option.optionId,
+                                        data: false
+                                    });
+                                else
+                                    catO.push({
+                                        optionId: option.optionId,
+                                        data: true
+                                    });
+                            }
                         }
                     } else if (option.optionType.type == "embedBuilder") {
                         if (
