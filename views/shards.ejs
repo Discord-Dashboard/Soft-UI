@@ -56,16 +56,34 @@
 
             for(const shard in data) {
                 let row = $(`<div class="col-sm-1">
-                <a class="active nav-link" data-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title='<i class="ni ni-circle-08"></i> Users: ${data[shard].users.toLocaleString()}<br><i class="ni ni-laptop"></i> Servers: ${data[shard].guilds.toLocaleString()}<br><i class="ni ni-collection"></i> Channels: ${data[shard].channels.toLocaleString()}<br><i class="ni ni-cloud-download-95"></i> Latency: ${data[shard].ping}ms'>
-                    <div
-                        class="icon icon-shape icon-md shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <b style="color:#6bd163;" class="unselectable">${data[shard].id}</b>
-                    </div>
-                </a>
+                <button type="button" class="btn bg-gradient-success" data-bs-toggle="modal" data-bs-target="#exampleModal${data[shard].id}" style="color:#6bd163;">
+                    ${data[shard].id}
+                </button>
+                </div>
+                <div class="modal fade" id="exampleModal${data[shard].id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Shard: ${data[shard].id}</h5>
+                                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <div class="modal-body">
+                            <i class="ni ni-circle-08"></i> Users: ${data[shard].users.toLocaleString()}<br>
+                            <i class="ni ni-laptop"></i> Servers: ${data[shard].guilds.toLocaleString()}<br>
+                            <i class="ni ni-collection"></i> Channels: ${data[shard].channels.toLocaleString()}<br>
+                            <i class="ni ni-cloud-download-95"></i> Latency: ${data[shard].ping}ms<br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                   </div>
+                </div>
             </div>`)
 
                 $('#shardlist2').append(row.clone(true))
-                $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+                // $("body").tooltip({ selector: '[data-toggle=tooltip]' });
             }
         });
     }
