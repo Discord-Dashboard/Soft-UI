@@ -103,7 +103,7 @@ let gradtwo;
                         </h5>
                         <p id="desc" class="mb-0 font-weight-bold text-sm">
                             <b>Total Shards: </b>
-                            1
+                            <span id="totalshards">Loading</span>
                         </p>
                     </div>
                 </div>
@@ -134,6 +134,8 @@ let gradtwo;
                 $('#shardlist').empty()
 
             data = data.sort((a, b) => a.id - b.id);
+
+            $('#totalshards').html(data.length)
 
             if (!first) {
                 for (const shard in data) {
