@@ -194,9 +194,9 @@ if (currentScheme == "dark") {
 </script>
 <script>
     function createGraph(shard) {
-        const { id, ping } = shard;
+        const { id, ping, interval } = shard;
 
-        const seconds = 10000 / 1000;
+        const seconds = interval / 1000;
 
         let labels = [];
         for (let i = 0; i < 10; i++) {
