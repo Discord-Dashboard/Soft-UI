@@ -175,7 +175,6 @@ if (currentScheme == "dark") {
                 $('#shardlist').append(row.clone(true))
 
                 if (first) {
-                    console.log("first")
                     for (const shard in data) {
                         const graph = createGraph(data[shard]);
                         graphs[data[shard].id] = graph;
@@ -196,8 +195,6 @@ if (currentScheme == "dark") {
 <script>
     function createGraph(shard) {
         const { id, ping } = shard;
-
-        console.log(id)
 
         const seconds = 10000 / 1000;
 
