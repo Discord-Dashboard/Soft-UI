@@ -16,15 +16,13 @@ module.exports = (themeConfig = {}) => {
         },
         messages: {
             error: {
-                addonLicense: `${consolePrefix}${
-                    'Failed to initialise {{ADDON}}.\nThe license this addon was installed with does not match your current discord-dashboard license.'
-                        .cyan
-                }`
+                addonLicense: `${consolePrefix}${'Failed to initialise {{ADDON}}.\nThe license this addon was installed with does not match your current discord-dashboard license.'
+                    .cyan
+                    }`
             },
             success: {
-                addonLoaded: `${consolePrefix}${
-                    'Successfully loaded {{ADDON}}.'.cyan
-                }`
+                addonLoaded: `${consolePrefix}${'Successfully loaded {{ADDON}}.'.cyan
+                    }`
             }
         },
         embedBuilderComponent: require('fs').readFileSync(
@@ -33,15 +31,15 @@ module.exports = (themeConfig = {}) => {
         ),
         init: async (app, config) => {
             let outdated = false
-            ;(async () => {
-                let check = await npmUpdater.update()
-                await fileUpdater.update()
-                if (!check) outdated = true
-            })()
+                ; (async () => {
+                    let check = await npmUpdater.update()
+                    await fileUpdater.update()
+                    if (!check) outdated = true
+                })()
 
             const db = new Keyv(
                 themeConfig.dbdriver ||
-                    'sqlite://' + path.join(__dirname, '/database.sqlite')
+                'sqlite://' + path.join(__dirname, '/database.sqlite')
             )
 
             db.on('error', (err) => {
