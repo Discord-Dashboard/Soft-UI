@@ -2,7 +2,6 @@ const fetch = require('node-fetch')
 const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
 
 async function npmDashCheck() {
-    console.log(`${consolePrefix}${'Checking'.cyan} ${'NPM'.red} ${'for updates..'.cyan}`);
     await npmThemeCheck();
     let failed = 0
     let failed2 = 0
@@ -13,10 +12,10 @@ async function npmDashCheck() {
         failed++
         console.log(`${consolePrefix}Failed to check NPM for updates. (DBD)`)
     }
-    
+
     if (failed === 0) {
         let checkArray = await fetch(`https://registry.npmjs.org/discord-dashboard`);
-        
+
         try {
             checkArray = await checkArray.json()
         } catch (error) {
@@ -25,7 +24,7 @@ async function npmDashCheck() {
                 `${consolePrefix}Failed to check NPM for updates. (DBD)`
             )
         }
-        
+
         if (failed2 === 0) {
             const latestVersion = checkArray['dist-tags'].latest
             const currentVersion = require('discord-dashboard').version
@@ -48,7 +47,7 @@ async function npmThemeCheck() {
 
     if (failed === 0) {
         let checkArray = await fetch(`https://registry.npmjs.org/dbd-soft-ui`)
-        
+
         try {
             checkArray = await checkArray.json()
         } catch (error) {

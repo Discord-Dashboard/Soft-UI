@@ -4,11 +4,9 @@ const consolePrefix = `\x1b[34m[\x1b[33mdbd-soft-ui\x1b[34m]\x1b[36m `
 const colors = require('colors')
 
 async function update() {
-    console.log(`${consolePrefix}Checking \x1b[31mlive copy \x1b[36mfor updates..\x1b[0m`);
-
     let failed3 = 0
     let failed4 = 0
-    
+
     try {
         await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/utils/updater/versionsOnline.json`);
     } catch (error) {
@@ -18,7 +16,7 @@ async function update() {
 
     if (failed3 === 0) {
         let checkArray = await fetch(`https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/utils/updater/versionsOnline.json`);
-        
+
         try {
             checkArray = await checkArray.json()
         } catch (error) {
@@ -53,7 +51,7 @@ async function update() {
                                 )}.`
                             )
                         }
-                        
+
                         if (failedFile === 0) {
                             await fs.writeFileSync(
                                 `${__dirname}/../../views/partials/${name}.ejs`,
