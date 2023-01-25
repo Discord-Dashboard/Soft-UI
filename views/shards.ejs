@@ -23,42 +23,49 @@ let coltwo;
 let gradone;
 let gradtwo;
 
-// if (currentScheme == "blue") {
+if (currentScheme == "blue") {
     colone = "#21d4fd";
     coltwo = "#2152ff";
     gradone = "rgba(33,212,253,0.1)";
     gradtwo = "rgba(33,82,255,0.1)";
-// }
-// if (currentScheme == "pink") {
-//     colone = "#FF0080";
-//     coltwo = "#7928CA";
-//     gradone = "rgba(255,0,128,0.1)";
-//     gradtwo = "rgba(121,40,202,0.1)";
-// }
-// if (currentScheme == "red") {
-//     colone = "#ea0606";
-//     coltwo = "#ff667c";
-//     gradone = "rgba(255,102,124,0.1)";
-//     gradtwo = "rgba(234,6,6,0.1)";
-// }
-// if (currentScheme == "green") {
-//     colone = "#17ad37";
-//     coltwo = "#98ec2d";
-//     gradone = "rgba(23,173,55,0.1)";
-//     gradtwo = "rgba(152,236,45,0.1)";
-// }
-// if (currentScheme == "yellow") {
-//     colone = "#f53939";
-//     coltwo = "#fbcf33";
-//     gradone = "rgba(245,57,57,0.1)";
-//     gradtwo = "rgba(251,207,51,0.1)";
-// }
-// if (currentScheme == "dark") {
-//     colone = "#141727";
-//     coltwo = "#3A416F";
-//     gradone = "rgba(20,23,39,0.1)";
-//     gradtwo = "rgba(58,65,111,0.1)";
-// }
+}
+if (currentScheme == "pink") {
+    colone = "#FF0080";
+    coltwo = "#7928CA";
+    gradone = "rgba(255,0,128,0.1)";
+    gradtwo = "rgba(121,40,202,0.1)";
+}
+if (currentScheme == "red") {
+    colone = "#ea0606";
+    coltwo = "#ff667c";
+    gradone = "rgba(255,102,124,0.1)";
+    gradtwo = "rgba(234,6,6,0.1)";
+}
+if (currentScheme == "green") {
+    colone = "#17ad37";
+    coltwo = "#98ec2d";
+    gradone = "rgba(23,173,55,0.1)";
+    gradtwo = "rgba(152,236,45,0.1)";
+}
+if (currentScheme == "yellow") {
+    colone = "#f53939";
+    coltwo = "#fbcf33";
+    gradone = "rgba(245,57,57,0.1)";
+    gradtwo = "rgba(251,207,51,0.1)";
+}
+if (currentScheme == "dark") {
+    colone = "#141727";
+    coltwo = "#3A416F";
+    gradone = "rgba(20,23,39,0.1)";
+    gradtwo = "rgba(58,65,111,0.1)";
+}
+if (currentScheme == "custom") {
+    colone = themeConfig.themeColors.primaryColor;
+    coltwo = themeConfig.themeColors.secondaryColor;
+    gradone = hexToRgbA(themeConfig.themeColors.primaryColor, 0.1);
+    gradtwo = hexToRgbA(themeConfig.themeColors.secondaryColor, 0.1);
+}
+
 %>
 <head>
     <style>
