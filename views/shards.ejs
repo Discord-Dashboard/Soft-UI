@@ -2,11 +2,15 @@
 =========================================================
 * Soft UI Dashboard - v1.0.3
 =========================================================
+
 * Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
 * Copyright 2021 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (https://www.creative-tim.com/license)
+
 * Coded by Creative Tim
+
 =========================================================
+
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
 <!DOCTYPE html>
@@ -15,14 +19,14 @@
 <head>
     <style>
         .unselectable {
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
         }
-    </style>
-    <%- themeConfig?.customHtml %>
+      </style>
+      <%- themeConfig?.customHtml %>
 </head>
 <body class="g-sidenav-show bg-gray-100" id="scroll">
 <%- include('partials/preload.ejs') %>
@@ -33,19 +37,23 @@
     <!-- End Navbar -->
     <div class="container-fluid py-4" style="padding-bottom: 0px !important;" id="shardlist">
         <b style="color:#6bd163;" class="unselectable">No shards exist!</b>
-        <%- include('partials/footer.ejs') %>
+    <%- include('partials/footer.ejs') %>
     </div>
 </div>
 </main>
 </div>
 <!--  Graph Code !-->
 <%- include('partials/scripts.ejs', {now: "shards"}) %>
+
 <script>
     async function updateshards(){
         $.get("/shards/get", function(data, status){
             $('#shardlist').empty()
+
             $('#shardlist').append($('<div class="row" id="shardlist2"></div>'));
+
             data = data.sort((a, b) => a.id - b.id);
+
             for(const shard in data) {
                 let row = $(`<div class="col-sm-1">
                 <a class="active nav-link" data-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title='<i class="ni ni-circle-08"></i> Users: ${data[shard].users.toLocaleString()}<br><i class="ni ni-laptop"></i> Servers: ${data[shard].guilds.toLocaleString()}<br><i class="ni ni-collection"></i> Channels: ${data[shard].channels.toLocaleString()}<br><i class="ni ni-cloud-download-95"></i> Latency: ${data[shard].ping}ms'>
@@ -55,6 +63,7 @@
                     </div>
                 </a>
             </div>`)
+
                 $('#shardlist2').append(row.clone(true))
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
             }
@@ -63,4 +72,5 @@
     updateshards()
 </script>
 </body>
+
 </html>
