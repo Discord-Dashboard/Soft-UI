@@ -504,7 +504,9 @@
                         <div class="form-group">
                             <% if (ldata !== undefined) { %>
                                 <textarea disabled readonly class="form-control" id="botLogsText" rows="12"><%= ldata.map(x => x.description).join("\n")%></textarea>
-                            <% }%>
+                            <% } else { %>
+                                <textarea disabled readonly class="form-control" id="botLogsText" rows="12">No logs found.</textarea>
+                            <% } %>
                         </div>
                     </form>
                 </div>
