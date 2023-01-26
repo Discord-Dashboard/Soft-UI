@@ -491,6 +491,23 @@
                     </div>
                 </div>
             </div>
+            <br>
+        <% } %>
+        <% if (themeConfig.admin.logs.enabled) { %>
+            <div class="card h-100">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Bot Logs</h6>
+                </div>
+                <div class="card-body p-3">
+                    <h6 class="text-uppercase text-body text-xs font-weight-bolder">Current Logs</h6>
+                    <form>
+                        <div class="form-group">
+                            <textarea disabled readonly class="form-control" id="botLogsText" rows="12"><%= ldata.map(x => x.description).join("\n") %></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
         <% } %>
         <div class="row">
             <div class="col-12 col-xl-6" style="margin-bottom: 20px;">
