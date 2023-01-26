@@ -3,7 +3,7 @@ const db = require('quick.db')
 
 module.exports = {
     page: '/admin',
-    execute: async (req, res, app, config, themeConfig, info) => {
+    execute: async (req, res, app, config, themeConfig, info, database) => {
         const pterodactyl = new Nodeactyl.NodeactylClient(
             themeConfig.admin.pterodactyl.panelLink,
             themeConfig.admin.pterodactyl.apiKey
@@ -40,6 +40,7 @@ module.exports = {
         res.render('admin', {
             req,
             sData: d,
+            ldata: await database.get('logs'),
             themeConfig: req.themeConfig,
             node: pterodactyl,
             bot: config.bot,
