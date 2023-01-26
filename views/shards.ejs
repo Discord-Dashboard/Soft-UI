@@ -23,42 +23,61 @@ let coltwo;
 let gradone;
 let gradtwo;
 
-// if (currentScheme == "blue") {
+if (currentScheme == "blue") {
     colone = "#21d4fd";
     coltwo = "#2152ff";
     gradone = "rgba(33,212,253,0.1)";
     gradtwo = "rgba(33,82,255,0.1)";
-// }
-// if (currentScheme == "pink") {
-//     colone = "#FF0080";
-//     coltwo = "#7928CA";
-//     gradone = "rgba(255,0,128,0.1)";
-//     gradtwo = "rgba(121,40,202,0.1)";
-// }
-// if (currentScheme == "red") {
-//     colone = "#ea0606";
-//     coltwo = "#ff667c";
-//     gradone = "rgba(255,102,124,0.1)";
-//     gradtwo = "rgba(234,6,6,0.1)";
-// }
-// if (currentScheme == "green") {
-//     colone = "#17ad37";
-//     coltwo = "#98ec2d";
-//     gradone = "rgba(23,173,55,0.1)";
-//     gradtwo = "rgba(152,236,45,0.1)";
-// }
-// if (currentScheme == "yellow") {
-//     colone = "#f53939";
-//     coltwo = "#fbcf33";
-//     gradone = "rgba(245,57,57,0.1)";
-//     gradtwo = "rgba(251,207,51,0.1)";
-// }
-// if (currentScheme == "dark") {
-//     colone = "#141727";
-//     coltwo = "#3A416F";
-//     gradone = "rgba(20,23,39,0.1)";
-//     gradtwo = "rgba(58,65,111,0.1)";
-// }
+}
+if (currentScheme == "pink") {
+    colone = "#FF0080";
+    coltwo = "#7928CA";
+    gradone = "rgba(255,0,128,0.1)";
+    gradtwo = "rgba(121,40,202,0.1)";
+}
+if (currentScheme == "red") {
+    colone = "#ea0606";
+    coltwo = "#ff667c";
+    gradone = "rgba(255,102,124,0.1)";
+    gradtwo = "rgba(234,6,6,0.1)";
+}
+if (currentScheme == "green") {
+    colone = "#17ad37";
+    coltwo = "#98ec2d";
+    gradone = "rgba(23,173,55,0.1)";
+    gradtwo = "rgba(152,236,45,0.1)";
+}
+if (currentScheme == "yellow") {
+    colone = "#f53939";
+    coltwo = "#fbcf33";
+    gradone = "rgba(245,57,57,0.1)";
+    gradtwo = "rgba(251,207,51,0.1)";
+}
+if (currentScheme == "dark") {
+    colone = "#141727";
+    coltwo = "#3A416F";
+    gradone = "rgba(20,23,39,0.1)";
+    gradtwo = "rgba(58,65,111,0.1)";
+}
+if (currentScheme == "custom") {
+    colone = themeConfig.themeColors.primaryColor;
+    coltwo = themeConfig.themeColors.secondaryColor;
+    gradone = hexToRgbA(themeConfig.themeColors.primaryColor, 0.1);
+    gradtwo = hexToRgbA(themeConfig.themeColors.secondaryColor, 0.1);
+}
+
+function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+    }
+    throw new Error('Bad Hex');
+}
 %>
 <head>
     <style>
@@ -79,20 +98,20 @@ let gradtwo;
     <!-- Navbar -->
     <%- include('partials/navbar.ejs', {now:'shards'}) %>
     <!-- End Navbar -->
-    <% const images=["curved-1", "curved-2" , "curved-3" , "curved-4" , "curved-5" , "curved-6" , "curved-7"
-    , "curved-8" , "curved-9" , "curved-10" , "curved-11" , "curved-12" , "curved-13" , "curved-14"
-    , "curved-15" , "curved-16" , "curved-17" , "curved-18" ]; const image=images[Math.floor(Math.random() *
-    images.length)]; %>
+    <% let image; if (themeConfig.shardspage.backgroundUrl) { image=themeConfig.shardspage.backgroundUrl } else { const images=["curved-1", "curved-2" , "curved-3" , "curved-4" , "curved-5" , "curved-6" , "curved-7"
+        , "curved-8" , "curved-9" , "curved-10" , "curved-11" , "curved-12" , "curved-13" , "curved-14"
+        , "curved-15" , "curved-16" , "curved-17" , "curved-18" ]; image="/img/curved-images/" + images[Math.floor(Math.random() *
+            images.length)]+ ".webp";} %>
     <div class="container-fluid">
         <div class="page-header min-height-300 border-radius-xl mt-4"
-            style="background-image: url('/img/curved-images/<%- image %>.webp'); background-position-y: 50%;">
+            style="background-image: url('<%- image %>'); background-position-y: 50%;">
             <span class="mask bg-gradient-primary opacity-6"></span>
         </div>
         <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
             <div class="row gx-4">
                 <div class="col-auto">
                     <div class="avatar avatar-xl position-relative">
-                        <img id="img" src="asdf" alt="profile_image"
+                        <img id="img" src="<%- themeConfig.icons.sidebar.darkUrl %>" alt="profile_image"
                             class="w-100 border-radius-lg shadow-sm">
                     </div>
                 </div>
