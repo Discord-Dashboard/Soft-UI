@@ -16,6 +16,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/preloader.ejs', {now:'index', req: req}) %>
+<%
+let currentScheme = themeConfig.colorScheme;
+let colone;
+let coltwo;
+let gradone;
+let gradtwo;
+
+if (currentScheme == "blue") {
+    colone = "#21d4fd";
+    coltwo = "#2152ff";
+    gradone = "rgba(33,212,253,0.1)";
+    gradtwo = "rgba(33,82,255,0.1)";
+}
+if (currentScheme == "pink") {
+    colone = "#FF0080";
+    coltwo = "#7928CA";
+    gradone = "rgba(255,0,128,0.1)";
+    gradtwo = "rgba(121,40,202,0.1)";
+}
+if (currentScheme == "red") {
+    colone = "#ea0606";
+    coltwo = "#ff667c";
+    gradone = "rgba(255,102,124,0.1)";
+    gradtwo = "rgba(234,6,6,0.1)";
+}
+if (currentScheme == "green") {
+    colone = "#17ad37";
+    coltwo = "#98ec2d";
+    gradone = "rgba(23,173,55,0.1)";
+    gradtwo = "rgba(152,236,45,0.1)";
+}
+if (currentScheme == "yellow") {
+    colone = "#f53939";
+    coltwo = "#fbcf33";
+    gradone = "rgba(245,57,57,0.1)";
+    gradtwo = "rgba(251,207,51,0.1)";
+}
+if (currentScheme == "dark") {
+    colone = "#141727";
+    coltwo = "#3A416F";
+    gradone = "rgba(20,23,39,0.1)";
+    gradtwo = "rgba(58,65,111,0.1)";
+}
+if (currentScheme == "custom") {
+    colone = themeConfig.themeColors.primaryColor;
+    coltwo = themeConfig.themeColors.secondaryColor;
+    gradone = hexToRgbA(themeConfig.themeColors.primaryColor, 0.1);
+    gradtwo = hexToRgbA(themeConfig.themeColors.secondaryColor, 0.1);
+}
+
+function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+    }
+    throw new Error('Bad Hex');
+}
+%>
 <head>
     <style>
         .unselectable {
@@ -35,10 +98,46 @@
     <!-- Navbar -->
     <%- include('partials/navbar.ejs', {now:'shards'}) %>
     <!-- End Navbar -->
-    <div class="container-fluid py-4" style="padding-bottom: 0px !important;" id="shardlist">
-        <b style="color:#6bd163;" class="unselectable">No shards exist!</b>
-    <%- include('partials/footer.ejs') %>
+    <% let image; if (themeConfig.shardspage.backgroundUrl) { image=themeConfig.shardspage.backgroundUrl } else { const images=["curved-1", "curved-2" , "curved-3" , "curved-4" , "curved-5" , "curved-6" , "curved-7"
+        , "curved-8" , "curved-9" , "curved-10" , "curved-11" , "curved-12" , "curved-13" , "curved-14"
+        , "curved-15" , "curved-16" , "curved-17" , "curved-18" ]; image="/img/curved-images/" + images[Math.floor(Math.random() *
+            images.length)]+ ".webp";} %>
+    <div class="container-fluid">
+        <div class="page-header min-height-300 border-radius-xl mt-4"
+            style="background-image: url('<%- image %>'); background-position-y: 50%;">
+            <span class="mask bg-gradient-primary opacity-6"></span>
+        </div>
+        <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
+            <div class="row gx-4">
+                <div class="col-auto">
+                    <div class="avatar avatar-xl position-relative">
+                        <img id="img" src="<%- themeConfig.icons.sidebar.darkUrl %>" alt="profile_image"
+                            class="w-100 border-radius-lg shadow-sm">
+                    </div>
+                </div>
+                <div class="col-auto my-auto">
+                    <div class="h-100">
+                        <h5 id="title" class="mb-1">
+                            Bot Shards Status
+                        </h5>
+                        <p id="desc" class="mb-0 font-weight-bold text-sm">
+                            <b>Total Shards: </b>
+                            <span id="totalshards">Loading</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="container">
+                <div class="row" style="row-gap: 1rem;" id="shardlist">
+                   <span>
+                        Loading...
+                   </span>
+                </div>
+        </div>
     </div>
+    <%- include('partials/footer.ejs') %>
 </div>
 </main>
 </div>
@@ -46,30 +145,169 @@
 <%- include('partials/scripts.ejs', {now: "shards"}) %>
 
 <script>
-    async function updateshards(){
-        $.get("/shards/get", function(data, status){
-            $('#shardlist').empty()
-
-            $('#shardlist').append($('<div class="row" id="shardlist2"></div>'));
+    let graphs = {};
+    async function updateshards(first){
+        let timeout
+        await $.get("/shards/get", function(data, status){
+            if (first)
+                $('#shardlist').empty()
 
             data = data.sort((a, b) => a.id - b.id);
 
-            for(const shard in data) {
-                let row = $(`<div class="col-sm-1">
-                <a class="active nav-link" data-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" title='<i class="ni ni-circle-08"></i> Users: ${data[shard].users.toLocaleString()}<br><i class="ni ni-laptop"></i> Servers: ${data[shard].guilds.toLocaleString()}<br><i class="ni ni-collection"></i> Channels: ${data[shard].channels.toLocaleString()}<br><i class="ni ni-cloud-download-95"></i> Latency: ${data[shard].ping}ms'>
-                    <div
-                        class="icon icon-shape icon-md shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <b style="color:#6bd163;" class="unselectable">${data[shard].id}</b>
-                    </div>
-                </a>
-            </div>`)
+            $('#totalshards').html(data.length)
 
-                $('#shardlist2').append(row.clone(true))
-                $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            if (!first) {
+                for (const shard in data) {
+                    const shardObj = data[shard];
+                    $(`userCount-${shardObj.id}`).html(shardObj.users)
+                    $(`serverCount-${shardObj.id}`).html(shardObj.servers)
+                    $(`channelCount-${shardObj.id}`).html(shardObj.channels)
+                    const graph = Chart.getChart(`chart-line-${shardObj.id}`)
+                    graph.data.datasets[0].data = data[shard].ping;
+                    graph.update();
+                }
             }
+
+            if (first)
+                for (const shard in data) {
+                    let row = $(`
+                    <div class="col-sm-12 col-md-6">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="d-flex flex-column h-100">
+                                    <p class="mb-1 pt-2 text-bold">Shard - ${data[shard].id}</p>
+                                        <div class="m-0 d-flex" style="gap: 5px;">
+                                            <i class="ni ni-circle-08 align-self-center"></i> Users: <span id="userCount-${data[shard].id}">${data[shard].users.toLocaleString()}</span><br>
+                                        </div>
+                                        <div class="m-0 d-flex" style="gap: 5px;">
+                                            <i class="ni ni-laptop align-self-center"></i> Servers: <span id="serverCount-${data[shard].id}">${data[shard].guilds.toLocaleString()}</span><br>
+                                        </div>
+                                        <div class="m-0 d-flex" style="gap: 5px;">
+                                            <i class="ni ni-collection align-self-center"></i> Channels: <span id="channelCount-${data[shard].id}">${data[shard].channels.toLocaleString()}</span><br>
+                                        </div>
+                                    <div class="chart-container">
+                                        <canvas id="chart-line-${data[shard].id}" class="chart-canvas"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    `)
+                    $('#shardlist').append(row.clone(true))
+                    }
+
+                if (first) {
+                    for (const shard in data) {
+                        const graph = createGraph(data[shard]);
+                        graphs[data[shard].id] = graph;
+                    }
+                }
+            timeout = data[0].interval
         });
+        return timeout
     }
-    updateshards()
+    window.onload = async function() {
+        const interval = await updateshards(true)
+        setInterval(function(){
+            updateshards(false)
+        }, interval || 15000);
+    };
+</script>
+<script>
+    function createGraph(shard) {
+        const { id, ping, interval } = shard;
+
+        const seconds = interval / 1000;
+
+        let labels = [];
+        for (let i = 0; i < 10; i++) {
+            labels.push(`${i * seconds}s`);
+        }
+
+        let ctx = document.getElementById(`chart-line-${id}`).getContext("2d");
+        var gradientStroke1 = ctx.createLinearGradient(0, 230, 0, 50);
+    
+        gradientStroke1.addColorStop(1, '<%= colone %>');
+        gradientStroke1.addColorStop(0.1, '<%= gradone %>');
+        gradientStroke1.addColorStop(0, '<%= gradtwo %>'); //purple colors
+        const chart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels,
+                datasets: [{
+                    label: "ping",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    pointRadius: 0,
+                    borderColor: "<%- colone %>",
+                    borderWidth: 3,
+                    backgroundColor: gradientStroke1,
+                    fill: true,
+                    data: ping,
+                    maxBarThickness: 6
+
+                },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        suggestedMin: 0,
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            padding: 10,
+                            color: '#b2b9bf',
+                            font: {
+                                size: 11,
+                                family: "Open Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#b2b9bf',
+                            padding: 20,
+                            font: {
+                                size: 11,
+                                family: "Open Sans",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+        });
+        return chart
+    }
 </script>
 </body>
 
