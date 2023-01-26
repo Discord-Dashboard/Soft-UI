@@ -502,7 +502,9 @@
                     <h6 class="text-uppercase text-body text-xs font-weight-bolder">Current Logs</h6>
                     <form>
                         <div class="form-group">
-                            <textarea disabled readonly class="form-control" id="botLogsText" rows="12"><%= ldata.map(x => x.description).join("\n") %></textarea>
+                            <% if (ldata !== undefined) { %>
+                                <textarea disabled readonly class="form-control" id="botLogsText" rows="12"><%= ldata.map(x => x.description).join("\n")%></textarea>
+                            <% }%>
                         </div>
                     </form>
                 </div>
