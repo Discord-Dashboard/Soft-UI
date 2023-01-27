@@ -1,6 +1,6 @@
 <% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
 
-<select placeholder="Select" class="js-example-basic-multiple"
+<select placeholder="Select" class="multiSelect js-example-basic-multiple"
         <% if(option.optionType.disabled){ %>disabled
         <% } %>
         <% if(option.optionType.required){ %>required
