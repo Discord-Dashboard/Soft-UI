@@ -29,9 +29,11 @@ module.exports = {
             themeOptions
         }
     },
-    numberPicker: (disabled, themeOptions = {}) => {
+    numberPicker: (min, max, disabled, themeOptions = {}) => {
         return {
             type: 'numberPicker',
+            min,
+            max,
             disabled,
             themeOptions
         }
