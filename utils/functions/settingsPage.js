@@ -294,6 +294,7 @@ module.exports = function (config, themeConfig) {
             canUseList,
             bot: config.bot,
             guild,
+            userid: req.session.user.id,
             gIcon,
             req: req,
             guildid: req.params.id,
