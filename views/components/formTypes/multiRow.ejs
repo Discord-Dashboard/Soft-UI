@@ -1,0 +1,11 @@
+
+<div class="formTypes">
+    <% option.optionType.options.forEach(opt => { %>
+        <% console.log({opt}) %>
+        <div class="formtype-item mt-3">
+            <h4 class="m-0"><%- opt?.optionName || ""%></h4>
+            <p><%- opt?.optionDescription || ""%></p>
+            <%- include(`./${opt.optionType.type}.ejs`, {option: opt, s, Allowed}) %>
+        </div>
+    <% }) %>
+</div>
