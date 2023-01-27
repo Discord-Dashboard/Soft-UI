@@ -339,32 +339,32 @@ declare module "dbd-soft-ui" {
             type: string,
             themeOptions: Record<string, any>
         }
-        emojiPicker: (disabled: any, themeOptions: Record<string, any>) => {
+        emojiPicker: (disabled: boolean, themeOptions: Record<string, any>) => {
             type: string,
-            disabled: any,
+            disabled: boolean,
             themeOptions: Record<string, any>
         }
-        slider: (min: any, max: any, step: any, disabled: any, themeOptions: Record<string, any>) => {
+        slider: (min: number, max: number, step: number, disabled: boolean, themeOptions: Record<string, any>) => {
             type: string,
-            min: any,
-            max: any,
-            step: any,
-            disabled: any,
+            min: number,
+            max: number,
+            step: number,
+            disabled: boolean,
             themeOptions: Record<string, any>
         },
-        date: (disabled: any, themeOptions: Record<string, any>) => {
+        date: (disabled: boolean, themeOptions: Record<string, any>) => {
             type: string,
-            disabled: any,
+            disabled: boolean,
             themeOptions: Record<string, any>
         },
-        numberPicker: (disabled: any, themeOptions: Record<string, any>) => {
+        numberPicker: (min: number, max: number, disabled: boolean, themeOptions: Record<string, any>) => {
             type: string,
-            disabled: any,
+            disabled: boolean,
             themeOptions: Record<string, any>
         },
-        tagInput: (disabled: any, themeOptions: Record<string, any>) => {
+        tagInput: (disabled: boolean, themeOptions: Record<string, any>) => {
             type: string,
-            disabled: any,
+            disabled: boolean,
             themeOptions: Record<string, any>
         }
     }
