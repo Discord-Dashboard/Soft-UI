@@ -35,13 +35,11 @@
                 <div class="col-md-12 mb-4">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title"><%- req?.locales?.partials?.privacyPolicy || "Privacy Policy" %></h4>
-                            <p class="category"><%- req?.locales?.partials?.description || "Privacy Policy and Terms of Service" %></p>
+                            <h4 class="card-title"><%- req?.locales?.privacyPolicy?.title || "Privacy Policy" %></h4>
+                            <p class="category"><%- req?.locales?.privacyPolicy?.description || "Privacy Policy and Terms of Service" %></p>
                         </div>
                         <div class="card-body">
-                            <% if(themeConfig.privacyPolicy){ %>
-                                <%- themeConfig.privacyPolicy.pp %>
-                            <% } else if (req?.locales?.privacyPolicy?.pp){ %>
+                            <% if (req?.locales?.privacyPolicy?.pp){ %>
                                 <%- req.locales.privacyPolicy.pp %>
                             <% } else { %>
                                 <p>Last updated: October 10, 2021</p>
