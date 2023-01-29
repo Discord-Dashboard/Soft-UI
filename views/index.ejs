@@ -94,7 +94,7 @@
                                     <% if(themeConfig.index.card.link.enabled) { %>
                                         <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto"
                                            href="<%- themeConfig.index.card.link.url %>">
-                                           <%- req?.locales?.index?.card?.link.text %>
+                                           <%- req?.locales?.index?.card?.link?.text %>
                                             <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                                         </a>
                                     <% } %>
@@ -117,7 +117,7 @@
             <div class="col-lg-7 mb-lg-0 mb-4">
                 <div class="card z-index-2">
                     <div class="card-body p-3">
-                        <h5 class="font-weight-bolder"><%- req?.locales?.index?.feedsTitle || "Feeds" %></h5>
+                        <h5 class="font-weight-bolder"><%- req?.locales?.index?.feeds.title || "Feeds" %></h5>
                         <%- include('partials/feeds.ejs', {require, admin:false}) %>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                 <% if(themeConfig.index.graph.enabled) { %>
                     <div class="card z-index-2">
                         <div class="card-body p-3">
-                            <h5 class="font-weight-bolder"><%- req?.locales?.index?.graph.title %></h5>
+                            <h5 class="font-weight-bolder"><%- req?.locales?.index?.graph?.title %></h5>
                             <% if(themeConfig.index.graph.lineGraph) { %>
                             <div class="bg-gradient-dark border-radius-lg py-3 pe-1 mb-3">
                                 <% } %>
