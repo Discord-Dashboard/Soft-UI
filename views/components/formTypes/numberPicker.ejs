@@ -11,9 +11,11 @@
         formType="numberPicker"
     <% if (option.optionType.min) { %>
         min="<%= option.optionType.min %>"
+        onkeyup="if(this.value < <%= option.optionType.min %>) this.value = <%= option.optionType.min %>"
     <% } %>
     <% if (option.optionType.max) { %>
         max="<%= option.optionType.max %>"
+        onkeyup="if(this.value > <%= option.optionType.max %>) this.value = <%= option.optionType.max %>"
     <% } %>
     <% if(!Allowed.allowed ){ %>
         style="border-color: red !important" 
