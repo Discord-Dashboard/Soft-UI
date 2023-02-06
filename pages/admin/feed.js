@@ -4,7 +4,6 @@ const { icons, otherIcons } = require('../../icons')
 module.exports = {
     page: '/feed',
     execute: async (req, res, app, config, themeConfig, info) => {
-        console.log(`Feed request, action: ${req.query.action}`)
         if (req.query.action === 'delete') {
             const deleteFeed = req.query.feed
             if (!deleteFeed) return res.redirect('/admin?error=invalidFeed')
@@ -13,7 +12,6 @@ module.exports = {
             if (deleteFeed !== '1' && deleteFeed !== '2' && deleteFeed !== '3')
                 return res.redirect('/admin?error=invalidFeed')
             if (deleteFeed === '1') {
-                console.log('1')
                 if (!db.get('feeds.one'))
                     return res.redirect('/admin?error=invalidFeed')
                 if (db.get('feeds.two')) {
@@ -40,7 +38,6 @@ module.exports = {
                     await db.delete('feeds.three')
                 }
             } else if (deleteFeed === '2') {
-                console.log('2')
                 if (!db.get('feeds.two'))
                     return res.redirect('/admin?error=invalidFeed')
                 if (db.get('feeds.one')) {
@@ -52,20 +49,14 @@ module.exports = {
                         icon: f.icon,
                         diff: f.diff
                     })
-                    console.log('Set feed 1 to 2')
                     await db.delete('feeds.one')
-                    console.log('Deleted feed 1')
                 } else {
                     await db.delete('feeds.two')
-                    console.log('Deleted feed 2')
                 }
             } else if (deleteFeed === '3') {
-                console.log('3')
                 if (!db.get('feeds.three'))
                     return res.redirect('/admin?error=invalidFeed')
                 await db.delete('feeds.three')
-                console.log(db.get('feeds.three'))
-                console.log('Deleted feed 3')
                 if (db.get('feeds.two')) {
                     const f = await db.get('feeds.two')
                     await db.set('feeds.three', {
@@ -75,7 +66,6 @@ module.exports = {
                         icon: f.icon,
                         diff: f.diff
                     })
-                    console.log('Set feed 2 to 3')
                 }
                 if (db.get('feeds.one')) {
                     const f = await db.get('feeds.one')
@@ -86,7 +76,6 @@ module.exports = {
                         icon: f.icon,
                         diff: f.diff
                     })
-                    console.log('Set feed 1 to 2')
                 }
             }
             return res.redirect('/admin')
