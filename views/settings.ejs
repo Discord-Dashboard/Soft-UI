@@ -106,10 +106,12 @@
                                         <li class="nav-item categories" id="<%- s.categoryId %>">
                                             <a class="nav-link <% if (req.params.category == s.categoryId) { %>active<% } %>"
                                                 id="<%- s.categoryId %>">
-                                                <div
-                                                    class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                                    <img width="20px" src="<%= s.categoryImageURL %>">
-                                                </div>
+                                                <% if(s.categoryImageURL) { %>
+                                                    <div
+                                                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                                        <img width="20px" src="<%= s.categoryImageURL %>">
+                                                    </div>
+                                                <% } %>
                                                 <span class="nav-link-text ms-1">
                                                     <%- s.categoryName %>
                                                 </span>
@@ -212,12 +214,14 @@
                     </div>
                     <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
                         <div class="row gx-4">
-                            <div class="col-auto">
-                                <div class="avatar avatar-xl position-relative">
-                                    <img id="img" src="<%= gIcon %>" alt="profile_image"
-                                        class="w-100 border-radius-lg shadow-sm">
+                            <% if(gIcon) { %>
+                                <div class="col-auto">
+                                    <div class="avatar avatar-xl position-relative">
+                                        <img id="img" src="<%= gIcon %>" alt="profile_image"
+                                            class="w-100 border-radius-lg shadow-sm">
+                                    </div>
                                 </div>
-                            </div>
+                            <% } %>
                             <div class="col-auto my-auto">
                                 <div class="h-100">
                                     <h5 id="title" class="mb-1">
