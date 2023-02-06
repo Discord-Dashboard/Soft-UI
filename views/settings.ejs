@@ -334,7 +334,9 @@
                             document.addEventListener("DOMContentLoaded", function () {
                                 $(`#title`).html(`<%- s.categoryName %>`)
                                 $(`#desc`).html(`<%- s.categoryDescription %>`)
+                                <% if(s.categoryImageURL) { %>
                                 $("#img").attr("src", `<%- s.categoryImageURL %>`);
+                                <% } %>
                             });
                         </script>
                         <div class="container-fluid settings mb-4" id="<%= s.categoryId %>div">
