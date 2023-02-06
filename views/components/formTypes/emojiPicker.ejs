@@ -115,8 +115,6 @@
     <br>
 <% } %>
 
-<% console.log(actual[s.categoryId][option.optionId]) %>
-
 <input defaultValue="<%= actual[s.categoryId][option.optionId] || "" %>" class="d-none" type="text" id="<%= option.optionId %>" formType="emojiPicker" type="text" onchange="optionEdited(this)">
 
 <div class="dropdown">
