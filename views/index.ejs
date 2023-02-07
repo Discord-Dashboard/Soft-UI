@@ -91,7 +91,7 @@
                                     <h5 class="font-weight-bolder"><%- req?.locales?.index?.card?.title %></h5>
                                     <p><%- req?.locales?.index?.card?.description %></p>
                                     <p class="mb-5"><%= req?.locales?.index?.card?.footer %></p>
-                                    <% if(themeConfig.index.card.link.enabled) { %>
+                                    <% if(themeConfig.index?.card?.link?.enabled) { %>
                                         <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto"
                                            href="<%- themeConfig.index.card.link.url %>">
                                            <%- req?.locales?.index?.card?.link?.text %>
