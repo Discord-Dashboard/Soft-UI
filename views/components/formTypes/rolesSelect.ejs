@@ -2,7 +2,7 @@
 <select class="form-control"
         <% if(option.optionType.disabled){ %>disabled
         <% } %>
-        id="<%= option.optionId %>" class="col-md-12" style="height:30px;"
+        id="<%= option.optionId %>" class="col-md-12"
         formType="rolesSelect"
         defaultValue=""
         <% if(!Allowed.allowed){ %>style="border-color: red;" disabled<% } %>
