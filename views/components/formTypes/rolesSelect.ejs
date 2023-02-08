@@ -1,5 +1,6 @@
 <% if(!Allowed.allowed){ %><span style="color: red;"><%- Allowed.errorMessage %></span><br><% } %>
-<select <% if(option.optionType.disabled){ %>disabled
+<select class="form-control"
+        <% if(option.optionType.disabled){ %>disabled
         <% } %>
         id="<%= option.optionId %>" class="col-md-12" style="height:30px;"
         formType="rolesSelect"
