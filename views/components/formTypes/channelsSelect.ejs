@@ -6,7 +6,7 @@
         defaultValue=""
         class="form-select"
         id="<%= option.optionId %>" class="col-md-12"
-        style="height:30px; <% if(!Allowed.allowed){ %>border-color: red;<% } %> ">
+        style="<% if(!Allowed.allowed){ %>border-color: red;<% } %> ">
     <%
     let ioooooo = 0;
     let functiona = option.optionType.function(bot, guildid);
