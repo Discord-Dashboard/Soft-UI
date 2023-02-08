@@ -119,9 +119,10 @@ function optionEdited(element) {
     else if (
         formType === "tagInput" ||
         formType == "channelMultiSelect" ||
-        formType == "rolesMultiSelect"
+        formType == "rolesMultiSelect" ||
+        formType == "multiSelect"
     ) {
-        if (formType == "channelMultiSelect" || formType == "rolesMultiSelect")
+        if (formType == "channelMultiSelect" || formType == "rolesMultiSelect" || formType == "multiSelect")
             option.value = $(`#${element.id}.multiSelect`).val()
         if (formType == "tagInput")
             option.value = $(`#${element.id}.tags`).val()

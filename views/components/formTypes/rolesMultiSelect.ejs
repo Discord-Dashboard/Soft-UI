@@ -15,7 +15,7 @@
 >
     <% if (actual[s.categoryId][option.optionId]) {
         let ioooooo = 0;
-        let functiona = option.optionType.function(bot, guildid);
+        let functiona = option.optionType.function(bot, guildid, userid);
         functiona.values.forEach(value=>{ %>
             <option value="<%= value %>"
                     <% if(actual[s.categoryId][option.optionId].includes(value)){ %>selected

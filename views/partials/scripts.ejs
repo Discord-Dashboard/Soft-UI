@@ -127,7 +127,7 @@
     }
     <% } %>
     function sweetalert(icons, text, timer) {
-        var is_mobile = !!navigator.userAgent.match(/iphone|android|blackberry/ig) || false;
+        var is_mobile = !!navigator.userAgent.match(/iphone|android|blackberry/ig);
         let pos = 'top-end';
         if (is_mobile) pos = 'bottom-end';
         const Toast = Swal.mixin({
