@@ -15,13 +15,13 @@ module.exports = {
 
         let onlineFiles = {
             index: await fetch(
-                `https://adn.siondevelopment.xyz/dbd-dark/src/ejs/index.ejs`
+                `https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/views/index.ejs`
             ),
             guild: await fetch(
-                `https://adn.siondevelopment.xyz/dbd-dark/src/ejs/guild.ejs`
+                `https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/views/guild.ejs`
             ),
             guilds: await fetch(
-                `https://adn.siondevelopment.xyz/dbd-dark/src/ejs/guilds.ejs`
+                `https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/views/guilds.ejs`
             )
         }
 
@@ -44,7 +44,7 @@ module.exports = {
         }
 
         let onlineV = await fetch(
-            `https://adn.siondevelopment.xyz/dbd-soft/src/autoupdate.json`
+            `https://cdn.jsdelivr.net/gh/Assistants-Center/DBD-Soft-UI/utils/updater/versionsOnline.json`
         )
         const localV = require(`${__dirname}/../../utils/updater/versions.json`)
         onlineV = await onlineV.json()
