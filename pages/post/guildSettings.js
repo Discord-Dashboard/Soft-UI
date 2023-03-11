@@ -54,7 +54,16 @@ module.exports = {
             }
         }
 
-        if (data.options) for (let option of category.categoryOptionsList) {
+        const subOptions = category.categoryOptionsList.filter((o) => o.optionType.type == "multiRow")
+            .map((o) => o.optionType.options)
+            .flat()
+
+        const newOptionsList = [
+            ...category.categoryOptionsList.filter((o) => o.optionType.type != "multiRow"),
+            ...subOptions
+        ]
+
+        if (data.options) for (let option of newOptionsList) {
             let d = data.options.find((o) => o.id === option.optionId);
             let canUse = {}
 

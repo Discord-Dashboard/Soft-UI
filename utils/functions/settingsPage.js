@@ -236,6 +236,25 @@ module.exports = function (config, themeConfig) {
                             actual[s.categoryId] = {}
                         }
                         if (!actual[s.categoryId][c.optionId]) {
+                            if (c.optionType.type === "multiRow") {
+                                for (const item of c.optionType.options) {
+                                    actual[s.categoryId][item.optionId] = await item.getActualSet(
+                                        {
+                                            guild: {
+                                                id: req.params.id,
+                                                object: bot.guilds.cache.get(req.params.id)
+                                            },
+                                            user: {
+                                                id: req.session.user.id,
+                                                object: bot.guilds.cache
+                                                    .get(req.params.id)
+                                                    .members.cache.get(req.session.user.id)
+                                            }
+                                        }
+                                    )
+                                }
+                                continue
+                            }
                             actual[s.categoryId][c.optionId] = await c.getActualSet(
                                 {
                                     guild: {
@@ -294,6 +313,7 @@ module.exports = function (config, themeConfig) {
             canUseList,
             bot: config.bot,
             guild,
+            userid: req.session.user.id,
             gIcon,
             req: req,
             guildid: req.params.id,
