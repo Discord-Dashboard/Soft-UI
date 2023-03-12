@@ -1,12 +1,175 @@
 declare module "dbd-soft-ui" {
-    import { Express } from "express";
+    import { Express, Request, Response } from "express";
 
-    export default function (options: Record<string, any>): {
+    type themeConfig = {
+        customThemeOptions: {
+            index: ({ req, res, config }: {
+                req: Request,
+                res: Response,
+                config: any
+            }) => {
+                cards: {
+                    title: string,
+                    icon: string,
+                    getValue: string,
+                    progressBar: {
+                        enabled: boolean,
+                        getProgress: number
+                    }
+                }[],
+                graph: {
+                    values: number[],
+                    labels: string[]
+                }
+            }
+        },
+        addons: string[],
+        websiteName: string,
+        colorScheme: "dark" | "pink" | "blue" | "red" | "green" | "yellow" | "custom",
+        themeColors?: {
+            primaryColor: string,
+            secondaryColor: string
+        }
+        supporteMail: string,
+        locales: Record<string, any>,
+        admin: {
+            pterodactyl: {
+                enabled: boolean,
+                apiKey: string,
+                panelLink: string,
+                serverUUIDs: string[]
+            },
+            logs?: {
+                enabled?: boolean,
+                key?: string,
+            }
+        },
+        icons: {
+            favicon: string,
+            noGuildIcon: string,
+            sidebar: {
+                darkUrl: string,
+                lightUrl: string,
+                hideName: boolean,
+                borderRadius: boolean,
+                alignCenter: boolean
+            }
+        },
+        index: {
+            graph: {
+                enabled: boolean,
+                lineGraph: boolean,
+                tag: string,
+                max: number
+            }
+        },
+        premium: {
+            enabled: boolean,
+            card: {
+                title: string,
+                description: string,
+                bgImage: string,
+                button: {
+                    text: string,
+                    url: string
+                }
+            }
+        },
+        preloader: {
+            image: string,
+            spinner: boolean,
+            text: string
+        },
+        sidebar?: {
+            gestures: {
+                disabled: boolean,
+                gestureTimer: number,
+                gestureSensitivity: number
+            }
+        },
+        shardspage?: {
+            enabled: boolean,
+            key: string,
+        },
+        meta: {
+            author: string,
+            owner: string,
+            description: string,
+            ogLocale: string,
+            ogTitle: string,
+            ogImage: string,
+            ogType: string,
+            ogUrl: string,
+            ogSiteName: string,
+            ogDescription: string,
+            twitterTitle: string,
+            twitterDescription: string,
+            twitterDomain: string,
+            twitterUrl: string,
+            twitterCard: string,
+            twitterSite: string,
+            twitterSiteId: string,
+            twitterCreator: string,
+            twitterCreatorId: string,
+            twitterImage: string
+        },
+        error: {
+            error404: {
+                title: string,
+                subtitle: string,
+                description: string
+            },
+            dbdError: {
+                disableSecretMenu: boolean,
+                secretMenuCombination: string[]
+            }
+        },
+        sweetalert: {
+            errors: {
+                requirePremium: string
+            },
+            success: {
+                login: string
+            }
+        },
+        blacklisted: {
+            title: string,
+            subtitle: string,
+            description: string,
+            button: {
+                enabled: boolean,
+                text: string,
+                link: string
+            }
+        },
+        commands?: [
+            {
+                category: string,
+                subTitle: string,
+                categoryId: string,
+                image: string,
+                hideAlias: boolean,
+                hideDescription: boolean,
+                hideSidebarItem: boolean,
+                list: [
+                    {
+                        commandName: string,
+                        commandUsage: string,
+                        commandDescription: string,
+                        commandAlias: string
+                    }
+                ]
+            }
+        ]
+
+    }
+
+    export default function (options: themeConfig): {
         themeCodename: string,
         viewsPath: string,
         staticPath: string,
-        themeConfig: Record<string, any>,
         embedBuilderComponent: string,
+        themeConfig: themeConfig,
         init: (app: Express, config: Record<string, any>) => void;
     };
 
