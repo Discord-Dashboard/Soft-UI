@@ -12,3 +12,4 @@ views/components/formTypes/modal.ejs
 views/components/formTypes/collapsable.ejs
 node_modules
 .idea
+index.js
