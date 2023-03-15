@@ -67,7 +67,7 @@ module.exports = {
             let d = data.options.find((o) => o.id === option.optionId);
             let canUse = {}
 
-            if (!d || (!d?.value && typeof d?.value !== 'boolean')) continue;
+            if (!d && !d?.id) continue;
 
             if (option.allowedCheck) canUse = await option.allowedCheck({
                 guild: { id: req.params.guildId },
