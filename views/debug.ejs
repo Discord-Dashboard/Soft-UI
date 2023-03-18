@@ -54,7 +54,7 @@
         {name: "License Type", value: `${license}`},
         {name: "Uptime", value: `${filterUptime}`},
         {name: "Permissions", value: req.requiredPermissions},
-        {name: "Redirect URI", value: `${config.redirectUri.includes("/discord/callback")}`}
+        {name: "Redirect URI", value: `${config.redirectUri?.includes("/discord/callback")}`}
     ]
 
     let modules = [

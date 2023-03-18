@@ -31,7 +31,7 @@
                 $('.active_all').addClass('active');
                 return false;
             });
-            <% themeConfig.commands.forEach(category => { %>
+            <% themeConfig.commands?.forEach(category => { %>
             $('#<%= category.categoryId %>').click(function () {
                 $('.item').not('.<%= category.categoryId %>').slideUp(300);
                 $('.<%= category.categoryId %>').slideDown("slow");
@@ -55,7 +55,7 @@
     <div class="container-fluid py-4">
         <div class="row">
             <div class="container-fluid">
-                <% themeConfig.commands.forEach(category => { %>
+                <% themeConfig.commands?.forEach(category => { %>
                     <section id="<%= category.categoryId %>">
                         <div class="col-12 item <%= category.categoryId %>" id="divtable">
                             <div class="card mb-4 command-card">

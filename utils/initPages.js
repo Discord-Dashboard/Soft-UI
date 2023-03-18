@@ -1,11 +1,24 @@
 const fs = require('fs')
 const colors = require('colors')
 const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
+const Nodeactyl = require('nodeactyl')
 
 module.exports = {
     init: async function (config, themeConfig, app, db) {
         let info;
         if (themeConfig?.customThemeOptions?.info) info = await themeConfig.customThemeOptions.info({ config: config });
+        if(themeConfig?.admin?.pterodactyl?.enabled) {
+            themeConfig.nodeactyl = new Nodeactyl.NodeactylClient(
+                themeConfig.admin?.pterodactyl?.panelLink,
+                themeConfig.admin?.pterodactyl?.apiKey
+            )
+
+            try {
+                await themeConfig.nodeactyl.getAccountDetails();
+            } catch (error) {
+                console.log(`${consolePrefix}${('Failed to connect to Pterodactyl panel!\nEnsure you\'ve used a CLIENT api key, (found at ' + themeConfig.admin.pterodactyl.panelLink +  '/account/api)').red}`);
+            }
+        }
         const eventFolders = fs.readdirSync(`${__dirname}/../pages`)
 
         for (const folder of eventFolders) {
@@ -18,7 +31,7 @@ module.exports = {
                     if (folder === 'admin') {
                         await app.get(e.page, async function (req, res) {
                             if (!req.session.user) return res.sendStatus(401)
-                            if (!config.ownerIDs.includes(req.session.user.id)) return res.sendStatus(403);
+                            if (!config.ownerIDs?.includes(req.session.user.id)) return res.sendStatus(403);
                             e.execute(
                                 req,
                                 res,

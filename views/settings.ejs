@@ -32,7 +32,7 @@
                     <a onclick="toggleSidenav()"><i
                             class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                             aria-hidden="true" id="iconSidenav"></i></a>
-                    <a <% if(themeConfig.icons.sidebar.alignCenter) { %> style="text-align: center;"
+                    <a <% if(themeConfig?.icons?.sidebar?.alignCenter) { %> style="text-align: center;"
                         <% } %>
                             class="navbar-brand m-0" href="/">
                             <img src="<%= themeConfig.icons.sidebar.lightUrl %>" class="navbar-brand-img h-100" <%

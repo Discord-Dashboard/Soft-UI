@@ -32,6 +32,10 @@ declare module "dbd-soft-ui" {
         }
         supporteMail: string,
         locales: Record<string, any>,
+        footer: {
+            replaceDefault: boolean,
+            text: string,
+        }
         admin: {
             pterodactyl: {
                 enabled: boolean,

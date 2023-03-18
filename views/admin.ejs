@@ -357,7 +357,7 @@
     <!-- End Navbar -->
     <div class="container-fluid py-4" style="padding-bottom: 0px !important;">
         <%
-        if(themeConfig.admin.pterodactyl.enabled) { %>
+        if(themeConfig?.admin?.pterodactyl?.enabled) { %>
             <div class="row">
                 <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog"
                      aria-labelledby="modal-notification" aria-hidden="true">
@@ -493,7 +493,7 @@
             </div>
             <br>
         <% } %>
-        <% if (themeConfig.admin.logs?.enabled) { %>
+        <% if (themeConfig.admin?.logs?.enabled) { %>
             <div class="card h-100">
                 <div class="card-header pb-0 p-3">
                     <h6 class="mb-0">Bot Logs</h6>

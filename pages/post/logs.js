@@ -2,7 +2,7 @@ module.exports = {
     page: '/stats/logs/update',
     execute: async (req, res, app, config, themeConfig, info, db) => {
         if (
-            'Bearer ' + themeConfig.admin.logs?.key !==
+            'Bearer ' + themeConfig.admin?.logs?.key !==
             req.headers.authorization
         )
             return res.json({ status: 'Invalid sharding key' })
