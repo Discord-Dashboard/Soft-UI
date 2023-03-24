@@ -10,7 +10,7 @@ module.exports = {
                     It will be used with support in the discord server.
                 */
         if (!req.session.user) return res.redirect('/discord?r=/debug/')
-        if (!config.ownerIDs.includes(req.session.user.id))
+        if (!config.ownerIDs?.includes(req.session.user.id))
             return res.redirect('/')
 
         let onlineFiles = {

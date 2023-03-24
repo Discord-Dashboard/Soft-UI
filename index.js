@@ -30,6 +30,8 @@ module.exports = (themeConfig = {}) => {
             'utf8'
         ),
         init: async (app, config) => {
+            if(!config?.useTheme404) return console.log(`${consolePrefix}${'You need to set useTheme404 to true in your DBD config otherwise Soft-UI will not work correctly!\n\nDashboard has not fully initialised due to this. Pages will 404!'.red}`);
+            
             let outdated = false
                 ; (async () => {
                     let check = await npmUpdater.update()
@@ -54,7 +56,7 @@ module.exports = (themeConfig = {}) => {
 
             require('./utils/functions/errorHandler')(config, themeConfig, db)
             require('./utils/functions/settingsPage')(config, themeConfig, db)
-            await require('./utils/addonManager').execute(themeConfig, config, app, module.exports.messages);
+            // await require('./utils/addonManager').execute(themeConfig, config, app, module.exports.messages);
             require('./utils/initPages').init(config, themeConfig, app, db)
         }
     }

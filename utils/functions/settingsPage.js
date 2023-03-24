@@ -55,7 +55,7 @@ module.exports = function (config, themeConfig) {
 
         let canUseList = {}
 
-        if (config.settings.length) for (const category of config.settings) {
+        if (config.settings?.length) for (const category of config.settings) {
             if (!canUseList[category.categoryId]) canUseList[category.categoryId] = {};
             if (!actual[category.categoryId]) actual[category.categoryId] = {}
 
@@ -300,7 +300,7 @@ module.exports = function (config, themeConfig) {
         const guild = bot.guilds.cache.get(req.params.id)
         let gIcon
 
-        if (!guild.iconURL()) gIcon = themeConfig.icons.noGuildIcon
+        if (!guild.iconURL()) gIcon = themeConfig?.icons?.noGuildIcon
         else gIcon = guild.iconURL()
 
         res.render('settings', {

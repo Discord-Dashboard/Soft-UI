@@ -21,12 +21,12 @@
     <%
     let data
 
-    if (error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) {
+    if (error !== undefined && error && config.ownerIDs?.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) {
         data = "text/json;charset=utf-8," + encodeURIComponent(error) + "\n"
         data += `${error.path}`
     }
     %>
-    <% if (error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
+    <% if (error !== undefined && error && config.ownerIDs?.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
         <script>
             function copyToClipboard(text) {
                 if (window.clipboardData && window.clipboardData.setData) {
@@ -93,7 +93,7 @@
 </header>
 </main>
 <%- include('partials/scripts.ejs', {now: "index"}) %>
-<% if(error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
+<% if(error !== undefined && error && config.ownerIDs?.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
     <div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm" role="document" style="max-width: 700px;">
@@ -116,7 +116,7 @@
             </div>
         </div>
     </div>
-    <% if (error !== undefined && error && config.ownerIDs.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
+    <% if (error !== undefined && error && config.ownerIDs?.includes(req.session?.user?.id) && !themeConfig?.error?.dbdError?.disableSecretMenu) { %>
     <script>
         if (window.addEventListener) {
             const konami = <%- JSON.stringify(themeConfig?.error?.dbdError?.secretMenuCombination || ["69", "82", "82", "79", "82"]) %> //this spells error
