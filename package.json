@@ -1,6 +1,6 @@
 {
     "name": "dbd-soft-ui",
-    "version": "1.6.41-beta.1",
+    "version": "1.6.42-beta.1",
     "typings": "dbd-soft-ui.d.ts",
     "author": {
         "name": "iMidnight"
