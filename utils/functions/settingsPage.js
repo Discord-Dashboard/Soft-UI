@@ -77,7 +77,7 @@ module.exports = function (config, themeConfig) {
                     if (!toggle[category.categoryId]) {
                         toggle[category.categoryId] = {}
                     }
-                    toggle[category.categoryId] = catGAS.categoryToggle || null;
+                    toggle[category.categoryId] = catGAS.find(o => o.optionId === "categoryToggle") || null;
                     catGAS = catGAS.filter((c) => c.optionId !== 'categoryToggle')
                 }
                 if (category.premium) {
