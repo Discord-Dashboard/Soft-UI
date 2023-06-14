@@ -37,7 +37,7 @@ module.exports = {
                     errors.push(`Category ${s.id} %is%Failed to save%is%categoryToggle`);
                 }
                 else {
-                    if (category.categoryId == s.id) catO.push({
+                    if (category?.categoryId == s.id) catO.push({
                         optionId: category.categoryId == s.id ? "categoryToggle" : s.id,
                         data: s.value
                     });
