@@ -217,7 +217,7 @@
                     <span class="nav-link-text ms-1"><%- req?.locales?.partials?.sidebar.pp || "Privacy Policy" %></span>
                     </a>
                 </li>
-                <% if(req.session.user && config.ownerIDs.includes(req.session.user.id)) { %>
+                <% if(req.session.user && config.ownerIDs?.includes(req.session.user.id)) { %>
                     <li class="nav-item">
                         <a class="nav-link <% if(now == 'admin'){ %>active"
                         <% } else { %>" href='/admin'

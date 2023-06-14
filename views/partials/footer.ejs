@@ -1,11 +1,16 @@
 <footer class="footer">
-    <div class="container-fluid">
-        <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-                <div class="copyright text-center text-sm text-muted text-lg-start">
-                    © <%= new Date().getFullYear()  %>, Made with <i class="fa fa-heart"></i> by <a href="/credits" class="font-weight-bold" target="_blank">PlainDevelopment</a> and <a href="/credits" class="font-weight-bold" target="_blank">iMidnight</a>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div class="row align-items-center justify-content-lg-between">
+      <div class="col-lg-6 mb-lg-0 mb-4">
+        <div class="copyright text-center text-sm text-muted text-lg-start">
+          © <%= new Date().getFullYear()  %>
+          <% if(themeConfig?.footer?.replaceDefault === true) { %>
+          <a href="/credits" class="font-weight-bold" target="_blank">Assistants</a><% if(themeConfig?.footer?.text?.length) { %> | <%= themeConfig?.footer?.text %> <% } %>
+          <% } else { %>
+          Made with <i class="fa fa-heart"></i> by <a href="/credits" class="font-weight-bold" target="_blank">PlainDevelopment</a> and <a href="/credits" class="font-weight-bold" target="_blank">iMidnight</a>
+          <% } %>
         </div>
+      </div>
     </div>
+  </div>
 </footer>

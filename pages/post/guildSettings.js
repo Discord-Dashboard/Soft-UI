@@ -18,7 +18,7 @@ module.exports = {
             .members.cache.get(req.session.user.id)
         const guildObject = config.bot.guilds.cache.get(req.params.guildId)
 
-        let category = config.settings.find((c) => c.categoryId == req.query.categoryId)
+        let category = config.settings?.find((c) => c.categoryId == req.query.categoryId)
 
         let catO = [];
         let catToggle = [];
@@ -26,7 +26,7 @@ module.exports = {
         if (data.categoryToggle) {
             for (const s of data.categoryToggle) {
                 if (!config.useCategorySet) try {
-                    let category = config.settings.find(
+                    let category = config.settings?.find(
                         (c) => c?.categoryId == s.id
                     )
                     await category.setNew({
@@ -434,7 +434,7 @@ module.exports = {
         }
 
         if (config.useCategorySet && catToggle.length) for (const opt of catToggle) {
-            let cat = config.settings.find((c) => c.categoryId == opt.optionId);
+            let cat = config.settings?.find((c) => c.categoryId == opt.optionId);
 
             if (!cat) {
                 errors.push(`Category ${opt.optionId} %is%Doesn't exist%is%categoryToggle`);

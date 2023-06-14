@@ -49,7 +49,7 @@
                                         const guild = bot.guilds.cache.get(req.session.guilds[i].id);
                                         let icon;
 
-                                        if (!guild.iconURL()) icon = themeConfig.icons.noGuildIcon;
+                                        if (!guild.iconURL()) icon = themeConfig?.icons?.noGuildIcon;
                                         else icon = guild.iconURL() + "?size=256";
                                     %>
                                     <a oncontextmenu="window.location='/guild/<%- guild.id %>'; return false;"

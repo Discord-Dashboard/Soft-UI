@@ -1,27 +1,23 @@
-const Nodeactyl = require('nodeactyl')
 const db = require('quick.db')
 
 module.exports = {
     page: '/admin',
     execute: async (req, res, app, config, themeConfig, info, database) => {
-        const pterodactyl = new Nodeactyl.NodeactylClient(
-            themeConfig.admin.pterodactyl.panelLink,
-            themeConfig.admin.pterodactyl.apiKey
-        )
         if (!req.session.user) return res.redirect('/discord?r=/admin/')
-        if (!config.ownerIDs.includes(req.session.user.id))
+        if (!config.ownerIDs?.includes(req.session.user.id))
             return res.redirect('/')
-        if (!pterodactyl && themeConfig.admin.pterodactyl.enabled)
+        if (!themeConfig.nodeactyl && themeConfig.admin?.pterodactyl?.enabled)
             return res.send(
                 'Unable to contact Pterodactyl, are your details correct?'
             )
 
         async function getServers() {
-            if (!themeConfig.admin.pterodactyl.enabled) return []
+            if (!themeConfig?.admin?.pterodactyl?.enabled) return []
             const serverData = []
-            for (const uuid of themeConfig.admin.pterodactyl.serverUUIDs) {
-                let dataStatus = await pterodactyl.getServerStatus(uuid)
-                let data = await pterodactyl.getServerDetails(uuid)
+            for (const uuid of themeConfig?.admin?.pterodactyl?.serverUUIDs) {
+                let dataStatus = await themeConfig?.nodeactyl?.getServerStatus(uuid)
+                let data = await themeConfig?.nodeactyl?.getServerDetails(uuid)
+                
                 serverData.push({
                     name: data.name.toString(),
                     uuid: data.uuid.toString(),
@@ -42,7 +38,7 @@ module.exports = {
             sData: d,
             ldata: await database.get('logs'),
             themeConfig: req.themeConfig,
-            node: pterodactyl,
+            node: themeConfig.nodeactyl,
             bot: config.bot,
             allFeedsUsed,
             config,
