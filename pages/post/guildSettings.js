@@ -20,14 +20,9 @@ module.exports = {
 
         let category = config.settings?.find((c) => c.categoryId == req.query.categoryId)
 
-        if (!category)
-            return res.send({
-                error: true,
-                message: "No category found",
-            })
-
         let catO = [];
         let catToggle = [];
+
         if (data.categoryToggle) {
             for (const s of data.categoryToggle) {
                 if (!config.useCategorySet) try {
@@ -52,7 +47,21 @@ module.exports = {
                     });
                 }
             }
+            if ("categoryToggle" in data && !category) {
+                return res.send({
+                    success: true,
+                    message: "Saved toggle",
+                    errors: [],
+                    successes: [],
+                })
+            }
         }
+
+        if (!category)
+            return res.send({
+                error: true,
+                message: "No category found",
+            })
 
         const subOptions = category.categoryOptionsList.filter((o) => o.optionType.type == "multiRow")
             .map((o) => o.optionType.options)
