@@ -260,7 +260,7 @@
                         <div class="input-group mb-4" style="margin-bottom: 0px !important;">
                             <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
                             <input class="form-control" type="text" id="searchBar"
-                                   placeholder="Search for commands..">
+                                   placeholder="<%- req.locales?.commands?.search || "Search for commands" %>" />
                         </div>
                     </div>
                 <% } %>
