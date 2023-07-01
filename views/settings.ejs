@@ -60,7 +60,7 @@
                                 <%= guild.name %>
                             </h5>
                             <p style="margin: 0 !important;"><i class="fa fa-user-friends" aria-hidden="true"></i>
-                                <%= guild.memberCount %> Members
+                                <%= guild.memberCount %> <%- req.locales?.manage?.settings?.memberCount || "Members" %>
                             </p>
                         </li>
                         <li class="nav-item mt-3">
@@ -90,12 +90,11 @@
                                         </g>
                                     </svg>
                                 </div>
-                                <span class="nav-link-text ms-1">Home</span>
+                                <span class="nav-link-text ms-1"><%- req.locales?.guild?.home || "Home" -%></span>
                             </a>
                         </li>
                         <li class="nav-item mt-3">
-                            <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Settings
-                                Categories</h6>
+                            <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"><%- req.locales?.guild?.settingsCategory || "Settings Categories" -%></h6>
                         </li>
                         <% settings.forEach(s=> { %>
                             <a class="<%- s.categoryId %>">
@@ -158,14 +157,14 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                             <li class="breadcrumb-item text-sm"><a class="opacity-9 text-dark"
-                                    href="javascript:">Pages</a>
+                                    href="javascript:"><%- req.locales?.partials?.navbar?.pages?.pages || "Pages" -%></a>
                             </li>
-                            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+                            <li class="breadcrumb-item text-sm text-dark active" aria-current="page"><%- req.locales?.partials?.navbar?.pages?.dashboard || "Dashboard" -%></li>
                         </ol>
-                        <h6 class="font-weight-bolder mb-0">Manage Guilds</h6>
+                        <h6 class="font-weight-bolder mb-0"><%- req.locales?.partials?.navbar?.pages?.manage || "Manage Guilds" -%></h6>
                     </nav>
 
-                    <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">*-
                         <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         </div>
                         <ul class="navbar-nav  justify-content-end">
@@ -263,7 +262,7 @@
                                                             </g>
                                                         </g>
                                                     </svg>
-                                                    <span class="ms-1">Leaderboard</span>
+                                                    <span class="ms-1"><%- req.locales?.guild?.navbar?.pages?.leaderboard || "Leaderboard" -%></span>
                                                 </a>
                                             </li>
                                     </div>
@@ -414,7 +413,7 @@
                                 <div class="col-auto my-auto">
                                     <div class="h-100">
                                         <h5 class="mb-1">
-                                            Changes Detected!
+                                            <%- req.locales?.guild?.updates?.title || "Changes detected" -%>
                                         </h5>
                                     </div>
                                 </div>
@@ -424,14 +423,14 @@
                                             <li class="nav-item" style="height: min-content;">
                                                 <a style="float: right; margin: 0;" class="btn" data-bs-toggle="tab"
                                                     onclick="discardChanges()" role="tab" aria-selected="false">
-                                                    <span class="ms-1">Reset</span>
+                                                    <span class="ms-1"><%- req.locales?.guild?.updates?.reset || "Reset" -%></span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a style="margin: 0 20px; float: right;" class="btn bg-gradient-primary"
                                                     data-bs-toggle="tab" onclick="saveChanges()" role="tab"
                                                     aria-selected="false">
-                                                    <span class="ms-1">Save Changes</span>
+                                                    <span class="ms-1"><%- req.locales?.guild?.updates?.save || "Save Changes" -%></span>
                                                 </a>
                                             </li>
                                     </div>
