@@ -91,6 +91,7 @@ module.exports = {
                     customThemeOptions: customThemeOptions || {},
                     config,
                     require,
+                    feeds: await themeConfig.storage.db.get("feeds") || [],
                 })
             }
         )
