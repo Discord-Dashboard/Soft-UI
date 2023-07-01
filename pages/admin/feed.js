@@ -1,4 +1,3 @@
-const db = require('quick.db')
 const { icons, otherIcons } = require('../../icons')
 
 module.exports = {
@@ -11,73 +10,26 @@ module.exports = {
                 return res.redirect('/admin?error=invalidFeed')
             if (deleteFeed !== '1' && deleteFeed !== '2' && deleteFeed !== '3')
                 return res.redirect('/admin?error=invalidFeed')
-            if (deleteFeed === '1') {
-                if (!db.get('feeds.one'))
-                    return res.redirect('/admin?error=invalidFeed')
-                if (db.get('feeds.two')) {
-                    const f = await db.get('feeds.two')
-                    await db.set('feeds.one', {
-                        color: f.color,
-                        description: f.description,
-                        published: f.published,
-                        icon: f.icon,
-                        diff: f.diff
-                    })
-                } else {
-                    await db.delete('feeds.one')
-                }
-                if (db.get('feeds.three')) {
-                    const f = await db.get('feeds.three')
-                    await db.set('feeds.two', {
-                        color: f.color,
-                        description: f.description,
-                        published: f.published,
-                        icon: f.icon,
-                        diff: f.diff
-                    })
-                    await db.delete('feeds.three')
-                }
-            } else if (deleteFeed === '2') {
-                if (!db.get('feeds.two'))
-                    return res.redirect('/admin?error=invalidFeed')
-                if (db.get('feeds.one')) {
-                    const f = await db.get('feeds.one')
-                    await db.set('feeds.two', {
-                        color: f.color,
-                        description: f.description,
-                        published: f.published,
-                        icon: f.icon,
-                        diff: f.diff
-                    })
-                    await db.delete('feeds.one')
-                } else {
-                    await db.delete('feeds.two')
-                }
-            } else if (deleteFeed === '3') {
-                if (!db.get('feeds.three'))
-                    return res.redirect('/admin?error=invalidFeed')
-                await db.delete('feeds.three')
-                if (db.get('feeds.two')) {
-                    const f = await db.get('feeds.two')
-                    await db.set('feeds.three', {
-                        color: f.color,
-                        description: f.description,
-                        published: f.published,
-                        icon: f.icon,
-                        diff: f.diff
-                    })
-                }
-                if (db.get('feeds.one')) {
-                    const f = await db.get('feeds.one')
-                    await db.set('feeds.two', {
-                        color: f.color,
-                        description: f.description,
-                        published: f.published,
-                        icon: f.icon,
-                        diff: f.diff
-                    })
-                }
+
+            const feeds = await themeConfig.storage.db.get('feeds') || []
+
+            switch (deleteFeed) {
+                case '1':
+                    if (!feeds[0]) return res.redirect('/admin?error=invalidFeed')
+                    feeds.shift()
+                    break
+                case '2':
+                    if (!feeds[1]) return res.redirect('/admin?error=invalidFeed')
+                    feeds.splice(1, 1)
+                    break
+                case '3':
+                    if (!feeds[2]) return res.redirect('/admin?error=invalidFeed')
+                    feeds.pop()
+                    break
             }
+
+            await themeConfig.storage.db.set('feeds', feeds)
+
             return res.redirect('/admin')
         } else if (req.query.action === 'create') {
             const { color, description, icon } = req.query
@@ -107,86 +59,28 @@ module.exports = {
             if (color === 'green') col = 'success'
             if (color === 'blue') col = 'info'
             if (color === 'dark') col = 'dark'
-            if (
-                db.get('feeds.three') &&
-                db.get('feeds.two') &&
-                db.get('feeds.one')
-            ) {
-                await db.delete('feeds.one')
-                const f3 = db.get('feeds.three')
-                const f2 = db.get('feeds.two')
-                await db.set('feeds.two', {
-                    color: f3.color,
-                    description: f3.description,
-                    published: f3.published,
-                    icon: f3.icon,
-                    diff: f3.diff
-                })
-                await db.set('feeds.one', {
-                    color: f2.color,
-                    description: f2.description,
-                    published: f2.published,
-                    icon: f2.icon,
-                    diff: f2.diff
-                })
-                await db.set('feeds.three', {
+
+            const feeds = await themeConfig.storage.db.get("feeds") || []
+
+            if (feeds.length === 3) {
+                feeds.shift()
+                feeds.push({
                     color: col,
                     description: description,
                     published: Date.now(),
                     icon: icon,
                     diff: diff
                 })
-            } else {
-                if (!db.get('feeds.three'))
-                    await db.set('feeds.three', {
-                        color: col,
-                        description: description,
-                        published: Date.now(),
-                        icon: icon,
-                        diff: diff
-                    })
-                else if (!db.get('feeds.two')) {
-                    const f3 = db.get('feeds.three')
-                    await db.set('feeds.two', {
-                        color: f3.color,
-                        description: f3.description,
-                        published: f3.published,
-                        icon: f3.icon,
-                        diff: f3.diff
-                    })
-                    await db.set('feeds.three', {
-                        color: col,
-                        description: description,
-                        published: Date.now(),
-                        icon: icon,
-                        diff: diff
-                    })
-                } else {
-                    const f3 = db.get('feeds.three')
-                    const f2 = db.get('feeds.two')
-                    await db.set('feeds.one', {
-                        color: f2.color,
-                        description: f2.description,
-                        published: f2.published,
-                        icon: f2.icon,
-                        diff: f2.diff
-                    })
-                    await db.set('feeds.two', {
-                        color: f3.color,
-                        description: f3.description,
-                        published: f3.published,
-                        icon: f3.icon,
-                        diff: f3.diff
-                    })
-                    await db.set('feeds.three', {
-                        color: col,
-                        description: description,
-                        published: Date.now(),
-                        icon: icon,
-                        diff: diff
-                    })
-                }
-            }
+            } else feeds.push({
+                color: col,
+                description: description,
+                published: Date.now(),
+                icon: icon,
+                diff: diff
+            })
+
+            await themeConfig.storage.db.set("feeds", feeds)
+
             return res.redirect('/admin')
         }
     }

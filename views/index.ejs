@@ -118,7 +118,7 @@
                 <div class="card z-index-2">
                     <div class="card-body p-3">
                         <h5 class="font-weight-bolder"><%- req?.locales?.index?.feeds.title || "Feeds" %></h5>
-                        <%- include('partials/feeds.ejs', {require, admin:false}) %>
+                        <%- include('partials/feeds.ejs', {require, admin:false, feeds}) %>
                     </div>
                 </div>
             </div>

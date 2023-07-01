@@ -1,10 +1,9 @@
-const db = require('quick.db')
 const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
 const colors = require('colors')
 const { icons, otherIcons } = require('../icons')
 
 module.exports = class Feed {
-    constructor() {
+    constructor(db) {
         this.setColor = function (color) {
             if (!color) throw new Error(`${consolePrefix}${`Failed to modify feed. ${colors.red('Invalid color.')}`.cyan}`);
             if (
@@ -37,35 +36,55 @@ module.exports = class Feed {
             return this;
         }
 
-        this.getFeed = function (id) {
+        this.getFeed = async function (id) {
             if (!id) throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red('Invalid id.')}`.cyan}`);
-            let feedName = '';
-            switch (id) {
-                case 1:
-                    feedName = 'one';
-                    break;
-                case 2:
-                    feedName = 'two';
-                    break;
-                case 3:
-                    feedName = 'three';
-                    break;
-                case "all":
-                    feedName = 'all';
-                    break;
-                default:
-                    throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red('Invalid id.')}`.cyan}`);
+
+            const feeds = await themeConfig.storage.db.get('feeds') || []
+
+            let currentFeed = {}
+
+            switch (id.toString()) {
+                case '1':
+                    currentFeed = feeds[0]
+                    break
+                case '2':
+                    currentFeed = feeds[1]
+                    break
+                case '3':
+                    currentFeed = feeds[2]
+                    break
+                case 'all':
+                    currentFeed = feeds
+
             }
 
-            let feed = db.get(`feeds${feedName === "all" ? "" : `.${feedName}`}`)
-            if (!feed) throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red('Feed not found.')}`.cyan}`);
-            this.feed = feed;
+            if (!currentFeed) throw new Error(`${consolePrefix}${`Failed to get feed. ${colors.red('Feed not found.')}`.cyan}`);
+            this.feed = currentFeed;
             return this;
         }
 
-        this.delete = function () {
-            if (!this.feed)throw new Error(`${consolePrefix}${`Failed to delete feed. ${colors.red('Feed not selected')}`.cyan}`);
-            db.delete(`feeds.${this.feed.id}`);
+        this.delete = async function () {
+            if (!this.feed) throw new Error(`${consolePrefix}${`Failed to delete feed. ${colors.red('Feed not selected')}`.cyan}`);
+
+            const feeds = await themeConfig.storage.db.get('feeds') || []
+
+            switch (this.feed.id.toString()) {
+                case '1':
+                    if (!feeds[0]) return res.redirect('/admin?error=invalidFeed')
+                    feeds.shift()
+                    break
+                case '2':
+                    if (!feeds[1]) return res.redirect('/admin?error=invalidFeed')
+                    feeds.splice(1, 1)
+                    break
+                case '3':
+                    if (!feeds[2]) return res.redirect('/admin?error=invalidFeed')
+                    feeds.pop()
+                    break
+            }
+
+            await themeConfig.storage.db.set('feeds', feeds)
+
             return this;
         }
 
@@ -84,82 +103,28 @@ module.exports = class Feed {
             if (color === 'blue') col = 'info';
             if (color === 'dark') col = 'dark';
 
-            if (db.get('feeds.three') && db.get('feeds.two') && db.get('feeds.one')) {
-                await db.delete('feeds.one')
-                const f3 = db.get('feeds.three')
-                const f2 = db.get('feeds.two')
-                await db.set('feeds.two', {
-                    color: f3.color,
-                    description: f3.description,
-                    published: f3.published,
-                    icon: f3.icon,
-                    diff: f3.diff
-                })
-                await db.set('feeds.one', {
-                    color: f2.color,
-                    description: f2.description,
-                    published: f2.published,
-                    icon: f2.icon,
-                    diff: f2.diff
-                })
-                await db.set('feeds.three', {
+            const feeds = await db.get("feeds") || []
+
+            if (feeds.length === 3) {
+                feeds.shift()
+                feeds.push({
                     color: col,
                     description: description,
                     published: Date.now(),
                     icon: icon,
                     diff: diff
                 })
-            } else {
-                if (!db.get('feeds.three')) {
-                    await db.set('feeds.three', {
-                        color: col,
-                        description: description,
-                        published: Date.now(),
-                        icon: icon,
-                        diff: diff
-                    })
-                } else if (!db.get('feeds.two')) {
-                    const f3 = db.get('feeds.three')
-                    await db.set('feeds.two', {
-                        color: f3.color,
-                        description: f3.description,
-                        published: f3.published,
-                        icon: f3.icon,
-                        diff: f3.diff
-                    })
-                    await db.set('feeds.three', {
-                        color: col,
-                        description: description,
-                        published: Date.now(),
-                        icon: icon,
-                        diff: diff
-                    })
-                } else {
-                    const f3 = db.get('feeds.three')
-                    const f2 = db.get('feeds.two')
-                    await db.set('feeds.one', {
-                        color: f2.color,
-                        description: f2.description,
-                        published: f2.published,
-                        icon: f2.icon,
-                        diff: f2.diff
-                    })
-                    await db.set('feeds.two', {
-                        color: f3.color,
-                        description: f3.description,
-                        published: f3.published,
-                        icon: f3.icon,
-                        diff: f3.diff
-                    })
-                    await db.set('feeds.three', {
-                        color: col,
-                        description: description,
-                        published: Date.now(),
-                        icon: icon,
-                        diff: diff
-                    })
-                }
-            }
+            } else feeds.push({
+                color: col,
+                description: description,
+                published: Date.now(),
+                icon: icon,
+                diff: diff
+            })
+
+            await db.set("feeds", feeds)
+
+            return res.redirect('/admin')
         }
     }
 }

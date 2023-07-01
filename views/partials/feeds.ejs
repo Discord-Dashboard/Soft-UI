@@ -1,48 +1,7 @@
 <div class="card-body px-0 pt-0 pb-2">
     <div class="table-responsive p-0">
         <%
-        let feeds = [];
-
-        const db = require('quick.db');
-
-        if (db.get('feeds.three')) {
-            const fd = db.get('feeds.three');
-            const fdata = {
-                color: fd.color,
-                description: fd.description,
-                icon: fd.icon,
-                published: fd.published,
-                diff: fd.diff,
-                feedNum: 3
-            }
-            feeds.push(fdata);
-        }
-        if (db.get('feeds.two')) {
-            const fd = db.get('feeds.two');
-            const fdata = {
-                color: fd.color,
-                description: fd.description,
-                icon: fd.icon,
-                published: fd.published,
-                diff: fd.diff,
-                feedNum: 2
-            }
-            feeds.push(fdata);
-        }
-        if (db.get('feeds.one')) {
-            const fd = db.get('feeds.one');
-            const fdata = {
-                color: fd.color,
-                description: fd.description,
-                published: fd.published,
-                icon: fd.icon,
-                diff: fd.diff,
-                feedNum: 1
-            }
-            feeds.push(fdata);
-        }
-        feeds.forEach(feed => {
-
+        feeds.forEach((feed, index) => {
             var delta = Math.abs(Date.now() - feed.published) / 1000;
 
             // calculate (and subtract) whole days
@@ -96,7 +55,7 @@
           </span>
                 <% if(admin) { %>
                     <div class="ms-auto text-end">
-                        <a id="deleteFeed<%- feed.feedNum %>" class="btn btn-link text-text-gradient px-3 mb-0"
+                        <a id="deleteFeed<%- index + 1 %>" class="btn btn-link text-text-gradient px-3 mb-0"
                            style="color:white;" href="javascript:"><i class="far fa-trash-alt me-2"></i>Delete</a>
                     </div>
                 <% } %>
