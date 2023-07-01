@@ -27,17 +27,17 @@
                 <button data-theme="auto"
                         class="theme btn bg-gradient-primary w-100 px-3 mb-2 ms-2 <% if (req.cookies?.selectedTheme == "auto") { %>active<% } %>"
                         data-class="bg-white">
-                    Auto
+                    <%- req?.locales?.partials?.settings?.theme?.auto || "Auto" %>
                 </button>
                 <button data-theme="light"
                         class="theme btn bg-gradient-primary w-100 mb-2 ms-2 <% if (req.cookies?.selectedTheme == "light") { %>active<% } %>"
                         data-class="bg-transparent">
-                    Light
+                    <%- req?.locales?.partials?.settings?.theme?.light || "Light" %>
                 </button>
                 <button data-theme="dark"
                         class="theme btn bg-gradient-primary w-100 px-3 mb-2 ms-2 <% if (req.cookies?.selectedTheme == "dark") { %>active<% } %>"
                         data-class="bg-white">
-                    Dark
+                    <%- req?.locales?.partials?.settings?.theme?.dark || "Dark" %>
                 </button>
 
             </div>
