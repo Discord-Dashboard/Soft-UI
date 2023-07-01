@@ -1,6 +1,6 @@
 {
     "name": "dbd-soft-ui",
-    "version": "1.6.45-beta.1",
+    "version": "1.6.49-beta.1",
     "typings": "dbd-soft-ui.d.ts",
     "author": {
         "name": "iMidnight"
@@ -14,7 +14,7 @@
     },
     "bundleDependencies": [],
     "dependencies": {
-        "@keyv/sqlite": "^3.6.1",
+        "@keyv/sqlite": "^3.6.5",
         "colors": "1.4.0",
         "keyv": "^4.5.0",
         "node-fetch": "2.6.7",

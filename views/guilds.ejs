@@ -34,10 +34,10 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0" style="text-align: center;">
                         <h2 class="mb-1">
-                            Your servers
+                            <%- req?.locales?.manage?.title || 'Your servers' %>
                         </h2>
                         <p class="mb-0 font-weight-bold text-sm">
-                            Select the server you want to configure
+                            <%- req?.locales?.manage?.description || 'Select the server you want to configure' %>
                         </p>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
