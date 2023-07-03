@@ -279,6 +279,69 @@
                             transform: scale(1.5) translate(5px, 3px);
                         }
                     </style>
+                    <% if (themeConfig.gridLayout) { %>
+                        <% if (!req.params.category) { %>
+                            <div class="container">
+                                <div class="row">
+                                    <% settings.forEach(s=> { %>
+                                        <div class="col-sm">
+                                            <div class="col-md-8 mt-4">
+                                                <div class="card">
+                                                    <img class="card-img-top" style="width: 200px; height: 150px; justify-content: center; display: flex;" src="<%- s.categoryImageURL%>">
+                                                    <div class="position-relative" style="height: 50px;overflow: hidden;margin-top: -50px;z-index:2;position: relative;">
+                                                        <div class="position-absolute w-100 top-0" style="z-index: 1;">
+                                                            <svg class="waves waves-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                                                                <defs>
+                                                                    <path id="card-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                                                                </defs>
+                                                                <g class="moving-waves">
+                                                                    <use xlink:href="#card-wave" x="48" y="-1" fill="rgba(255,255,255,0.30"></use>
+                                                                    <use xlink:href="#card-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                                                                    <use xlink:href="#card-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                                                                    <use xlink:href="#card-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                                                                    <use xlink:href="#card-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                                                                    <use xlink:href="#card-wave" x="48" y="16" fill="rgba(255,255,255,0.99)"></use>
+                                                                </g>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <h4>
+                                                            <%- s.categoryName %>
+                                                        </h4>
+                                                        <p>
+                                                            <%- s.categoryDescription %>
+                                                        </p>
+                                                        <a href="/settings/<%- req.params.id %>/<%= s.categoryId %>" class="text-primary icon-move-right">Edit
+                                                            <i class="fas fa-arrow-right text-xs ms-1" aria-hidden="true"></i>
+                                                        </a>
+                                                        <% if(s.toggleable) { %>
+                                                            <span style="text-align: right; width: 100%;">
+                                                            <div class="form-check form-switch ps-0 larger"
+                                                                 style="float: right !important;">
+                                                                <input name="<%- s.categoryId %>"
+                                                                       category="<%- s.categoryName %>" switch="true"
+                                                                       class="form-check-input ms-auto category-toggle"
+                                                                       style="height: 20px !important; margin-left: 10px !important; height: 30px !important; width: 60px !important;"
+                                                                       type="checkbox" id="switch-<%= s.categoryId %>"
+                                                                    <%=toggle[s.categoryId] ? "checked" : "" %>
+
+                                                                >
+                                                                <label style="z-index: 100; position: relative;"
+                                                                       class="form-check-label text-body ms-3 text-truncate w-80 mb-0 d-none"
+                                                                       for="switch-<%= s.categoryId %>"></label>
+                                                            </div>
+                                                        </span>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
                     <% if (!req.params.category) { %>
                         <div class="container-fluid py-4 settings">
                             <div class="row">
