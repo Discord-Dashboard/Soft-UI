@@ -341,52 +341,53 @@
                                 </div>
                             </div>
                         <% } %>
-                    <% } %>
-                    <% if (!req.params.category) { %>
-                        <div class="container-fluid py-4 settings">
-                            <div class="row">
-                                <% settings.forEach(s=> { %>
-                                    <a style="color: inherit; text-decoration: none;" href="/settings/<%- req.params.id %>/<%= s.categoryId %>">
-                                        <div style="flex: 50%;" class="item" id="divtable">
-                                        <div class="card mb-4">
-                                            <div class="card-header d-flex"
-                                                style="border-radius: 10px; justify-content: space-between;">
-                                                <div>
-                                                    <h4>
-                                                        <%- s.categoryName %>
-                                                    </h4>
-                                                    <p>
-                                                        <%- s.categoryDescription %>
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <% if(s.toggleable) { %>
-                                                        <span style="text-align: right; width: 100%;">
-                                                            <div class="form-check form-switch ps-0 larger"
-                                                                style="float: right !important;">
-                                                                <input name="<%- s.categoryId %>"
-                                                                    category="<%- s.categoryName %>" switch="true"
-                                                                    class="form-check-input ms-auto category-toggle"
-                                                                    style="height: 20px !important; margin-left: 10px !important; height: 30px !important; width: 60px !important;"
-                                                                    type="checkbox" id="switch-<%= s.categoryId %>"
-                                                                    <%=toggle[s.categoryId] ? "checked" : "" %>
+                    <% } else { %>
+                        <% if (!req.params.category) { %>
+                            <div class="container-fluid py-4 settings">
+                                <div class="row">
+                                    <% settings.forEach(s=> { %>
+                                        <a style="color: inherit; text-decoration: none;" href="/settings/<%- req.params.id %>/<%= s.categoryId %>">
+                                            <div style="flex: 50%;" class="item" id="divtable">
+                                                <div class="card mb-4">
+                                                    <div class="card-header d-flex"
+                                                         style="border-radius: 10px; justify-content: space-between;">
+                                                        <div>
+                                                            <h4>
+                                                                <%- s.categoryName %>
+                                                            </h4>
+                                                            <p>
+                                                                <%- s.categoryDescription %>
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <% if(s.toggleable) { %>
+                                                                <span style="text-align: right; width: 100%;">
+                                                                <div class="form-check form-switch ps-0 larger"
+                                                                     style="float: right !important;">
+                                                                    <input name="<%- s.categoryId %>"
+                                                                           category="<%- s.categoryName %>" switch="true"
+                                                                           class="form-check-input ms-auto category-toggle"
+                                                                           style="height: 20px !important; margin-left: 10px !important; height: 30px !important; width: 60px !important;"
+                                                                           type="checkbox" id="switch-<%= s.categoryId %>"
+                                                                        <%=toggle[s.categoryId] ? "checked" : "" %>
 
-                                                                >
-                                                                <label style="z-index: 100; position: relative;"
-                                                                    class="form-check-label text-body ms-3 text-truncate w-80 mb-0 d-none"
-                                                                    for="switch-<%= s.categoryId %>"></label>
-                                                            </div>
-                                                        </span>
-                                                        <% } %>
+                                                                    >
+                                                                    <label style="z-index: 100; position: relative;"
+                                                                           class="form-check-label text-body ms-3 text-truncate w-80 mb-0 d-none"
+                                                                           for="switch-<%= s.categoryId %>"></label>
+                                                                </div>
+                                                            </span>
+                                                            <% } %>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    </a>
+                                        </a>
                                     <% }) %>
+                                </div>
                             </div>
-                        </div>
                         <% } %>
+                    <% } %>
                 </div>
                 <div style="padding-bottom: 100px;">
                     <% settings.forEach(s=> {
