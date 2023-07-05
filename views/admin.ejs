@@ -517,10 +517,10 @@
             <div class="col-12 col-xl-6" style="margin-bottom: 20px;">
                 <div class="card h-100">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">Feed Builder</h6>
+                        <h6 class="mb-0"><%- req?.locales?.admin?.feeds?.feedBuilder || "Feed Builder" %></h6>
                     </div>
                     <div class="card-body p-3">
-                        <h6 class="text-uppercase text-body text-xs font-weight-bolder">Feed Icon</h6>
+                        <h6 class="text-uppercase text-body text-xs font-weight-bolder"><%- req?.locales?.admin?.feeds?.feedIcon || "Feed Icon" %></h6>
                         <ul class="list-group">
                             <li class="list-group-item border-0 px-0">
                                 <div class="form-check form-switch ps-0">
@@ -537,7 +537,7 @@
                                 </div>
                             </li>
                         </ul>
-                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4">Feed Description</h6>
+                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4"><%- req?.locales?.admin?.feeds?.feedDescription || "Feed Description" %></h6>
                         <ul class="list-group">
                             <li class="list-group-item border-0 px-0">
                                 <div class="form-check form-switch ps-0">
@@ -554,18 +554,18 @@
                                 </div>
                             </li>
                         </ul>
-                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4">Feed Colour</h6>
+                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4"><%- req?.locales?.admin?.feeds?.feedColour || "Feed Colour" %></h6>
                         <ul class="list-group">
                             <li class="list-group-item border-0 px-0">
                                 <div class="form-check form-switch ps-0">
                                     <select class="form-control" id="colorSelect">
-                                        <option value="pink">Pink</option>
-                                        <option value="red">Red</option>
-                                        <option value="orange">Orange</option>
-                                        <option value="green">Green</option>
-                                        <option value="gray">Gray</option>
-                                        <option value="blue">Blue</option>
-                                        <option value="dark">Dark</option>
+                                        <option value="pink"><%- req?.locales?.admin?.feeds?.colors?.pink || "Pink" %></option>
+                                        <option value="red"><%- req?.locales?.admin?.feeds?.colors?.red || "Red" %></option>
+                                        <option value="orange"><%- req?.locales?.admin?.feeds?.colors?.orange || "Orange" %></option>
+                                        <option value="green"><%- req?.locales?.admin?.feeds?.colors?.green || "Green" %></option>
+                                        <option value="gray"><%- req?.locales?.admin?.feeds?.colors?.gray || "Gray" %></option>
+                                        <option value="blue"><%- req?.locales?.admin?.feeds?.colors?.blue || "Blue" %></option>
+                                        <option value="dark"><%- req?.locales?.admin?.feeds?.colors?.dark || "Dark" %></option>
                                     </select>
                                 </div>
                             </li>
@@ -578,7 +578,7 @@
             <div class="col-12 col-xl-6" style="margin-bottom: 20px;">
                 <div class="card h-10" style="margin-bottom: 20px;">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">Feed Preview</h6>
+                        <h6 class="mb-0"><%- req?.locales?.admin?.feeds?.feedPreview || "Feed Preview" %></h6>
                     </div>
                     <div class="card-body p-3">
                         <div>
@@ -645,7 +645,7 @@
                           });
                         </script>
                         <button type="button" class="btn btn-light text-black ml-auto"
-                                onclick="$('#bigIconsList').fadeToggle();">Show Icons
+                                onclick="$('#bigIconsList').fadeToggle();"><%- req?.locales?.admin?.feeds?.feedShowIcons || "Show Icons" %>
                         </button>
                         <%- include('partials/iconsList.ejs', {icons,otherIcons}) %>
                         <a id="backButton" style="display: none;"></a>
