@@ -312,7 +312,7 @@
                                                         <p>
                                                             <%- s.categoryDescription %>
                                                         </p>
-                                                        <a href="/settings/<%- req.params.id %>/<%= s.categoryId %>" class="text-primary icon-move-right">Edit
+                                                        <a href="/settings/<%- req.params.id %>/<%= s.categoryId %>" class="text-primary icon-move-right"><%- req.locales?.manage?.settings?.cardsEdit || "Edit"%>
                                                             <i class="fas fa-arrow-right text-xs ms-1" aria-hidden="true"></i>
                                                         </a>
                                                         <% if(s.toggleable) { %>
