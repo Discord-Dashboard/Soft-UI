@@ -348,7 +348,7 @@
 <body class="g-sidenav-show  bg-gray-100" id="scroll">
 <%- include('partials/preload.ejs') %>
 <script>
-    const maxUsed = <%- allFeedsUsed %>;
+  const maxUsed = <%- allFeedsUsed %>;
 </script>
 <%- include('partials/sidebar.ejs', {config: config, now:'admin'}) %>
 <div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
@@ -480,9 +480,9 @@
                                     });
                                     %>
                                     <script>
-                                        function controlServer(id, action) {
-                                            window.location = `../control?action=${action}&uuid=${id}`;
-                                        }
+                                      function controlServer(id, action) {
+                                        window.location = `../control?action=${action}&uuid=${id}`;
+                                      }
                                     </script>
                                     </tbody>
                                 </table>
@@ -517,10 +517,10 @@
             <div class="col-12 col-xl-6" style="margin-bottom: 20px;">
                 <div class="card h-100">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">Feed Builder</h6>
+                        <h6 class="mb-0"><%- req?.locales?.admin?.feeds?.feedBuilder || "Feed Builder" %></h6>
                     </div>
                     <div class="card-body p-3">
-                        <h6 class="text-uppercase text-body text-xs font-weight-bolder">Feed Icon</h6>
+                        <h6 class="text-uppercase text-body text-xs font-weight-bolder"><%- req?.locales?.admin?.feeds?.feedIcon || "Feed Icon" %></h6>
                         <ul class="list-group">
                             <li class="list-group-item border-0 px-0">
                                 <div class="form-check form-switch ps-0">
@@ -537,7 +537,7 @@
                                 </div>
                             </li>
                         </ul>
-                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4">Feed Description</h6>
+                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4"><%- req?.locales?.admin?.feeds?.feedDescription || "Feed Description" %></h6>
                         <ul class="list-group">
                             <li class="list-group-item border-0 px-0">
                                 <div class="form-check form-switch ps-0">
@@ -554,18 +554,18 @@
                                 </div>
                             </li>
                         </ul>
-                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4">Feed Colour</h6>
+                        <h6 class="text-uppercase text-body text-xs font-weight-bolder mt-4"><%- req?.locales?.admin?.feeds?.feedColour || "Feed Colour" %></h6>
                         <ul class="list-group">
                             <li class="list-group-item border-0 px-0">
                                 <div class="form-check form-switch ps-0">
                                     <select class="form-control" id="colorSelect">
-                                        <option value="pink">Pink</option>
-                                        <option value="red">Red</option>
-                                        <option value="orange">Orange</option>
-                                        <option value="green">Green</option>
-                                        <option value="gray">Gray</option>
-                                        <option value="blue">Blue</option>
-                                        <option value="dark">Dark</option>
+                                        <option value="pink"><%- req?.locales?.admin?.feeds?.colors?.pink || "Pink" %></option>
+                                        <option value="red"><%- req?.locales?.admin?.feeds?.colors?.red || "Red" %></option>
+                                        <option value="orange"><%- req?.locales?.admin?.feeds?.colors?.orange || "Orange" %></option>
+                                        <option value="green"><%- req?.locales?.admin?.feeds?.colors?.green || "Green" %></option>
+                                        <option value="gray"><%- req?.locales?.admin?.feeds?.colors?.gray || "Gray" %></option>
+                                        <option value="blue"><%- req?.locales?.admin?.feeds?.colors?.blue || "Blue" %></option>
+                                        <option value="dark"><%- req?.locales?.admin?.feeds?.colors?.dark || "Dark" %></option>
                                     </select>
                                 </div>
                             </li>
@@ -578,7 +578,7 @@
             <div class="col-12 col-xl-6" style="margin-bottom: 20px;">
                 <div class="card h-10" style="margin-bottom: 20px;">
                     <div class="card-header pb-0 p-3">
-                        <h6 class="mb-0">Feed Preview</h6>
+                        <h6 class="mb-0"><%- req?.locales?.admin?.feeds?.feedPreview || "Feed Preview" %></h6>
                     </div>
                     <div class="card-body p-3">
                         <div>
@@ -625,7 +625,7 @@
         <div class="col-lg-12 mb-lg-0 mb-4">
             <div class="card z-index-2">
                 <div class="card-body p-3">
-                    <h6 class="ms-2 mt-3 mb-0" style="margin-top: 0px !important">Current Feeds</h6>
+                    <h6 class="ms-2 mt-3 mb-0" style="margin-top: 0px !important"><%- req?.locales?.admin?.feeds?.feedCurrent || "Current Feeds" %></h6>
                     <%- include('partials/feeds.ejs', {require, admin:true, feeds}) %>
                     <div style="white-space: nowrap; overflow: hidden;">
                         <datalist id="iconList">
@@ -640,12 +640,12 @@
 
                         </datalist>
                         <script>
-                            $(document).ready(function () {
-                                $('.js-example-basic-single').select2();
-                            });
+                          $(document).ready(function () {
+                            $('.js-example-basic-single').select2();
+                          });
                         </script>
                         <button type="button" class="btn btn-light text-black ml-auto"
-                                onclick="$('#bigIconsList').fadeToggle();">Show Icons
+                                onclick="$('#bigIconsList').fadeToggle();"><%- req?.locales?.admin?.feeds?.feedShowIcons || "Show Icons" %>
                         </button>
                         <%- include('partials/iconsList.ejs', {icons,otherIcons}) %>
                         <a id="backButton" style="display: none;"></a>
@@ -663,22 +663,22 @@
 <script>var _0xe6b70 = _0x4d17; (function (_0x1a2dc5, _0x148537) { var _0x103ca3 = _0x4d17, _0xf225e4 = _0x1a2dc5(); while (!![]) { try { var _0x46963f = parseInt(_0x103ca3(0x229)) / 0x1 + parseInt(_0x103ca3(0x1ab)) / 0x2 * (parseInt(_0x103ca3(0x21b)) / 0x3) + parseInt(_0x103ca3(0x21c)) / 0x4 * (-parseInt(_0x103ca3(0x1be)) / 0x5) + parseInt(_0x103ca3(0x1d7)) / 0x6 * (parseInt(_0x103ca3(0x1eb)) / 0x7) + -parseInt(_0x103ca3(0x1fe)) / 0x8 * (parseInt(_0x103ca3(0x1ae)) / 0x9) + parseInt(_0x103ca3(0x1df)) / 0xa + -parseInt(_0x103ca3(0x208)) / 0xb * (-parseInt(_0x103ca3(0x1aa)) / 0xc); if (_0x46963f === _0x148537) break; else _0xf225e4['push'](_0xf225e4['shift']()); } catch (_0x35ec83) { _0xf225e4['push'](_0xf225e4['shift']()); } } }(_0x9d96, 0x1bf3f)); var _0x3166de = [_0xe6b70(0x210), _0xe6b70(0x202), _0xe6b70(0x1c3), _0xe6b70(0x1c5), 'sellsy', _0xe6b70(0x20d), _0xe6b70(0x1e1), _0xe6b70(0x22a), _0xe6b70(0x1a4), _0xe6b70(0x1d5), 'google', _0xe6b70(0x1d6) + 'e', _0xe6b70(0x1f5), _0xe6b70(0x20b), _0xe6b70(0x227), _0xe6b70(0x1e3), _0xe6b70(0x207), _0xe6b70(0x217), _0xe6b70(0x22b), _0xe6b70(0x201), 'orange', _0xe6b70(0x1c4), _0xe6b70(0x1d9), 'green', _0xe6b70(0x1f6), _0xe6b70(0x1ea), 'color', 'danger', _0xe6b70(0x1f3), _0xe6b70(0x1a7) + 'y', _0xe6b70(0x1ac), _0xe6b70(0x1fc), 'info', 'on', _0xe6b70(0x228) + 'ct', _0xe6b70(0x1ca) + 'ertychange' + _0xe6b70(0x205), _0xe6b70(0x215), _0xe6b70(0x1ba) + 't', _0xe6b70(0x1a9) + _0xe6b70(0x1c1), _0xe6b70(0x1d3) + 'e', '\x27]', _0xe6b70(0x1c7), _0xe6b70(0x214), 'length', _0xe6b70(0x20a), _0xe6b70(0x209) + 'on', 'show', _0xe6b70(0x1b2), _0xe6b70(0x1ad), _0xe6b70(0x1ed), _0xe6b70(0x1ec) + 't', 'includes', _0xe6b70(0x1b9), _0xe6b70(0x1e0) + _0xe6b70(0x1dd), _0xe6b70(0x1a6) + 'n', _0xe6b70(0x203) + 'tion\x20set', _0xe6b70(0x1c0) + 'sc', _0xe6b70(0x1f4), _0xe6b70(0x1ff) + _0xe6b70(0x221), 'querySelec' + _0xe6b70(0x1fd), '[value=\x22or' + 'ange\x22]', _0xe6b70(0x1f7) + _0xe6b70(0x1e5), _0xe6b70(0x1f9) + _0xe6b70(0x22f), _0xe6b70(0x1f9) + _0xe6b70(0x216), _0xe6b70(0x222) + _0xe6b70(0x1b3), _0xe6b70(0x1b4) + _0xe6b70(0x206), _0xe6b70(0x1e4) + _0xe6b70(0x1e2), _0xe6b70(0x1d1) + _0xe6b70(0x220), _0xe6b70(0x1f0) + _0xe6b70(0x1ee) + _0xe6b70(0x1cd) + '\x22]', _0xe6b70(0x204), _0xe6b70(0x1ce) + _0xe6b70(0x1dc), _0xe6b70(0x1f2), 'error', _0xe6b70(0x1a5) + _0xe6b70(0x218) + _0xe6b70(0x1c6) + _0xe6b70(0x1d0) + 'n\x20element?', _0xe6b70(0x21f) + _0xe6b70(0x21e) + _0xe6b70(0x1e6) + 'icon\x20eleme' + _0xe6b70(0x1de), 'colorSelec' + 't', _0xe6b70(0x21d) + _0xe6b70(0x1d4) + _0xe6b70(0x1c9) + _0xe6b70(0x1a8) + '?', 'iMidnight\x20' + _0xe6b70(0x21a) + _0xe6b70(0x225) + 'f\x20you\x20if\x20h' + 'e\x20saw\x20what' + _0xe6b70(0x224) + _0xe6b70(0x1d2) + _0xe6b70(0x1cb) + _0xe6b70(0x213), _0xe6b70(0x1e9), ':selected', _0xe6b70(0x1bf) + _0xe6b70(0x1f8) + _0xe6b70(0x200) + _0xe6b70(0x1b1) + '?', _0xe6b70(0x20f) + _0xe6b70(0x1bb), 'You\x20delete' + _0xe6b70(0x1d4) + _0xe6b70(0x20c) + _0xe6b70(0x211) + _0xe6b70(0x1af), _0xe6b70(0x21d) + 'd\x20the\x20feed' + '\x20descripti' + _0xe6b70(0x1fb), _0xe6b70(0x1b7) + 'escription' + _0xe6b70(0x223) + _0xe6b70(0x1e8), '', '\x20', 'It\x27s\x20empty' + '..\x20what\x27s\x20' + _0xe6b70(0x1bd), _0xe6b70(0x1cc) + 'go.', 'modal', _0xe6b70(0x1b8) + 'ification', _0xe6b70(0x22d), _0xe6b70(0x1cf), _0xe6b70(0x1fa) + 'it', 'class', '#previewFe' + _0xe6b70(0x219), _0xe6b70(0x1b6) + _0xe6b70(0x1b5), 'html', _0xe6b70(0x1b6) + _0xe6b70(0x22c) + _0xe6b70(0x1c8), _0xe6b70(0x1f1) + 'd1', _0xe6b70(0x1f1) + 'd2', _0xe6b70(0x1f1) + 'd3']; function _0x9d96() { var _0x407989 = ['[value=\x22bl', '\x20is\x20not\x20lo', '\x20you\x20just\x20', 'be\x20proud\x20o', 'feed=2', 'spotify', '#colorSele', '193712eeVaLn', 'dev', 'value', 'edDescript', 'location', '&descripti', 'ay\x22]', 'github-alt', 'Why\x20would\x20', 'descriptio', 'pinkprimar', 'lor\x20select', 'option[val', '5052MZJcik', '68rxwBdl', 'secondary', 'disabled', '3114INpHZK', 'tion?', 'on=delete&', '\x20available', '#validIcon', 'ue\x22]', '[value=\x22da', 'edIcon', '#previewFe', 'The\x20feed\x20d', '#modal-not', 'icon', '#iconSelec', 'ption', '/feed?acti', 'the\x20point?', '1120165MnTnyA', 'That\x27s\x20not', '#invalidDe', 'ue=\x27', 'ght-bold', 'node', 'pink', 'apple', '\x20the\x20ID\x20fr', 'find', 'ion', 'rom\x20the\x20co', 'input\x20prop', '\x20color\x20sel', 'Invalid\x20lo', 'escription', 'getElement', 'click', 'om\x20the\x20ico', '[type=\x22tex', 'did\x20to\x20the', 'toLowerCas', 'd\x20the\x20ID\x20f', 'gitlab', 'itunes-not', '6mtNTIi', 'alert\x20aler', 'gray', 'color=', '\x20text-whit', 'ById', 'iption', 'nt?', '890570MOrdhD', '#feedDescr', 'cloudflare', '=\x22128\x22]', 'usb', '[maxlength', 'nk\x22]', 'moved\x20the\x20', 'feed=3', 'ng\x20enough.', 'text', 'dark', '434504fRsRoI', '#feedSubmi', 'attr', 'er=\x22Feed\x20D', 'fab\x20fa-', '[placehold', '#deleteFee', '[list]', 'warning', '#validDesc', 'node-js', 'blue', '[value=\x22pi', '\x20even\x20a\x20co', '[value=\x22gr', '#mfeedSubm', 'on?', 'success', 'tor', '5240IdkzGj', '[value=\x22re', 'lor\x20that\x27s', 'red', 'discord', 'No\x20descrip', 'iconSelect', '\x20paste', 'rk\x22]', 'windows', '429yGyKqS', '#invalidIc', 'hide', 'npm', 'rom\x20the\x20fe', 'app-store', 'feed=1', 'feedDescri', 'youtube', 'ed\x20descrip', 'on=create&', 'ect.', '#iconList', 'val', 'een\x22]', 'change', 'you\x20remove', 'edColor', 'would\x20not\x20', '17991BrxXDQ', '4CUGrwd', 'You\x20delete', 'pletely\x20re', 'So\x20you\x20com', 't\x22]', 'd\x22]']; _0x9d96 = function () { return _0x407989; }; return _0x9d96(); } const _0xc6908b = [_0x3166de[0x0], _0x3166de[0x1], _0x3166de[0x2], _0x3166de[0x3], _0x3166de[0x4], _0x3166de[0x5], _0x3166de[0x6], _0x3166de[0x7], _0x3166de[0x8], _0x3166de[0x9], _0x3166de[0xa], _0x3166de[0xb], _0x3166de[0xc], _0x3166de[0xd], _0x3166de[0xe], _0x3166de[0xf], _0x3166de[0x10]]; let _0x3b4879 = ![]; $(_0x3166de[0x22])[_0x3166de[0x21]](_0x3166de[0x11], function () { const _0x2ff1bf = this[_0x3166de[0x12]]; if (_0x2ff1bf !== _0x3166de[0x13] && _0x2ff1bf !== _0x3166de[0x14] && _0x2ff1bf !== _0x3166de[0x15] && _0x2ff1bf !== _0x3166de[0x16] && _0x2ff1bf !== _0x3166de[0x17] && _0x2ff1bf !== _0x3166de[0x18] && _0x2ff1bf !== _0x3166de[0x19]) return; if (_0x2ff1bf === _0x3166de[0x13]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x1b]); if (_0x2ff1bf === _0x3166de[0x14]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x1c]); if (_0x2ff1bf === _0x3166de[0x15]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x1d]); if (_0x2ff1bf === _0x3166de[0x16]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x1e]); if (_0x2ff1bf === _0x3166de[0x17]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x1f]); if (_0x2ff1bf === _0x3166de[0x18]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x20]); if (_0x2ff1bf === _0x3166de[0x19]) return _0x35c100(_0x3166de[0x1a], _0x3166de[0x19]); }), $(_0x3166de[0x25])[_0x3166de[0x21]](_0x3166de[0x23], function () { var _0x444cd0 = _0xe6b70, _0x2a3ec3 = $(_0x3166de[0x25])[_0x3166de[0x24]](), _0x2ab58f = $(_0x3166de[0x2a])[_0x3166de[0x29]](_0x3166de[0x26] + _0x2a3ec3[_0x3166de[0x27]]() + _0x3166de[0x28]); _0x2ab58f != null && _0x2ab58f[_0x3166de[0x2b]] > 0x0 ? ($(_0x3166de[0x2d])[_0x3166de[0x2c]](), $(_0x3166de[0x2f])[_0x3166de[0x2e]](), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], ![]), _0xc6908b[_0x3166de[0x33]](_0x2a3ec3) ? _0x35c100(_0x3166de[0x34], _0x444cd0(0x1ef) + _0x2a3ec3) : _0x35c100(_0x3166de[0x34], 'fas\x20fa-' + _0x2a3ec3)) : ($(_0x3166de[0x2d])[_0x3166de[0x2e]](), $(_0x3166de[0x2f])[_0x3166de[0x2c]](), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![])); }), $(_0x3166de[0x35])[_0x3166de[0x21]](_0x3166de[0x23], function () { var _0x1000a3 = $(_0x3166de[0x35])[_0x3166de[0x24]](); _0x35c100(_0x3166de[0x36], _0x1000a3 || _0x3166de[0x37]), !_0x1000a3 || _0x1000a3[_0x3166de[0x2b]] < 0x3 ? ($(_0x3166de[0x38])[_0x3166de[0x2e]](), $(_0x3166de[0x39])[_0x3166de[0x2c]](), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![])) : ($(_0x3166de[0x38])[_0x3166de[0x2c]](), $(_0x3166de[0x39])[_0x3166de[0x2e]](), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], ![])); }); function _0x21e83f() { if (document[_0x3166de[0x3b]](_0x3166de[0x3a])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x3c])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x3d])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x3e])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x3f])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x40])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x41])) return !![]; } function _0x1c078b() { if (document[_0x3166de[0x3b]](_0x3166de[0x42])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x43])) return !![]; if (document[_0x3166de[0x3b]](_0x3166de[0x44])) return !![]; } function _0x160caf() { var _0x39f97c = _0xe6b70; if (!document[_0x3166de[0x46]](_0x3166de[0x45]) && document[_0x3166de[0x3b]](_0x3166de[0x47])) return sweetalert(_0x3166de[0x48], _0x3166de[0x49], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); else { if (!document[_0x3166de[0x46]](_0x3166de[0x45])) return sweetalert(_0x3166de[0x48], _0x3166de[0x4a], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); } if (!document[_0x3166de[0x46]](_0x3166de[0x4b]) && _0x21e83f()) return sweetalert(_0x3166de[0x48], _0x3166de[0x4c], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); else { if (!document[_0x3166de[0x46]](_0x3166de[0x4b])) return sweetalert(_0x3166de[0x48], _0x3166de[0x4d], 0x1770), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); } const _0x2db721 = $(_0x3166de[0x22])[_0x3166de[0x29]](_0x3166de[0x4f])[_0x3166de[0x4e]]()[_0x3166de[0x27]](); if (_0x2db721 !== _0x3166de[0x13] && _0x2db721 !== _0x3166de[0x14] && _0x2db721 !== _0x3166de[0x15] && _0x2db721 !== _0x3166de[0x16] && _0x2db721 !== _0x3166de[0x17] && _0x2db721 !== _0x3166de[0x18] && _0x2db721 !== _0x3166de[0x19]) return sweetalert(_0x3166de[0x48], _0x3166de[0x50], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); var _0x405aad = $(_0x3166de[0x25])[_0x3166de[0x24]](), _0x30001e = $(_0x3166de[0x35])[_0x3166de[0x24]](); if (!document[_0x3166de[0x46]](_0x3166de[0x51]) && _0x1c078b()) return sweetalert(_0x3166de[0x48], _0x3166de[0x52], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); else { if (!document[_0x3166de[0x46]](_0x3166de[0x51])) return sweetalert(_0x3166de[0x48], _0x3166de[0x53], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); } var _0x59632f = $(_0x3166de[0x2a])[_0x3166de[0x29]](_0x3166de[0x26] + _0x405aad[_0x3166de[0x27]]() + _0x3166de[0x28]); if (_0x30001e[_0x3166de[0x2b]] < 0x3) return sweetalert(_0x3166de[0x48], _0x3166de[0x54], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); if (!_0x405aad || _0x405aad === _0x3166de[0x55] || _0x405aad === _0x3166de[0x56] || !_0x30001e || _0x30001e === _0x3166de[0x55] || _0x30001e === _0x3166de[0x56]) return sweetalert(_0x3166de[0x48], _0x3166de[0x57], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); if (_0x59632f != null && _0x59632f[_0x3166de[0x2b]] > 0x0) { } else return sweetalert(_0x3166de[0x48], _0x3166de[0x58], 0xfa0), $(_0x3166de[0x32])[_0x3166de[0x31]](_0x3166de[0x30], !![]); maxUsed && !_0x3b4879 ? (_0x3b4879 = !![], $(_0x3166de[0x5a])[_0x3166de[0x59]](_0x3166de[0x2e])) : window[_0x3166de[0x5b]] = _0x39f97c(0x1bc) + _0x39f97c(0x212) + _0x39f97c(0x1da) + _0x2db721 + (_0x39f97c(0x22e) + 'on=') + encodeURIComponent(_0x30001e) + '&icon=' + _0x405aad; } function _0x4d17(_0x57957e, _0x3d4293) { var _0x9d96d6 = _0x9d96(); return _0x4d17 = function (_0x4d1760, _0x3a9b54) { _0x4d1760 = _0x4d1760 - 0x1a4; var _0x4196d6 = _0x9d96d6[_0x4d1760]; return _0x4196d6; }, _0x4d17(_0x57957e, _0x3d4293); } $(_0x3166de[0x32])[_0x3166de[0x5c]](function () { _0x160caf(); }), $(_0x3166de[0x5d])[_0x3166de[0x5c]](function () { _0x160caf(); }); function _0x35c100(_0x379a69, _0x2b000c) { var _0x2fc28d = _0xe6b70; if (_0x379a69 === _0x3166de[0x1a]) return $(_0x3166de[0x5f])[_0x3166de[0x31]](_0x3166de[0x5e], _0x2fc28d(0x1d8) + 't-' + _0x2b000c + (_0x2fc28d(0x1db) + 'e\x20font-wei' + _0x2fc28d(0x1c2))); if (_0x379a69 === _0x3166de[0x34]) return $(_0x3166de[0x60])[_0x3166de[0x31]](_0x3166de[0x5e], _0x2b000c); if (_0x379a69 === _0x3166de[0x36]) return $(_0x3166de[0x62])[_0x3166de[0x61]](_0x2b000c); } $(_0x3166de[0x63])[_0x3166de[0x5c]](function () { var _0x113d11 = _0xe6b70; window[_0x3166de[0x5b]] = _0x113d11(0x1bc) + _0x113d11(0x1b0) + _0x113d11(0x20e); }), $(_0x3166de[0x64])[_0x3166de[0x5c]](function () { var _0x41169e = _0xe6b70; window[_0x3166de[0x5b]] = _0x41169e(0x1bc) + 'on=delete&' + _0x41169e(0x226); }), $(_0x3166de[0x65])[_0x3166de[0x5c]](function () { var _0x445762 = _0xe6b70; window[_0x3166de[0x5b]] = _0x445762(0x1bc) + _0x445762(0x1b0) + _0x445762(0x1e7); });
 </script>
 <script>
-    $(window).scroll(async function () {
-        if ($(window).scrollTop() > 300) {
-            $("#backButton").slideDown();
-            $("#themeButton").fadeOut();
+  $(window).scroll(async function () {
+    if ($(window).scrollTop() > 300) {
+      $("#backButton").slideDown();
+      $("#themeButton").fadeOut();
 
-        } else {
+    } else {
 
-            $("#backButton").slideUp();
+      $("#backButton").slideUp();
 
-            $("#themeButton").show();
-        }
-    });
+      $("#themeButton").show();
+    }
+  });
 
-    $("#backButton").on('click', function (e) {
-        $('html, body').animate({scrollTop: 0}, '250');
-    });
+  $("#backButton").on('click', function (e) {
+    $('html, body').animate({scrollTop: 0}, '250');
+  });
 
 </script>
 <%- include('partials/scripts.ejs', {now: "admin"}) %>
