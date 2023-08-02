@@ -1,7 +1,7 @@
 module.exports = {
     page: '/commands',
     execute: async (req, res, app, config, themeConfig, info) => {
-        if (themeConfig.commands?.lengeth)
+        if (themeConfig.commands?.length)
             res.render('commands.ejs', {
                 req,
                 config,
