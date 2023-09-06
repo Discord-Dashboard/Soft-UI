@@ -9,10 +9,9 @@ declare module "dbd-soft-ui" {
                 config: any
             }) => Promise<{
                 cards: {
-                    title: string,
                     icon: string,
-                    getValue: string,
-                    progressBar: {
+                    getValue?: string,
+                    progressBar?: {
                         enabled: boolean,
                         getProgress: number
                     }
