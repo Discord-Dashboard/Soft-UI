@@ -7,7 +7,7 @@ declare module "dbd-soft-ui" {
                 req: Request,
                 res: Response,
                 config: any
-            }) => {
+            }) => Promise<{
                 cards: {
                     title: string,
                     icon: string,
@@ -21,7 +21,7 @@ declare module "dbd-soft-ui" {
                     values: number[],
                     labels: string[]
                 }
-            }
+            }>,
         },
         addons: string[],
         websiteName: string,
