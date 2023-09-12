@@ -1,53 +1,42 @@
 declare module "dbd-soft-ui" {
     import { Express, Request, Response } from "express";
 
+    /**
+     * All posible values that can be set in the theme config
+     */
     type themeConfig = {
+        storage: any,
         customThemeOptions: {
             index: ({ req, res, config }: {
                 req: Request,
                 res: Response,
                 config: any
-            }) => {
-                cards: {
+            }) => Promise<{
+                cards: Array<{
                     title: string,
                     icon: string,
-                    getValue: string,
+                    getValue: any,
                     progressBar: {
                         enabled: boolean,
                         getProgress: number
                     }
-                }[],
-                graph: {
-                    values: number[],
-                    labels: string[]
+                }> | []
+                graph?: {
+                    values?: number[],
+                    labels?: string[]
                 }
-            }
+                values?: any[]
+            }>
         },
-        addons: string[],
+        addons?: string[],
         websiteName: string,
         colorScheme: "dark" | "pink" | "blue" | "red" | "green" | "yellow" | "custom",
+        locales?: Record<string, any>,
         themeColors?: {
             primaryColor: string,
             secondaryColor: string
         }
         supporteMail: string,
-        locales: Record<string, any>,
-        footer: {
-            replaceDefault: boolean,
-            text: string,
-        }
-        admin: {
-            pterodactyl: {
-                enabled: boolean,
-                apiKey: string,
-                panelLink: string,
-                serverUUIDs: string[]
-            },
-            logs?: {
-                enabled?: boolean,
-                key?: string,
-            }
-        },
         icons: {
             favicon: string,
             noGuildIcon: string,
@@ -63,11 +52,36 @@ declare module "dbd-soft-ui" {
             graph: {
                 enabled: boolean,
                 lineGraph: boolean,
+                title?: string,
                 tag: string,
                 max: number
             }
         },
-        premium: {
+        sweetalert: {
+            errors: {
+                requirePremium?: string
+            },
+            success: {
+                login: string
+            }
+        },
+        footer?: {
+            replaceDefault: boolean,
+            text: string,
+        }
+        admin: {
+            pterodactyl: {
+                enabled: boolean,
+                apiKey: string,
+                panelLink: string,
+                serverUUIDs: string[]
+            },
+            logs?: {
+                enabled?: boolean,
+                key?: string,
+            }
+        },
+        premium?: {
             enabled: boolean,
             card: {
                 title: string,
@@ -95,7 +109,7 @@ declare module "dbd-soft-ui" {
             enabled: boolean,
             key: string,
         },
-        meta: {
+        meta?: {
             author: string,
             owner: string,
             description: string,
@@ -117,7 +131,7 @@ declare module "dbd-soft-ui" {
             twitterCreatorId: string,
             twitterImage: string
         },
-        error: {
+        error?: {
             error404: {
                 title: string,
                 subtitle: string,
@@ -128,15 +142,7 @@ declare module "dbd-soft-ui" {
                 secretMenuCombination: string[]
             }
         },
-        sweetalert: {
-            errors: {
-                requirePremium: string
-            },
-            success: {
-                login: string
-            }
-        },
-        blacklisted: {
+        blacklisted?: {
             title: string,
             subtitle: string,
             description: string,
@@ -146,25 +152,22 @@ declare module "dbd-soft-ui" {
                 link: string
             }
         },
-        commands?: [
-            {
-                category: string,
-                subTitle: string,
-                categoryId: string,
-                image: string,
-                hideAlias: boolean,
-                hideDescription: boolean,
-                hideSidebarItem: boolean,
-                list: [
-                    {
-                        commandName: string,
-                        commandUsage: string,
-                        commandDescription: string,
-                        commandAlias: string
-                    }
-                ]
-            }
-        ]
+        dbdriver?: string | undefined,
+        commands: Array<{
+            category: string,
+            subTitle: string,
+            categoryId: string,
+            image: string,
+            hideAlias: boolean,
+            hideDescription: boolean,
+            hideSidebarItem: boolean,
+            list: Array<{
+                commandName: string,
+                commandUsage: string,
+                commandDescription: string,
+                commandAlias: string
+            }>
+        }>
 
     }
 
@@ -502,16 +505,16 @@ declare module "dbd-soft-ui" {
      * @see [utils/formtypes](./utils/formtypes.js).
      */
     export interface FormTypes {
-        spacer: (themeOptions: Record<string, any>) => {
+        spacer: (themeOptions?: Record<string, any>) => {
             type: string,
             themeOptions: Record<string, any>
         }
-        emojiPicker: (disabled: boolean, themeOptions: Record<string, any>) => {
+        emojiPicker: (disabled: boolean, themeOptions?: Record<string, any>) => {
             type: string,
             disabled: boolean,
-            themeOptions: Record<string, any>
+            themeOptions?: Record<string, any>
         }
-        slider: (min: number, max: number, step: number, disabled: boolean, themeOptions: Record<string, any>) => {
+        slider: (min: number, max: number, step: number, disabled: boolean, themeOptions?: Record<string, any>) => {
             type: string,
             min: number,
             max: number,
@@ -519,20 +522,25 @@ declare module "dbd-soft-ui" {
             disabled: boolean,
             themeOptions: Record<string, any>
         },
-        date: (disabled: boolean, themeOptions: Record<string, any>) => {
+        date: (disabled: boolean, themeOptions?: Record<string, any>) => {
             type: string,
             disabled: boolean,
             themeOptions: Record<string, any>
         },
-        numberPicker: (min: number, max: number, disabled: boolean, themeOptions: Record<string, any>) => {
+        numberPicker: (min: number, max: number, disabled: boolean, themeOptions?: Record<string, any>) => {
             type: string,
             disabled: boolean,
             themeOptions: Record<string, any>
         },
-        tagInput: (disabled: boolean, themeOptions: Record<string, any>) => {
+        tagInput: (disabled: boolean, themeOptions?: Record<string, any>) => {
             type: string,
             disabled: boolean,
             themeOptions: Record<string, any>
-        }
+        },
+        multiRow: (options: any[], themeOptions?: Record<string, any>) => {
+            type: string,
+            options: any[],
+            themeOptions: Record<string, any>
+        },
     }
 }
