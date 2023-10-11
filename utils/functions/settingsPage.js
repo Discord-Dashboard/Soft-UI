@@ -55,14 +55,6 @@ module.exports = function (config, themeConfig) {
 
         let canUseList = {}
 
-        const options = config.settings.map(s => {
-            const category = s.categoryOptionsList
-            return category.map(c => {
-                const option = c.optionType
-                return option.type === "multiRow" ? option.options : option
-            })
-        }).flat(Infinity)
-
         if (config.settings?.length) for (const category of config.settings) {
             if (!canUseList[category.categoryId]) canUseList[category.categoryId] = {};
             if (!actual[category.categoryId]) actual[category.categoryId] = {}
@@ -115,7 +107,7 @@ module.exports = function (config, themeConfig) {
                         )
                         continue;
                     }
-                    const option = options.find(
+                    const option = category.categoryOptionsList.find(
                         (c) => c.optionId == o.optionId
                     )
                     if (option) {
@@ -200,7 +192,7 @@ module.exports = function (config, themeConfig) {
                     }
                 }
 
-                for (const c of options) {
+                for (const c of s.categoryOptionsList) {
                     if (c.allowedCheck) {
                         const canUse = await c.allowedCheck({
                             guild: { id: req.params.id },
