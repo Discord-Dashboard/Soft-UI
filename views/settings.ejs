@@ -340,9 +340,7 @@
                         </script>
                         <div class="container-fluid settings mb-4" id="<%= s.categoryId %>div">
                             <% s.categoryOptionsList.forEach( option=> {
-                                console.log(option)
-                                let Allowed = canUseList?.[s.categoryId]?.[option.optionId];
-                                if (!Allowed) Allowed = { allowed: true, reason: "No reason provided" } ;
+                                let Allowed = canUseList[s.categoryId][option.optionId];
                                 %>
 
                                 <% if (!option.themeOptions) option.themeOptions={}; let
