@@ -17,7 +17,7 @@
     "dependencies": {
         "@keyv/sqlite": "^3.6.5",
         "colors": "1.4.0",
-        "keyv": "^4.5.0",
+        "keyv": "^4.5.3",
         "node-fetch": "2.6.7",
         "nodeactyl": "^3.2.2"
     },
