@@ -15,7 +15,7 @@
     },
     "bundleDependencies": [],
     "dependencies": {
-        "@keyv/sqlite": "^3.6.5",
+        "@keyv/sqlite": "^3.6.6",
         "colors": "1.4.0",
         "keyv": "^4.5.0",
         "node-fetch": "2.6.7",
