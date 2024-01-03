@@ -463,7 +463,8 @@ module.exports = {
 
         req.DBDEvents.emit('guildSettingsUpdated', {
             user: req.session.user,
-            changes: { successes, errors }
+            changes: { successes, errors },
+            guildId: req.guildId
         })
 
         res.send({
