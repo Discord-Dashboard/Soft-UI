@@ -1,3 +1,5 @@
+const { PermissionsBitField } = require("discord.js");
+
 module.exports = {
     page: '/guild/update/:guildId/',
     execute: async (req, res, app, config, themeConfig, info) => {
@@ -13,10 +15,18 @@ module.exports = {
                 message: 'User is not logged in'
             })
 
-        const userGuildMemberObject = config.bot.guilds.cache
-            .get(req.params.guildId)
-            .members.cache.get(req.session.user.id)
-        const guildObject = config.bot.guilds.cache.get(req.params.guildId)
+        const guildObject = config.bot.guilds.cache.get(req.params.guildId);
+        const userGuildMemberObject = guildObject?.members?.cache?.get(req.session.user.id);
+
+        if(!userGuildMemberObject) return res.send({
+                success: false,
+                message: 'No access'
+            });
+        
+        if(!userGuildMemberObject.permissions.has(PermissionsBitField.Flags.ManageGuild)) return res.send({
+                success: false,
+                message: 'No access'
+            });
 
         let category = config.settings?.find((c) => c.categoryId == req.query.categoryId)
 
