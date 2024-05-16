@@ -1,4 +1,3 @@
-
 const { PermissionsBitField } = require("discord.js");
 
 module.exports = {
