@@ -393,7 +393,7 @@
                                                                 <% } %>
                                                                     <div class="mt-3">
                                                                         <%- include(`components/formTypes/${option.optionType.type}.ejs`,
-                                                                            {option, s, Allowed}); %>
+                                                                            {option, s, Allowed, allowList: canUseList[s.categoryId]}); %>
                                                                     </div>
                                                                     <% if (!themeOptions?.startNewSection ||
                                                                         themeOptions?.startNewSection &&
