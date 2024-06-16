@@ -204,11 +204,11 @@
             </nav>
             <% const images=["curved-1", "curved-2" , "curved-3" , "curved-4" , "curved-5" , "curved-6" , "curved-7"
                 , "curved-8" , "curved-9" , "curved-10" , "curved-11" , "curved-12" , "curved-13" , "curved-14"
-                , "curved-15" , "curved-16" , "curved-17" , "curved-18" ]; const image=images[Math.floor(Math.random() *
-                images.length)]; %>
+                , "curved-15" , "curved-16" , "curved-17" , "curved-18" ]; let image; if (themeConfig?.icons.backgroundImage) {image=themeConfig?.icons.backgroundImage} else {image="/img/curved-images/"+images[Math.floor(Math.random() *
+                images.length)]+".webp";} %>
                 <div class="container-fluid">
                     <div class="page-header min-height-300 border-radius-xl mt-4"
-                        style="background-image: url('/img/curved-images/<%- image %>.webp'); background-position-y: 50%;">
+                        style="background-image: url('<%- image %>'); background-position-y: 50%;">
                         <span class="mask bg-gradient-primary opacity-6"></span>
                     </div>
                     <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
@@ -393,7 +393,7 @@
                                                                 <% } %>
                                                                     <div class="mt-3">
                                                                         <%- include(`components/formTypes/${option.optionType.type}.ejs`,
-                                                                            {option, s, Allowed}); %>
+                                                                            {option, s, Allowed, allowList: canUseList[s.categoryId]}); %>
                                                                     </div>
                                                                     <% if (!themeOptions?.startNewSection ||
                                                                         themeOptions?.startNewSection &&

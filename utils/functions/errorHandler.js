@@ -7,13 +7,13 @@ module.exports = function (config, themeConfig) {
             description =
                 themeConfig?.error?.error404?.description ||
                 'The page you are looking for does not exist.'
+        } else {
+            title = themeConfig?.error?.dbdError?.title || type.toString()
+            subtitle = themeConfig?.error?.dbdError?.subtitle || 'An error occurred'
+            description =
+                themeConfig?.error?.dbdError?.description ||
+                'Please contact us if the issue persists or try again later.'
         }
-
-        title = themeConfig?.error?.dbdError?.title || type.toString()
-        subtitle = themeConfig?.error?.dbdError?.subtitle || 'An error occurred'
-        description =
-            themeConfig?.error?.dbdError?.description ||
-            'Please contact us if the issue persists or try again later.'
 
         if (error) {
             console.error(error)
