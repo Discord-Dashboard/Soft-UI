@@ -69,19 +69,19 @@
                                             <thead>
                                             <tr>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Name
+                                                    <%- req.locales?.commands?.commandName || "Name" %>
                                                 </th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                    Command Usage
+                                                    <%- req.locales?.commands?.commandUsage || "Command Usage" %>
                                                 </th>
                                                 <% if(!category.hideDescription) { %>
                                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        Description
+                                                        <%- req.locales?.commands?.commandDescription || "Description" %>
                                                     </th>
                                                 <% } %>
                                                 <% if(!category.hideAlias) { %>
                                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        Aliases
+                                                        <%- req.locales?.commands?.commandAlias || "Aliases" %>
                                                     </th>
                                                 <% } %>
                                                 <th class="text-secondary opacity-7"></th>

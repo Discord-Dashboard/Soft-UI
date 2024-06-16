@@ -7,7 +7,7 @@ module.exports = {
     init: async function (config, themeConfig, app, db) {
         let info;
         if (themeConfig?.customThemeOptions?.info) info = await themeConfig.customThemeOptions.info({ config: config });
-        if(themeConfig?.admin?.pterodactyl?.enabled) {
+        if (themeConfig?.admin?.pterodactyl?.enabled) {
             themeConfig.nodeactyl = new Nodeactyl.NodeactylClient(
                 themeConfig.admin?.pterodactyl?.panelLink,
                 themeConfig.admin?.pterodactyl?.apiKey
@@ -16,7 +16,7 @@ module.exports = {
             try {
                 await themeConfig.nodeactyl.getAccountDetails();
             } catch (error) {
-                console.log(`${consolePrefix}${('Failed to connect to Pterodactyl panel!\nEnsure you\'ve used a CLIENT api key, (found at ' + themeConfig.admin.pterodactyl.panelLink +  '/account/api)').red}`);
+                console.log(`${consolePrefix}${('Failed to connect to Pterodactyl panel!\nEnsure you\'ve used a CLIENT api key, (found at ' + themeConfig.admin.pterodactyl.panelLink + '/account/api)').red}`);
             }
         }
         const eventFolders = fs.readdirSync(`${__dirname}/../pages`)
@@ -73,6 +73,34 @@ module.exports = {
                 }
             }
         }
+
+
+        app.get(
+            themeConfig.landingPage?.enabled ? "/dash" : "/",
+            async (req, res) => {
+                let customThemeOptions
+                if (themeConfig?.customThemeOptions?.index) {
+                    customThemeOptions = await themeConfig.customThemeOptions.index(
+                        { req: req, res: res, config: config }
+                    )
+                }
+                res.render("index", {
+                    req: req,
+                    themeConfig: req.themeConfig,
+                    bot: config.bot,
+                    customThemeOptions: customThemeOptions || {},
+                    config,
+                    require,
+                    feeds: await themeConfig.storage.db.get("feeds") || [],
+                })
+            }
+        )
+
+        if (themeConfig.landingPage?.enabled)
+            app.get("/", async (req, res) => {
+                res.setHeader("Content-Type", "text/html")
+                res.send(await themeConfig.landingPage.getLandingPage(req, res))
+            })
 
         app.use('*', async function (req, res) {
             res.status(404)

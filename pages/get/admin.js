@@ -1,5 +1,3 @@
-const db = require('quick.db')
-
 module.exports = {
     page: '/admin',
     execute: async (req, res, app, config, themeConfig, info, database) => {
@@ -17,7 +15,7 @@ module.exports = {
             for (const uuid of themeConfig?.admin?.pterodactyl?.serverUUIDs) {
                 let dataStatus = await themeConfig?.nodeactyl?.getServerStatus(uuid)
                 let data = await themeConfig?.nodeactyl?.getServerDetails(uuid)
-                
+
                 serverData.push({
                     name: data.name.toString(),
                     uuid: data.uuid.toString(),
@@ -30,8 +28,9 @@ module.exports = {
         }
 
         let allFeedsUsed = false
-        if (db.get('feeds.one') && db.get('feeds.two') && db.get('feeds.three'))
+        if (await themeConfig.storage.db.get('feeds')?.length === 3)
             allFeedsUsed = true
+
         const d = await getServers()
         res.render('admin', {
             req,
@@ -42,7 +41,8 @@ module.exports = {
             bot: config.bot,
             allFeedsUsed,
             config,
-            require
+            require,
+            feeds: await themeConfig.storage.db.get('feeds') || [],
         })
     }
 }

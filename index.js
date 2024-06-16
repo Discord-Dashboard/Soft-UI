@@ -4,6 +4,7 @@ const fileUpdater = require('./utils/updater/files')
 const consolePrefix = `${'['.blue}${'dbd-soft-ui'.yellow}${']'.blue} `
 const Keyv = require('keyv')
 const path = require('path')
+const DBD = require('discord-dashboard')
 
 module.exports = (themeConfig = {}) => {
     return {
@@ -30,8 +31,11 @@ module.exports = (themeConfig = {}) => {
             'utf8'
         ),
         init: async (app, config) => {
-            if(!config?.useTheme404) return console.log(`${consolePrefix}${'You need to set useTheme404 to true in your DBD config otherwise Soft-UI will not work correctly!\n\nDashboard has not fully initialised due to this. Pages will 404!'.red}`);
-            
+            if (!config?.useTheme404) return console.log(`${consolePrefix}${'You need to set useTheme404 to true in your DBD config otherwise Soft-UI will not work correctly!\n\nDashboard has not fully initialised due to this. Pages will 404!'.red}`);
+
+            const licenseInfo = DBD.licenseInfo()
+            if (themeConfig?.footer && licenseInfo?.error === false && licenseInfo?.type !== "opensource") { } else themeConfig.footer = null
+
             let outdated = false
                 ; (async () => {
                     let check = await npmUpdater.update()
