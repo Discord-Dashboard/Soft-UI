@@ -3,219 +3,485 @@ const { PermissionsBitField } = require("discord.js");
 module.exports = {
     page: '/guild/update/:guildId/',
     execute: async (req, res, app, config, themeConfig, info) => {
-        const data = req.body;
+        const data = req.body
 
-        let errors = [];
-        let successes = [];
+        let setNewRes
+        let errors = []
+        let successes = []
 
-        if (!req.session?.user) {
+        if (!req.session?.user)
             return res.send({
                 success: false,
                 message: 'User is not logged in'
-            });
-        }
+            })
 
-        const user = {
-            id: req.session.user.id,
-            object: config.bot.guilds.cache
-                .get(req.params.guildId)
-                .members.cache.get(req.session.user.id)
-        }
-
-        const guild = {
-            id: req.params.guildId,
-            object: config.bot.guilds.cache.get(req.params.guildId)
-        }
-
-        const userGuildMemberObject = guild?.object?.members?.cache?.get(req.session.user.id);
+        const guildObject = config.bot.guilds.cache.get(req.params.guildId);
+        const userGuildMemberObject = guildObject?.members?.cache?.get(req.session.user.id);
 
         if(!userGuildMemberObject) return res.send({
                 success: false,
                 message: 'No access'
             });
-
+        
         if(!userGuildMemberObject.permissions.has(PermissionsBitField.Flags.ManageGuild)) return res.send({
                 success: false,
                 message: 'No access'
             });
 
-        const categorySet = {};
+        let category = config.settings?.find((c) => c.categoryId == req.query.categoryId)
 
-        const category = config.settings?.find(category => category.categoryId == req.query.categoryId);
-        if (!category) {
-            errors.push(`Failed to load category ${req.query.categoryId}`);
-        }
+        let catO = [];
+        let catToggle = [];
 
-        const childFormTypes = category.categoryOptionsList
-            .filter(option => option.optionType.type == "multiRow")
-            .flatMap(option => option.optionType.options);
-
-        const options = [
-            ...category.categoryOptionsList.filter(option => option.optionType.type != "multiRow"),
-            ...childFormTypes
-        ];
-
-        // Check if the user has turned a category on or off
-        if (data?.categoryToggle && data.categoryToggle.length > 0) {
-            const categories = config.settings.filter(category => data.categoryToggle.find(toggle => toggle.id == category.categoryId));
-
-            const premiumList = await Promise.all(categories.map(async category => {
-                if (category.premium && !category.premiumUser({ user, guild })) {
-                    console.log(`Category ${category.categoryId} requires a premiumUser method when setting premium`);
-                }
-
-                return {
-                    id: category.categoryId,
-                    isPremium: category.premium ? await category.premiumUser({ user, guild }) : false
-                }
-            }));
-
-
-            for (const toggleCat of data.categoryToggle) {
-                const category = categories.find(cat => cat.categoryId == toggleCat.id);
-
-                if (!category) {
-                    errors.push(`Failed to load category ${toggleCat.id}`);
-                    continue;
-                }
-
-                if (category.premium && !premiumList.find(premium => premium.id == category.categoryId).isPremium) {
-                    errors.push(`Category ${category.categoryId} requires premium`);
-                    continue;
-                }
-
-                try {
-                    if (config?.useCategorySet) {
-                        if (!categorySet[toggleCat.id])
-                            categorySet[toggleCat.id] = [];
-                        categorySet[toggleCat.id] = [...categorySet[toggleCat.id], {
-                            optionId: "categoryToggle",
-                            data: toggleCat.value
-                        }]
-                    } else category.setNew({ guild, user, newData: toggleCat.value });
-                } catch (error) {
-                    console.log(error)
-                    errors.push(`Failed to set category ${toggleCat.id} to ${toggleCat.value}`);
-                    continue
-                }
-            }
-        }
-
-        // Check if the user has changed a setting
-        if (data?.options && data.options.length > 0) {
-            const category = config.settings?.find(category => category.categoryId == req.query.categoryId);
-            if (!category) {
-                errors.push(`Failed to load category ${req.query.categoryId}`);
-            }
-
-            const premium = category.premium ? await category.premiumUser({ user, guild }) : false;
-
-            const filtered = options.filter(option => data.options.find(opt => opt.id == option.optionId));
-            const allowed = await Promise.all(filtered.map(async option => {
-                return option.allowedCheck ? {
-                    ...option.allowedCheck({
+        if (data.categoryToggle) {
+            for (const s of data.categoryToggle) {
+                if (!config.useCategorySet) try {
+                    let category = config.settings?.find(
+                        (c) => c?.categoryId == s.id
+                    )
+                    await category.setNew({
                         guild: { id: req.params.guildId },
-                        user: { id: req.session.user.id }
-                    }),
-                    optionId: option.optionId
-                } : { allowed: true, optionId: option.optionId, errorMessage: null };
-            }));
-
-            for (const option of data.options) {
-                const setting = filtered.find(opt => opt.optionId == option.id);
-                if (!setting) {
-                    errors.push(`Failed to load setting ${option.id}`);
-                    continue;
+                        newData: s.value
+                    })
+                } catch (err) {
+                    errors.push(`Category ${s.id} %is%Failed to save%is%categoryToggle`);
                 }
-
-                const allow = allowed.find(allowed => allowed.optionId == option.id);
-                if (!allow.allowed) {
-                    errors.push(allow.errorMessage);
-                    continue;
-                }
-
-                let item;
-
-                switch (setting.optionType.type) {
-                    case "rolesMultiSelect":
-                    case "channelsMultiSelect":
-                    case "multiSelect":
-                    case "tagInput":
-                        item = {
-                            optionId: setting.optionId,
-                            data: Array.isArray(option.value) ? option.value : [option.value]
-                        };
-                        break;
-                    case "switch":
-                        item = {
-                            optionId: setting.optionId,
-                            data: option.value ?? false
-                        };
-                        break;
-                    case "embedBuilder":
-                        try {
-                            const parsedResponse = JSON.parse(option.value);
-                            item = {
-                                optionId: setting.optionId,
-                                data: parsedResponse
-                            };
-                        } catch (err) {
-                            item = {
-                                optionId: setting.optionId,
-                                data: option.optionType.data
-                            };
-                        }
-                        break;
-                    default:
-                        console.log(setting.optionType.type, option.value)
-                        item = {
-                            optionId: setting.optionId,
-                            data: option.value ?? null
-                        };
-                        break;
-                }
-
-                try {
-                    if (config?.useCategorySet) {
-                        if (!categorySet[req.query.categoryId])
-                            categorySet[req.query.categoryId] = [];
-
-                        categorySet[req.query.categoryId] = [...categorySet[req.query.categoryId], item]
-                    } else setting.setNew({ guild, user, newData: item.data });
-                } catch (error) {
-                    console.log(error)
-                    errors.push(`Failed to set setting ${option.id} to ${option.value}`);
-                    continue;
+                else {
+                    if (category?.categoryId == s.id) catO.push({
+                        optionId: category.categoryId == s.id ? "categoryToggle" : s.id,
+                        data: s.value
+                    });
+                    else catToggle.push({
+                        optionId: s.id,
+                        data: s.value
+                    });
                 }
             }
+            if ("categoryToggle" in data && !category) {
+                return res.send({
+                    success: true,
+                    message: "Saved toggle",
+                    errors: [],
+                    successes: [],
+                })
+            }
+        }
 
-            if (category.premium && !premium) {
-                errors.push(`Category ${category.categoryId} requires premium`);
+        if (!category)
+            return res.send({
+                error: true,
+                message: "No category found",
+            })
+
+        const subOptions = category.categoryOptionsList.filter((o) => o.optionType.type == "multiRow")
+            .map((o) => o.optionType.options)
+            .flat()
+
+        const newOptionsList = [
+            ...category.categoryOptionsList.filter((o) => o.optionType.type != "multiRow"),
+            ...subOptions
+        ]
+
+        if (data.options) for (let option of newOptionsList) {
+            let d = data.options.find((o) => o.id === option.optionId);
+            let canUse = {}
+
+            if (!d && !d?.id) continue;
+
+            if (option.allowedCheck) canUse = await option.allowedCheck({
+                guild: { id: req.params.guildId },
+                user: { id: req.session.user.id },
+            })
+            else canUse = { allowed: true, errorMessage: null }
+
+
+            if (canUse.allowed == false) {
+                setNewRes = { error: canUse.errorMessage }
+                errors.push(
+                    option.optionName +
+                    "%is%" +
+                    setNewRes.error +
+                    "%is%" +
+                    option.optionId
+                )
+            } else if (option.optionType != "spacer") {
+                if (config.useCategorySet) {
+                    if (option.optionType.type == "rolesMultiSelect" || option.optionType.type == "channelsMultiSelect" || option.optionType.type == "multiSelect" || option.optionType.type == 'tagInput') {
+                        if (!d.value || d.value == null || d.value == undefined) catO.push({
+                            optionId: option.optionId,
+                            data: [],
+                        })
+                        else if (typeof d.value != "object") catO.push({
+                            optionId: option.optionId,
+                            data: [d.value],
+                        })
+                        else catO.push({
+                            optionId: option.optionId,
+                            data: d.value,
+                        })
+                    } else if (option.optionType.type == "switch") {
+                        if (
+                            d.value ||
+                            d.value == null ||
+                            d.value == undefined ||
+                            d.value == false
+                        ) {
+                            if (d.value || d.value == null || d.value == undefined || d.value == false) {
+                                if (d.value == null || d.value == undefined || d.value == false)
+                                    catO.push({
+                                        optionId: option.optionId,
+                                        data: false
+                                    });
+                                else
+                                    catO.push({
+                                        optionId: option.optionId,
+                                        data: true
+                                    });
+                            }
+                        }
+                    } else if (option.optionType.type == "embedBuilder") {
+                        if (
+                            d.value == null ||
+                            d.value == undefined
+                        )
+                            catO.push({
+                                optionId: option.optionId,
+                                data: option.optionType.data,
+                            })
+                        else {
+                            try {
+                                const parsedResponse = JSON.parse(
+                                    d.value
+                                )
+                                catO.push({
+                                    optionId: option.optionId,
+                                    data: parsedResponse,
+                                })
+                            } catch (err) {
+                                catO.push({
+                                    optionId: option.optionId,
+                                    data: option.optionType.data,
+                                })
+                            }
+                        }
+                    } else {
+                        if (
+                            d.value == undefined ||
+                            d.value == null
+                        )
+                            catO.push({
+                                optionId: option.optionId,
+                                data: null,
+                            })
+                        else
+                            catO.push({
+                                optionId: option.optionId,
+                                data: d.value,
+                            })
+                    }
+                } else {
+                    if (
+                        option.optionType.type ==
+                        'rolesMultiSelect' ||
+                        option.optionType.type ==
+                        'channelsMultiSelect' ||
+                        option.optionType.type == 'multiSelect' ||
+                        option.optionType.type == 'tagInput'
+                    ) {
+                        if (
+                            !d.value ||
+                            d.value == null ||
+                            d.value == undefined
+                        ) {
+                            setNewRes = await option.setNew({
+                                guild: {
+                                    id: req.params.guildId,
+                                    object: guildObject
+                                },
+                                user: {
+                                    id: req.session.user.id,
+                                    object: userGuildMemberObject
+                                },
+                                newData: []
+                            })
+                            setNewRes ? null : (setNewRes = {})
+                            if (setNewRes.error) {
+                                errors.push(
+                                    option.optionName +
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
+                                )
+                            } else {
+                                successes.push(option.optionName)
+                            }
+                        } else if (
+                            typeof d.value != 'object'
+                        ) {
+                            setNewRes = await option.setNew({
+                                guild: {
+                                    id: req.params.guildId,
+                                    object: guildObject
+                                },
+                                user: {
+                                    id: req.session.user.id,
+                                    object: userGuildMemberObject
+                                },
+                                newData: [d.value]
+                            })
+                            setNewRes ? null : (setNewRes = {})
+                            if (setNewRes.error) {
+                                errors.push(
+                                    option.optionName +
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
+                                )
+                            } else {
+                                successes.push(option.optionName)
+                            }
+                        } else {
+                            setNewRes = await option.setNew({
+                                guild: {
+                                    id: req.params.guildId,
+                                    object: guildObject
+                                },
+                                user: {
+                                    id: req.session.user.id,
+                                    object: userGuildMemberObject
+                                },
+                                newData: d.value
+                            })
+                            setNewRes ? null : (setNewRes = {})
+                            if (setNewRes.error) {
+                                errors.push(
+                                    option.optionName +
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
+                                )
+                            } else {
+                                successes.push(option.optionName)
+                            }
+                        }
+                    } else if (
+                        option.optionType.type == 'embedBuilder'
+                    ) {
+                        if (
+                            d.value !== null ||
+                            d.value !== undefined
+                        ) {
+                            setNewRes =
+                                (await option.setNew({
+                                    guild: {
+                                        id: req.params.guildId,
+                                        object: guildObject
+                                    },
+                                    user: {
+                                        id: req.session.user.id,
+                                        object: userGuildMemberObject
+                                    },
+                                    newData: JSON.parse(
+                                        d.value
+                                    )
+                                })) || {}
+                            setNewRes ? null : (setNewRes = {})
+                            if (setNewRes.error) {
+                                errors.push(
+                                    option.optionName +
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
+                                )
+                            } else {
+                                successes.push(option.optionName)
+                            }
+                        } else {
+                            try {
+                                const parsedResponse = JSON.parse(
+                                    d.value
+                                )
+                                setNewRes =
+                                    (await option.setNew({
+                                        guild: {
+                                            id: req.params.guildId,
+                                            object: guildObject
+                                        },
+                                        user: {
+                                            id: req.session.user.id,
+                                            object: userGuildMemberObject
+                                        },
+                                        newData: parsedResponse
+                                    })) || {}
+                                setNewRes ? null : (setNewRes = {})
+                                if (setNewRes.error) {
+                                    errors.push(
+                                        option.optionName +
+                                        '%is%' +
+                                        setNewRes.error +
+                                        '%is%' +
+                                        option.optionId
+                                    )
+                                } else {
+                                    successes.push(
+                                        option.optionName
+                                    )
+                                }
+                            } catch (err) {
+                                setNewRes =
+                                    (await option.setNew({
+                                        guild: {
+                                            id: req.params.guildId,
+                                            object: guildObject
+                                        },
+                                        user: {
+                                            id: req.session.user.id,
+                                            object: userGuildMemberObject
+                                        },
+                                        newData:
+                                            option.optionType.data
+                                    })) || {}
+                                setNewRes = {
+                                    error: 'JSON parse for embed builder went wrong, your settings have been reset.'
+                                }
+                                if (setNewRes.error) {
+                                    errors.push(
+                                        option.optionName +
+                                        '%is%' +
+                                        setNewRes.error +
+                                        '%is%' +
+                                        option.optionId
+                                    )
+                                } else {
+                                    successes.push(
+                                        option.optionName
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        if (
+                            d.value == undefined ||
+                            d.value == null
+                        ) {
+                            setNewRes =
+                                (await option.setNew({
+                                    guild: {
+                                        id: req.params.guildId,
+                                        object: guildObject
+                                    },
+                                    user: {
+                                        id: req.session.user.id,
+                                        object: userGuildMemberObject
+                                    },
+                                    newData: null
+                                })) || {}
+                            setNewRes ? null : (setNewRes = {})
+                            if (setNewRes.error) {
+                                errors.push(
+                                    option.optionName +
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
+                                )
+                            } else {
+                                successes.push(option.optionName)
+                            }
+                        } else {
+                            setNewRes =
+                                (await option.setNew({
+                                    guild: {
+                                        id: req.params.guildId,
+                                        object: guildObject
+                                    },
+                                    user: {
+                                        id: req.session.user.id,
+                                        object: userGuildMemberObject
+                                    },
+                                    newData: d.value
+                                })) || {}
+                            setNewRes ? null : (setNewRes = {})
+                            if (setNewRes.error) {
+                                errors.push(
+                                    option.optionName +
+                                    '%is%' +
+                                    setNewRes.error +
+                                    '%is%' +
+                                    option.optionId
+                                )
+                            } else {
+                                successes.push(option.optionName)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (config.useCategorySet && catO.length) {
+            let sNR = await category.setNew({
+                guild: {
+                    id: req.params.guildId,
+                    object: guildObject,
+                },
+                user: {
+                    id: req.session.user.id,
+                    object: userGuildMemberObject,
+                },
+                data: catO,
+            })
+            sNR ? null : (sNR = {})
+            if (sNR.error) {
+                errors.push(category.categoryId + "%is%" + sNR.error)
+            } else {
+                successes.push(category.categoryId)
+            }
+        }
+
+        if (config.useCategorySet && catToggle.length) for (const opt of catToggle) {
+            let cat = config.settings?.find((c) => c.categoryId == opt.optionId);
+
+            if (!cat) {
+                errors.push(`Category ${opt.optionId} %is%Doesn't exist%is%categoryToggle`);
+                continue;
+            }
+
+            try {
+                await cat.setNew({
+                    guild: {
+                        id: req.params.guildId,
+                        object: guildObject,
+                    },
+                    user: {
+                        id: req.session.user.id,
+                        object: userGuildMemberObject,
+                    },
+                    data: [{
+                        optionId: "categoryToggle",
+                        data: opt.data
+                    }],
+                });
+            } catch (err) {
+                errors.push(`Category ${opt.optionId} %is%${err}%is%categoryToggle`);
             }
         }
 
         req.DBDEvents.emit('guildSettingsUpdated', {
             user: req.session.user,
-            changes: { successes, errors }
-        });
+            changes: { successes, errors },
+            guildId: req.params.guildId
+        })
 
-        if (errors.length === 0)
-            for (const [category, data] of Object.entries(categorySet)) {
-                try {
-                    config.settings.find(cat => cat.categoryId == category).setNew({ guild, user, newData: data });
-
-                    data.forEach(o => successes.push(`Successfully saved ${o.optionId} to ${o.value} in category ${category}`));
-                } catch (error) {
-                    console.log(error);
-                    errors.push(`Failed to save changes to ${category}`);
-                };
-            };
-
-        return res.send({
-            success: errors.length === 0,
-            message: errors.length === 0 ? 'Successfully saved changes' : 'Failed to save changes',
+        res.send({
+            success: true,
+            message: 'saved changed',
             errors,
             successes
-        });
+        })
     }
-};
+}
