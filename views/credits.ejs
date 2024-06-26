@@ -39,44 +39,6 @@
             <!-- i cant figure out how to center this -->
         </div>
         <section class="py-sm-7 py-5 position-relative" id="mainSection" style="padding-top: 0px !important;">
-            <div>
-                <div class="row mb-4">
-                    <div class="col-lg-12 mb-lg-0 mb-4" style="padding: 0px">
-                        <div class="card">
-                            <div class="card-body p-3">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="d-flex flex-column h-100">
-                                            <p class="mb-1 pt-2 text-bold">Soft-UI Theme</p>
-                                            <h5 class="font-weight-bolder">Soft UI Theme</h5>
-                                            <p>The Discord-Dashboard Soft UI theme was created as a feature-packed theme for DBD users!</p>
-                                            <p class="mb-1 mt-5"> Made with <i class="fa fa-heart"></i> by <a
-                                                        href="https://github.com/PlainDevelopment"
-                                                        class="font-weight-bold text-gradient text-primary"
-                                                        style="font-weight: 700 !important;">PlainDevelopment</a> and <a
-                                                        href="https://github.com/iMidnights"
-                                                        class="font-weight-bold text-gradient text-primary"
-                                                        style="font-weight: 700 !important;">iMidnight</a></p>
-                                                <a class="text-body text-sm font-weight-bold mb-0 icon-move-right"
-                                                   href="https://github.com/Assistants-Technologies">
-                                                    Visit our Github page
-                                                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                                                </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
-                                        <div class="bg-gradient-primary border-radius-lg h-100"
-                                             style="background-image: url('/img/soft-ui.webp') !important; background-repeat: no-repeat; background-size: contain; background-position: center;">
-                                            <div class="position-relative d-flex align-items-center justify-content-center h-100"
-                                                 style="min-height: 210px !important;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="row mt-4 d-flex" style="justify-content: space-between;">
                     <div class="card" style="width: 320px; height: 550px; text-align: center;">
                         <div class="p-3">
@@ -147,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card" style="width: 300px; height: 465px; text-align: center;">
+                    <div class="card" style="width: 320px; height: 550px; text-align: center;">
                         <div class="p-3">
                             <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
                                  src="https://avatars.githubusercontent.com/u/46864390"
@@ -181,25 +143,22 @@
     const image = images[Math.floor(Math.random() * images.length)];
     %>
     <section class="pb-7 position-relative" id="getHelp">
-        <div class="page-header min-vh-50 m-3 border-radius-xl"
-             style="background-image: url('/img/curved-images/<%- image %>.webp');">
-             <span class="mask bg-gradient-dark opacity-8"></span>
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-6 text-center mx-auto">
                         <h1 class="text-white mt-4 mb-1">Got a question?</h1>
-                        <p class="lead text-white mb-6">Join our discord server!</p>
+                        <p class="lead text-white mb-6">Join our Discord server!</p>
+                        <button type="button" class="btn btn-link text-white" id="discordButton" onclick="supportServer()">
+                            <i class="fab fa-discord fa-7x" aria-hidden="true"></i>
+                            <span class="sr-only">Join our Discord server</span>
+                        </button>
                     </div>
-                    <button type="button" style="border: none; background: none; cursor: pointer;" id="discordButton"
-                            onclick="supportServer()">
-                        <i class="fab fa-discord fa-7x" aria-hidden="true"></i>
-                    </button>
                 </div>
             </div>
         </div>
-
-        <%- include('partials/footer.ejs') %>
     </section>
+    
+    
 </div>
 </main>
 <script>
