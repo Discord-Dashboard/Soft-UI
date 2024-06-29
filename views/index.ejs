@@ -71,7 +71,11 @@
                                 </div>
                                 <div class="col-4 text-end">
                                     <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                        <i class="ni ni-<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
+                                        <% if (stats.icon.startsWith('fa-')) { %>
+                                            <i class="<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
+                                        <% } else { %>
+                                            <i class="ni-<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
+                                        <% } %>
                                     </div>
                                 </div>
                             </div>
