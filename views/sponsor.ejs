@@ -1,0 +1,185 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/preloader.ejs', {now: 'sponsor'}) %>
+    <%- themeConfig?.customHtml %>
+</head>
+
+<body class="g-sidenav-show bg-gray-100" id="scroll">
+<%- include('partials/preload.ejs') %>
+<%- include('partials/sidebar.ejs', {config: config, now:'sponsor'}) %>
+<div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs', {now:'sponsor'}) %>
+    <!-- End Navbar -->
+    </section>
+    <%
+    const images = ["curved-1", "curved-2", "curved-3", "curved-4", "curved-5", "curved-6", "curved-7", "curved-8", "curved-9", "curved-10", "curved-11", "curved-12", "curved-13", "curved-14", "curved-15", "curved-16", "curved-17", "curved-18"];
+
+    const image = images[Math.floor(Math.random() * images.length)];
+    %>
+    <section class="py-sm-7 py-5 position-relative" id="mainSection" style="padding-top: 0px !important;">
+        <div class="row mt-4 d-flex" style="justify-content: space-between; gap: 20px;">
+            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div class="p-3">
+                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
+                         src="https://avatars.githubusercontent.com/u/86969968"
+                         style="width: 200px; height: 200px; border-radius: 50%;"
+                         alt="Sponsor">
+                </div>
+                <hr style="margin: 0 20px;">
+                <div>
+                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
+                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$2 P/Month</h2>
+                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
+                        <p style="font-size: 1rem; color: #555;">Have your bug reports prioritized</p>
+                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
+                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
+                               href="https://github.com/sponsors/Assistants-Technologies"
+                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
+                                Choose this Amount
+                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div class="p-3">
+                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
+                         src="https://avatars.githubusercontent.com/u/86969968"
+                         style="width: 200px; height: 200px; border-radius: 50%;"
+                         alt="Sponsor">
+                </div>
+                <hr style="margin: 0 20px;">
+                <div>
+                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
+                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$3 P/Month</h2>
+                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
+                        <p style="font-size: 1rem; color: #555;">Get a Sponsor badge on your profile</p>
+                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
+                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
+                               href="https://github.com/sponsors/Assistants-Technologies"
+                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
+                                Choose this Amount
+                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div class="p-3">
+                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
+                         src="https://avatars.githubusercontent.com/u/86969968"
+                         style="width: 200px; height: 200px; border-radius: 50%;"
+                         alt="Sponsor">
+                </div>
+                <hr style="margin: 0 20px;">
+                <div>
+                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
+                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$4 P/Month</h2>
+                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
+                        <p style="font-size: 1rem; color: #555;">Get a Personal License for your Discord-Dashboard project</p>
+                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
+                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
+                               href="https://github.com/sponsors/Assistants-Technologies"
+                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
+                                Choose this Amount
+                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div class="p-3">
+                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
+                         src="https://avatars.githubusercontent.com/u/86969968"
+                         style="width: 200px; height: 200px; border-radius: 50%;"
+                         alt="Sponsor">
+                </div>
+                <hr style="margin: 0 20px;">
+                <div>
+                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
+                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$50 P/Month</h2>
+                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
+                        <p style="font-size: 1rem; color: #555;">Get a Production License for your Discord-Dashboard project & BE A GOAT</p>
+                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
+                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
+                               href="https://github.com/sponsors/Assistants-Technologies"
+                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
+                                Choose this Amount
+                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</main>
+<script>
+    let disableFunc = false;
+    var win;
+
+    function supportServer() {
+        if (disableFunc) return;
+        disableFunc = true;
+        $('#discordButton').parent().css('overflow', 'hidden');
+        $('#discordButton').animate({'margin-top': '-=50px'});
+        $('#discordButton').animate({'margin-top': '+=500px', opacity: 0}, function () {
+            $(this).hide();
+        });
+        $("#discordRocket").fadeIn();
+        setTimeout(function () {
+            $('#rocketDiscord').animate({'margin-top': '+=600px'}, 1);
+            $("#mainSection").fadeOut();
+            $("#main2").fadeOut();
+            $("#getHelp").fadeOut();
+        }, 1000)
+        setTimeout(function () {
+            setTimeout(function () {
+                $('#rocketDiscord').animate({'margin-top': '+=75px'});
+                $('#rocketDiscord').animate({'margin-top': '-=1000px'}, 1500);
+                setTimeout(function () {
+                    window.open('https://discord.gg/EdJFwNvNS9', '_blank', 'location=yes,height=1200,width=800');
+
+                    $("#rocketDiscord").fadeOut();
+                    $("#discordRocket").fadeOut();
+
+                    setTimeout(function () {
+                        disableFunc = false;
+                        location.reload();
+                    }, 3500)
+                }, 1200)
+            }, 1500)
+        }, 2000);
+    }
+
+
+</script>
+
+
+<%- include('partials/scripts.ejs', {now: "sponsor"}) %>
+</body>
+
+</html>
+
