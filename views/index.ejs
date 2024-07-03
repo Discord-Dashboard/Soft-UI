@@ -70,11 +70,14 @@
                                     <% } %>
                                 </div>
                                 <div class="col-4 text-end">
-                                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                        <% if (stats.icon.startsWith('fa-')) { %>
-                                            <i class="<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
-                                        <% } else { %>
-                                            <i class="ni ni-<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
+                                    <div class="icon icon-shape text-center border-radius-md"
+                                         style="<% if (stats.icon.startsWith('http')) { %>background-image: url('<%= stats.icon %>'); background-size: cover; background-position: center;<% } else { %>background: linear-gradient(87deg, #11cdef, #1171ef);<% } %>">
+                                        <% if (!stats.icon.startsWith('http')) { %>
+                                            <% if (stats.icon.startsWith('fa-')) { %>
+                                                <i class="<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
+                                            <% } else { %>
+                                                <i class="ni ni-<%= stats.icon %> text-lg opacity-10" aria-hidden="true"></i>
+                                            <% } %>
                                         <% } %>
                                     </div>
                                 </div>
@@ -106,8 +109,8 @@
                             </div>
                             <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
                                 <div class="bg-gradient-primary border-radius-lg h-100"
-                                     style="background-image: url('<%= req?.locales?.index?.card?.image %>') !important; background-repeat: no-repeat; background-size: contain; background-position: center;">
-                                    <div class="position-relative d-flex align-items-center justify-content-center h-100"
+                                style="background-image: url('<%= req?.locales?.index?.card?.image %>') !important; background-repeat: no-repeat; background-size: contain; background-position: center;">
+                                <div class="position-relative d-flex align-items-center justify-content-center h-100"
                                          style="min-height: 210px !important;">
                                     </div>
                                 </div>
