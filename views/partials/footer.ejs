@@ -5,7 +5,7 @@
         <div class="copyright text-center text-sm text-muted text-lg-start">
           © <%= new Date().getFullYear()  %>
           <% if(themeConfig?.footer?.replaceDefault === true) { %>
-          <a href="/credits" class="font-weight-bold" target="_blank">Assistants</a><% if(themeConfig?.footer?.text?.length) { %> | <%= themeConfig?.footer?.text %> <% } %>
+          <a href="/credits" class="font-weight-bold" target="_blank">Assistants</a> Sponsor us via <a href="/sponsor" class="font-weight-bold" target="_blank">Sponsorship</a><% if(themeConfig?.footer?.text?.length) { %> | <%= themeConfig?.footer?.text %> <% } %>
           <% } else { %>
           Made with <i class="fa fa-heart"></i> by <a href="/credits" class="font-weight-bold" target="_blank">PlainDevelopment</a> and <a href="/credits" class="font-weight-bold" target="_blank">iMidnight</a>
           <% } %>
