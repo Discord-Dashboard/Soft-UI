@@ -1,399 +1,250 @@
-const Discord = require('discord.js')
+const Discord = require('discord.js');
+
 module.exports = function (config, themeConfig) {
     config.guildSettings = async function (req, res, home, category) {
-        if (!req.session.user) return res.redirect('/discord?r=/guild/' + req.params.id)
+        if (!req.session.user) return res.redirect('/discord?r=/guild/' + req.params.id);
 
-        let bot = config.bot
-        if (!bot.guilds.cache.get(req.params.id)) {
+        const bot = config.bot;
+        const guildId = req.params.id;
+        const userId = req.session.user.id;
+
+        if (!bot.guilds.cache.get(guildId)) {
             try {
-                await bot.guilds.fetch(req.params.id)
+                await bot.guilds.fetch(guildId);
             } catch (err) { }
         }
 
-        if (!bot.guilds.cache.get(req.params.id)) return res.redirect('/manage?error=noPermsToManageGuild')
-        if (
-            !bot.guilds.cache
-                .get(req.params.id)
-                .members.cache.get(req.session.user.id)
-        ) {
-            try {
-                await bot.guilds.cache
-                    .get(req.params.id)
-                    .members.fetch(req.session.user.id)
-            } catch (err) { }
-        }
-        for (let PermissionRequired of req.requiredPermissions) {
-            let converted = PermissionRequired[0]
-            const DiscordJsVersion = Discord.version.split('.')[0]
-            if (DiscordJsVersion === '14') converted = await convert14(PermissionRequired[0])
+        const guild = bot.guilds.cache.get(guildId);
+        if (!guild) return res.redirect('/manage?error=noPermsToManageGuild');
 
-            if (
-                !bot.guilds.cache
-                    .get(req.params.id)
-                    .members.cache.get(req.session.user.id)
-                    .permissions.has(converted)
-            ) {
-                return res.redirect('/manage?error=noPermsToManageGuild')
+        let member = guild.members.cache.get(userId);
+        if (!member) {
+            try {
+                member = await guild.members.fetch(userId);
+            } catch (err) {
+                return res.redirect('/manage?error=noPermsToManageGuild');
             }
         }
 
-        if (bot.guilds.cache.get(req.params.id).channels.cache.size < 1) {
+        if (!member) return res.redirect('/manage?error=noPermsToManageGuild');
+
+        const discordJsVersion = Discord.version.split('.')[0];
+        const requiredPermissions = req.requiredPermissions;
+
+        for (const permission of requiredPermissions) {
+            let convertedPermission = permission[0];
+            if (discordJsVersion === '14') {
+                convertedPermission = await convertPermission(permission[0]);
+            }
+
+            if (!member.permissions.has(convertedPermission)) {
+                return res.redirect('/manage?error=noPermsToManageGuild');
+            }
+        }
+
+        if (guild.channels.cache.size < 1) {
             try {
-                await bot.guilds.cache.get(req.params.id).channels.fetch()
+                await guild.channels.fetch();
             } catch (err) { }
         }
 
-        if (bot.guilds.cache.get(req.params.id).roles.cache.size < 2) {
+        if (guild.roles.cache.size < 2) {
             try {
-                await bot.guilds.cache.get(req.params.id).roles.fetch()
+                await guild.roles.fetch();
             } catch (err) { }
         }
 
-        let actual = {}
-        let toggle = {}
-        let premium = {}
+        const actualSettings = {};
+        const toggleSettings = {};
+        const premiumSettings = {};
+        const canUseSettings = {};
 
-        let canUseList = {}
+        if (config.settings?.length) {
+            for (const category of config.settings) {
+                if (!canUseSettings[category.categoryId]) canUseSettings[category.categoryId] = {};
+                if (!actualSettings[category.categoryId]) actualSettings[category.categoryId] = {};
 
-        if (config.settings?.length) for (const category of config.settings) {
-            if (!canUseList[category.categoryId]) canUseList[category.categoryId] = {};
-            if (!actual[category.categoryId]) actual[category.categoryId] = {}
-
-            if (config.useCategorySet) {
-                let catGAS = await category.getActualSet({
-                    guild: {
-                        id: req.params.id,
-                        object: bot.guilds.cache.get(req.params.id),
-                    },
-                    user: {
-                        id: req.session.user.id,
-                        object: bot.guilds.cache
-                            .get(req.params.id)
-                            .members.cache.get(req.session.user.id),
-                    },
-                });
-
-                if (category.toggleable) {
-                    if (!toggle[category.categoryId]) {
-                        toggle[category.categoryId] = {}
-                    }
-                    toggle[category.categoryId] = catGAS.find(o => o.optionId === "categoryToggle") || null;
-                    catGAS = catGAS.filter((c) => c.optionId !== 'categoryToggle')
-                }
-                if (category.premium) {
-                    if (!premium[category.categoryId]) {
-                        premium[category.categoryId] = {}
-                    }
-                    premium[category.categoryId] = await s.premiumUser({
-                        guild: {
-                            id: req.params.id
-                        },
-                        user: {
-                            id: req.session.user.id,
-                            tag: req.session.user.tag
-                        }
-                    })
-                }
-
-                if (category.premium && premium[category.categoryId] == false) return res.redirect(
-                    `/settings/${req.params.id}?error=premiumRequired`
-                )
-
-
-                for (const o of catGAS) {
-                    if (!o || !o?.optionId) {
-                        console.log(
-                            "WARNING: You haven't set the optionId for a category option in your config. This is required for the category option to work."
-                        )
-                        continue;
-                    }
-                    const option = category.categoryOptionsList.find(
-                        (c) => c.optionId == o.optionId
-                    )
-                    if (option) {
-                        if (option.allowedCheck) {
-                            const canUse = await option.allowedCheck({
-                                guild: {
-                                    id: req.params.id,
-                                },
-                                user: {
-                                    id: req.session.user.id,
-                                },
-                            })
-
-                            if (typeof canUse != "object")
-                                throw new TypeError(
-                                    `${category.categoryId} category option with id ${option.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
-                                )
-                            canUseList[category.categoryId][
-                                option.optionId
-                            ] = canUse
-                        } else {
-                            canUseList[category.categoryId][
-                                option.optionId
-                            ] = {
-                                allowed: true,
-                                errorMessage: null,
-                            }
-                        }
-
-                        if (option.optionType !== "spacer") {
-                            if (!actual[category.categoryId]) {
-                                actual[category.categoryId] = {}
-                            }
-                            if (
-                                !actual[category.categoryId][
-                                option.optionId
-                                ]
-                            ) {
-                                actual[category.categoryId][
-                                    option.optionId
-                                ] = o.data
-                            }
-                        } else actual[category.categoryId][option.optionId] = {
-                            type: 'spacer',
-                            themeOptions: option.themeOptions
-                        }
-                    } else console.log(`WARNING: Option ${o.optionId} in category ${category.categoryId} doesn't exist in your config.`)
-
-                }
-            } else for (const s of config.settings) {
-                if (!canUseList[s.categoryId]) canUseList[s.categoryId] = {}
-                if (s.toggleable) {
-                    if (!toggle[s.categoryId]) {
-                        toggle[s.categoryId] = {}
-                    }
-                    toggle[s.categoryId] = await s.getActualSet({
-                        guild: {
-                            id: req.params.id
-                        }
-                    })
-                }
-                if (s.premium) {
-                    if (!premium[s.categoryId]) {
-                        premium[s.categoryId] = {}
-                    }
-                    premium[s.categoryId] = await s.premiumUser({
-                        guild: {
-                            id: req.params.id
-                        },
-                        user: {
-                            id: req.session.user.id,
-                            tag: req.session.user.tag
-                        }
-                    })
-                }
-
-                if (category) {
-                    if (s.premium && premium[category] == false) {
-                        return res.redirect(
-                            `/settings/${req.params.id}?error=premiumRequired`
-                        )
-                    }
-                }
-
-                for (const c of s.categoryOptionsList) {
-                    if (c.allowedCheck) {
-                        const canUse = await c.allowedCheck({
-                            guild: { id: req.params.id },
-                            user: { id: req.session.user.id }
-                        })
-                        if (typeof canUse != 'object') {
-                            throw new TypeError(
-                                `${s.categoryId} category option with id ${c.optionId} allowedCheck function need to return {allowed: Boolean, errorMessage: String | null}`
-                            )
-                        }
-                        canUseList[s.categoryId][c.optionId] = canUse
-                    } else {
-                        canUseList[s.categoryId][c.optionId] = {
-                            allowed: true,
-                            errorMessage: null
-                        }
+                if (config.useCategorySet) {
+                    let getActualCategory = await category.getActualSet({
+                        guild: { id: guildId, object: guild },
+                        user: { id: userId, object: member },
+                    });
+                    
+                    if (category.toggleable) {
+                        toggleSettings[category.categoryId] = getActualCategory.find(o => o.optionId === "categoryToggle")?.data || null;
+                        getActualCategory = getActualCategory.filter(o => o.optionId !== 'categoryToggle');
                     }
 
-                    if (!actual[s.categoryId]) actual[s.categoryId] = {}
-
-                    if (c.optionType.type == 'spacer') {
-                        actual[s.categoryId][c.optionId] = {
-                            type: 'spacer',
-                            themeOptions: c.themeOptions
-                        }
-                    } else if (
-                        c.optionType.type == 'collapsable' ||
-                        c.optionType.type == 'modal'
-                    ) {
-                        for (const item of c.optionType.options) {
-                            if (
-                                item.optionType.type == 'channelsMultiSelect' ||
-                                item.optionType.type == 'roleMultiSelect' ||
-                                item.optionType.type == 'tagInput'
-                            ) {
-                                actual[s.categoryId][item.optionId] = []
-                            }
-                        }
-                    } else {
-                        if (!actual[s.categoryId]) {
-                            actual[s.categoryId] = {}
-                        }
-                        if (!actual[s.categoryId][c.optionId]) {
-                            if (c.optionType.type === "multiRow") {
-                                for (const item of c.optionType.options) {
-                                    actual[s.categoryId][item.optionId] = await item.getActualSet(
-                                        {
-                                            guild: {
-                                                id: req.params.id,
-                                                object: bot.guilds.cache.get(req.params.id)
-                                            },
-                                            user: {
-                                                id: req.session.user.id,
-                                                object: bot.guilds.cache
-                                                    .get(req.params.id)
-                                                    .members.cache.get(req.session.user.id)
-                                            }
-                                        }
-                                    )
-                                }
-                                continue
-                            }
-                            actual[s.categoryId][c.optionId] = await c.getActualSet(
-                                {
-                                    guild: {
-                                        id: req.params.id,
-                                        object: bot.guilds.cache.get(req.params.id)
-                                    },
-                                    user: {
-                                        id: req.session.user.id,
-                                        object: bot.guilds.cache
-                                            .get(req.params.id)
-                                            .members.cache.get(req.session.user.id)
-                                    }
-                                }
-                            )
-                        }
+                    // If the category is premium, check if the user has premium
+                    if (req.params.category && category.premium) {
+                        premiumSettings[category.categoryId] = await category.premiumUser({ guild: { id: guildId }, user: { id: userId } });
                     }
+
+                    // If the category is premium and the user doesn't have premium, redirect them
+                    if (category.premium && !premiumSettings[category.categoryId]) {
+                        return res.redirect(`/settings/${guildId}?error=premiumRequired`);
+                    }
+
+                    // Called when using categorySet
+                    await processCategoryOptions(category, getActualCategory, actualSettings, canUseSettings, guildId, userId);
+                } else {
+                    if (category.toggleable) {
+                        toggleSettings[category.categoryId] = await category.getActualSet({ guild: { id: guildId } }) || false;
+                    }
+
+                    // If the category is premium, check if the user has premium
+                    if (req.params.category && category.premium) {
+                        premiumSettings[category.categoryId] = await category.premiumUser({ guild: { id: guildId }, user: { id: userId } });
+                    }
+
+                    // If the category is premium and the user doesn't have premium, redirect them
+                    if (req.params.category && category.premium && !premiumSettings[category.categoryId]) {
+                        return res.redirect(`/settings/${guildId}?error=premiumRequired`);
+                    }
+
+                    // Called when not using categorySet
+                    await processNonCategoryOptions(category, actualSettings, canUseSettings, guildId, userId);
                 }
             }
         }
 
-        let errors
-        let success
-        // boo
-        if (req.session.errors) {
-            if (String(req.session.errors).includes('%is%')) {
-                errors = req.session.errors.split('%and%')
-            }
-        }
+        const errors = req.session.errors?.split('%and%') || [];
+        const success = req.session.success === true || req.session.success?.split('%and%') || [];
 
-        if (req.session.success) {
-            if (typeof req.session.success == 'boolean') {
-                success = true
-            } else {
-                if (String(req.session.success).includes('%is%')) {
-                    success = req.session.success.split('%and%')
-                }
-            }
-        }
+        req.session.errors = null;
+        req.session.success = null;
 
-        req.session.errors = null
-        req.session.success = null
-
-        const guild = bot.guilds.cache.get(req.params.id)
-        let gIcon
-
-        if (!guild.iconURL()) gIcon = themeConfig?.icons?.noGuildIcon
-        else gIcon = guild.iconURL()
+        const guildIcon = guild.iconURL() || themeConfig?.icons?.noGuildIcon;
 
         res.render('settings', {
             successes: success,
             errors: errors,
             settings: config.settings,
-            actual: actual,
-            toggle,
-            premium,
-            canUseList,
+            actual: actualSettings,
+            toggle: toggleSettings,
+            premium: premiumSettings,
+            canUseList: canUseSettings,
             bot: config.bot,
             guild,
-            userid: req.session.user.id,
-            gIcon,
-            req: req,
-            guildid: req.params.id,
+            userid: userId,
+            gIcon: guildIcon,
+            req,
+            guildid: guildId,
             themeConfig: req.themeConfig,
             config
-        })
+        });
+    };
+}
+
+async function convertPermission(permission) {
+    const permissionMap = {
+        'CREATE_INSTANT_INVITE': 'CreateInstantInvite',
+        'KICK_MEMBERS': 'KickMembers',
+        'BAN_MEMBERS': 'BanMembers',
+        'ADMINISTRATOR': 'Administrator',
+        'MANAGE_CHANNELS': 'ManageChannels',
+        'MANAGE_GUILD': 'ManageGuild',
+        'ADD_REACTIONS': 'AddReactions',
+        'VIEW_AUDIT_LOG': 'ViewAuditLog',
+        'PRIORITY_SPEAKER': 'PrioritySpeaker',
+        'STREAM': 'Stream',
+        'VIEW_CHANNEL': 'ViewChannel',
+        'SEND_MESSAGES': 'SendMessages',
+        'SEND_TTS_MESSAGES': 'SendTTSMessages',
+        'MANAGE_MESSAGES': 'ManageMessages',
+        'EMBED_LINKS': 'ManageMessages',
+        'ATTACH_FILES': 'AttachFiles',
+        'READ_MESSAGE_HISTORY': 'ReadMessageHistory',
+        'MENTION_EVERYONE': 'MentionEveryone',
+        'USE_EXTERNAL_EMOJIS': 'UseExternalEmojis',
+        'VIEW_GUILD_INSIGHTS': 'ViewGuildInsights',
+        'CONNECT': 'Connect',
+        'SPEAK': 'Speak'
+    };
+
+    return permissionMap[permission] || 'NULL';
+}
+// Called when using category set
+async function processCategoryOptions(category, getActualCategory, actualSettings, canUseSettings, guildId, userId) {
+    // Loop through all options in config.settings[i]
+    for (const option of category.categoryOptionsList) {
+        switch (option.optionType.type) {
+            case 'multiRow':
+                // Loop through all sub-options in multiRow
+                for (const item of option.optionType.options) {
+                    const canUse = await (item.allowedCheck ? item.allowedCheck({ guild: { id: guildId }, user: { id: userId } }) : { allowed: true, errorMessage: null });
+                    if (typeof canUse !== 'object') {
+                        throw new TypeError(`${category.categoryId} category option with id ${item.optionId} allowedCheck function needs to return {allowed: Boolean, errorMessage: String | null}`);
+                    }
+
+                    canUseSettings[category.categoryId][item.optionId] = canUse;
+                    actualSettings[category.categoryId][item.optionId] = getActualCategory.find(o => o.optionId === item.optionId)?.data || (item.optionType.type === 'tagInput' ? [] : null);
+                }
+                break;
+            case "spacer":
+                // Return basic spacer object
+                actualSettings[category.categoryId][configOption.optionId] = { type: 'spacer', themeOptions: configOption.themeOptions };
+                break;
+            case "rolesMultiSelect":
+            case "channelsMultiSelect":
+            case "multiSelect":
+            case "tagInput":
+            case "tagInput":
+                // Return empty array if no data
+                actualSettings[category.categoryId][configOption.optionId] = getActualCategory.find(o => o.optionId === configOption.optionId)?.data || [];
+                break;
+            default:
+                // Return data if it exists for all other formTypes, otherwise return null
+                const canUse = await (option.allowedCheck ? option.allowedCheck({ guild: { id: guildId }, user: { id: userId } }) : { allowed: true, errorMessage: null });
+                if (typeof canUse !== 'object') {
+                    throw new TypeError(`${category.categoryId} category option with id ${option.optionId} allowedCheck function needs to return {allowed: Boolean, errorMessage: String | null}`);
+                }
+
+                canUseSettings[category.categoryId][option.optionId] = canUse;
+                actualSettings[category.categoryId][option.optionId] = getActualCategory.find(o => o.optionId === option.optionId)?.data || null;
+                break;
+        }
     }
 }
 
-async function convert14(perm) {
-    var final = 'NULL'
+// Called when not using category set
+async function processNonCategoryOptions(category, actualSettings, canUseSettings, guildId, userId) {
+    for (const option of category.categoryOptionsList) {
+        switch (option.optionType.type) {
+            case 'multiRow':
+                // Loop through all sub-options in multiRow
+                for (const item of option.optionType.options) {
+                    const canUse = await (item.allowedCheck ? item.allowedCheck({ guild: { id: guildId }, user: { id: userId } }) : { allowed: true, errorMessage: null });
+                    if (typeof canUse !== 'object') {
+                        throw new TypeError(`${category.categoryId} category option with id ${item.optionId} allowedCheck function needs to return {allowed: Boolean, errorMessage: String | null}`);
+                    }
 
-    switch (perm) {
-        case 'CREATE_INSTANT_INVITE':
-            final = 'CreateInstantInvite'
-            break
-        case 'KICK_MEMBERS':
-            final = 'KickMembers'
-            break
-        case 'BAN_MEMBERS':
-            final = 'BanMembers'
-            break
-        case 'ADMINISTRATOR':
-            final = 'Administrator'
-            break
-        case 'MANAGE_CHANNELS':
-            final = 'ManageChannels'
-            break
-        case 'MANAGE_GUILD':
-            final = 'ManageGuild'
-            break
-        case 'ADD_REACTIONS':
-            final = 'AddReactions'
-            break
-        case 'VIEW_AUDIT_LOG':
-            final = 'ViewAuditLog'
-            break
-        case 'PRIORITY_SPEAKER':
-            final = 'PrioritySpeaker'
-            break
-        case 'STREAM':
-            final = 'Stream'
-            break
-        case 'VIEW_CHANNEL':
-            final = 'ViewChannel'
-            break
-        case 'SEND_MESSAGES':
-            final = 'SendMessages'
-            break
-        case 'SEND_TTS_MESSAGES':
-            final = 'SendTTSMessages'
-            break
-        case 'MANAGE_MESSAGES':
-            final = 'ManageMessages'
-            break
-        case 'EMBED_LINKS':
-            final = 'ManageMessages'
-            break
-        case 'ATTACH_FILES':
-            final = 'AttachFiles'
-            break
-        case 'READ_MESSAGE_HISTORY':
-            final = 'ReadMessageHistory'
-            break
-        case 'MENTION_EVERYONE':
-            final = 'MentionEveryone'
-            break
-        case 'USE_EXTERNAL_EMOJIS':
-            final = 'UseExternalEmojis'
-            break
-        case 'VIEW_GUILD_INSIGHTS':
-            final = 'ViewGuildInsughts'
-            break
-        case 'CONNECT':
-            final = 'Connect'
-            break
-        case 'SPEAK':
-            final = 'Speak'
-            break
+                    canUseSettings[category.categoryId][item.optionId] = canUse;
+                    actualSettings[category.categoryId][item.optionId] = await item.getActualSet({ guild: { id: guildId }, user: { id: userId } }) || (item.optionType.type === 'tagInput' ? [] : null);
+                }
+                break;
+            case "spacer":
+                // Return basic spacer object
+                actualSettings[category.categoryId][configOption.optionId] = { type: 'spacer', themeOptions: configOption.themeOptions };
+                break;
+            case "rolesMultiSelect":
+            case "channelsMultiSelect":
+            case "multiSelect":
+            case "tagInput":
+            case "tagInput":
+                // Return empty array if no data
+                actualSettings[category.categoryId][configOption.optionId] = await option.getActualSet({ guild: { id: guildId }, user: { id: userId } }) || [];
+                break;
+            default:
+                // Return data if it exists for all other formTypes, otherwise return null
+                const canUse = await (option.allowedCheck ? option.allowedCheck({ guild: { id: guildId }, user: { id: userId } }) : { allowed: true, errorMessage: null });
+                if (typeof canUse !== 'object') {
+                    throw new TypeError(`${category.categoryId} category option with id ${option.optionId} allowedCheck function needs to return {allowed: Boolean, errorMessage: String | null}`);
+                }
+
+                canUseSettings[category.categoryId][option.optionId] = canUse;
+                actualSettings[category.categoryId][option.optionId] = await option.getActualSet({ guild: { id: guildId }, user: { id: userId } }) || null;
+                break;
+        }
     }
-
-    return final
 }
