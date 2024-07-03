@@ -19,6 +19,32 @@
 <head>
     <%- include('partials/preloader.ejs', {now: 'sponsor'}) %>
     <%- themeConfig?.customHtml %>
+    <style>
+        .card {
+            width: 100%;
+            height: 550px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+
+        .text-gradient {
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .choose-btn {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100" id="scroll">
@@ -34,108 +60,58 @@
 
     const image = images[Math.floor(Math.random() * images.length)];
     %>
-    <section class="py-sm-7 py-5 position-relative" id="mainSection" style="padding-top: 0px !important;">
-        <div class="row mt-4 d-flex" style="justify-content: space-between; gap: 20px;">
-            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <div class="p-3">
-                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
-                         src="https://avatars.githubusercontent.com/u/86969968"
-                         style="width: 200px; height: 200px; border-radius: 50%;"
-                         alt="Sponsor">
-                </div>
-                <hr style="margin: 0 20px;">
-                <div>
-                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
-                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$2 P/Month</h2>
-                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
-                        <p style="font-size: 1rem; color: #555;">Have your bug reports prioritized</p>
-                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
-                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
-                               href="https://github.com/sponsors/Assistants-Technologies"
-                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
-                                Choose this Amount
-                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <div class="p-3">
-                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
-                         src="https://avatars.githubusercontent.com/u/86969968"
-                         style="width: 200px; height: 200px; border-radius: 50%;"
-                         alt="Sponsor">
-                </div>
-                <hr style="margin: 0 20px;">
-                <div>
-                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
-                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$3 P/Month</h2>
-                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
-                        <p style="font-size: 1rem; color: #555;">Get a Sponsor badge on your profile</p>
-                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
-                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
-                               href="https://github.com/sponsors/Assistants-Technologies"
-                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
-                                Choose this Amount
-                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <div class="p-3">
-                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
-                         src="https://avatars.githubusercontent.com/u/86969968"
-                         style="width: 200px; height: 200px; border-radius: 50%;"
-                         alt="Sponsor">
-                </div>
-                <hr style="margin: 0 20px;">
-                <div>
-                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
-                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$4 P/Month</h2>
-                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
-                        <p style="font-size: 1rem; color: #555;">Get a Personal License for your Discord-Dashboard project</p>
-                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
-                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
-                               href="https://github.com/sponsors/Assistants-Technologies"
-                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
-                                Choose this Amount
-                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="width: 320px; height: 550px; text-align: center; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <div class="p-3">
-                    <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
-                         src="https://avatars.githubusercontent.com/u/86969968"
-                         style="width: 200px; height: 200px; border-radius: 50%;"
-                         alt="Sponsor">
-                </div>
-                <hr style="margin: 0 20px;">
-                <div>
-                    <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
-                        <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">$50 P/Month</h2>
-                        <h5 class="mt-1" style="margin-bottom: 0;"></h5>
-                        <p style="font-size: 1rem; color: #555;">Get a Production License for your Discord-Dashboard project & BE A GOAT</p>
-                        <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
-                            <a class="text-body text-bg font-weight-bold mb-0 icon-move-right"
-                               href="https://github.com/sponsors/Assistants-Technologies"
-                               style="color: #007bff; text-decoration: none; font-size: 1rem;">
-                                Choose this Amount
-                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <section class="py-5 position-relative" id="mainSection">
+        <div class="container">
+            <div class="row mt-4 d-flex justify-content-center" id="cardContainer">
+                <!-- Cards will be injected here by JavaScript -->
             </div>
         </div>
     </section>
 </div>
 </main>
+<script>
+    const sponsorshipOptions = [
+        { price: '$2 P/Month', description: 'Have your bug reports prioritized', url: 'https://github.com/sponsors/Assistants-Technologies' },
+        { price: '$3 P/Month', description: 'Get a Sponsor badge on your profile', url: 'https://github.com/sponsors/Assistants-Technologies' },
+        { price: '$4 P/Month', description: 'Get a Personal License for your Discord-Dashboard project', url: 'https://github.com/sponsors/Assistants-Technologies' },
+        { price: '$50 P/Month', description: 'Get a Production License for your Discord-Dashboard project & BE A GOAT', url: 'https://github.com/sponsors/Assistants-Technologies' },
+    ];
+
+    function createCard(option) {
+        return `
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                <div class="card">
+                    <div class="p-3">
+                        <img class="img border-radius-100 max-width-200 w-100 position-relative z-index-2"
+                             src="https://avatars.githubusercontent.com/u/86969968"
+                             alt="Sponsor">
+                    </div>
+                    <hr style="margin: 0 20px;">
+                    <div>
+                        <div class="p-3 text-center" style="text-align: left !important; padding-top: 0 !important;">
+                            <h2 class="text-gradient text-primary" style="font-size: 1.75rem; margin: 10px 0;">${option.price}</h2>
+                            <p style="font-size: 1rem; color: #555;">${option.description}</p>
+                            <div style="position: absolute; bottom: 15px; width: 100%; text-align: center;">
+                                <a class="text-body text-bg font-weight-bold mb-0 icon-move-right choose-btn"
+                                   href="${option.url}">
+                                    Choose this Amount
+                                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true" style="margin-left: 5px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    $(document).ready(function() {
+        const cardContainer = $('#cardContainer');
+        sponsorshipOptions.forEach(option => {
+            cardContainer.append(createCard(option));
+        });
+    });
+</script>
 <script>
     let disableFunc = false;
     var win;
@@ -182,4 +158,3 @@
 </body>
 
 </html>
-
