@@ -1,6 +1,10 @@
 <div class="card-body px-0 pt-0 pb-2">
     <div class="table-responsive p-0">
         <%
+
+        // Sort feeds by published date in descending order
+        feeds.sort((a, b) => b.published - a.published);
+
         feeds.forEach((feed, index) => {
             var delta = Math.abs(Date.now() - feed.published) / 1000;
 
